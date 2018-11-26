@@ -1,0 +1,13 @@
+{
+    "version": 2,
+    "name": "empathic",
+    "builds": [
+        { "src": "frontend/package.json", "use": "@now/static-build" },
+        { "src": "backend/server.js", "use": "@now/node-server" }
+    ],
+    "routes": [
+      {"src": "^/static/(.*)", "dest": "/frontend/static/$1"},
+      {"src": "/api/.*", "dest": "/backend/server.js"},
+      {"src": "/.*", "dest": "/frontend/index.html"}
+    ]
+}
