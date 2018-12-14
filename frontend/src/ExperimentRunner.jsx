@@ -1,30 +1,30 @@
 import React from 'react';
-import VideoPlayer from './VideoPlayer.js'
+import fetch from 'whatwg-fetch';
+import VideoPlayer from './VideoPlayer';
 
 class ExperimentRunner extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      videoId: "",
-      question: ""
+      videoId: '',
+      question: '',
     };
   }
 
   componentDidMount() {
     fetch('/api/experiment')
-      .then(result => {
-        return result.json();
-      }).then(data => {
+      .then(result => result.json()).then((data) => {
         this.setState(data);
       });
-
   }
 
   render() {
+    const { videoId, question } = this.state;
     return (
       <VideoPlayer
-        videoId={this.state.videoId}
-        question={this.state.question}/>
+        videoId={videoId}
+        question={question}
+      />
     );
   }
 }
