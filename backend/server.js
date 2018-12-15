@@ -1,17 +1,18 @@
-const express = require('express');
+import express from 'express';
 
 const app = express();
 
 const PORT = 3001;
 
-app.get('/api/experiment', function (req, res) {
-  let obj = {
+app.get('/api/experiment', (req, res) => {
+  const obj = {
     videoId: 302719494,
-    question: "some question"
+    question: 'some question',
   };
   res.json(obj);
-})
+});
 
-app.listen(PORT, function () {
+/* eslint no-console: "off" */
+app.listen(PORT, () => {
   console.log(`API running at http://localhost:${PORT}`);
-})
+});
