@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "lint": "eslint \"./**/*.js\""
   },
   "author": "",
   "license": "ISC",
