@@ -1,32 +1,19 @@
 import React from 'react';
-import fetch from 'whatwg-fetch';
+import Fetch from 'react-fetch-component';
 import VideoPlayer from './VideoPlayer';
 
-class ExperimentRunner extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      videoId: '',
-      question: '',
-    };
-  }
-
-  componentDidMount() {
-    fetch('/api/experiment')
-      .then(result => result.json()).then((data) => {
-        this.setState(data);
-      });
-  }
-
-  render() {
-    const { videoId, question } = this.state;
-    return (
-      <VideoPlayer
-        videoId={videoId}
-        question={question}
-      />
-    );
-  }
+function ExperimentRunner() {
+  return (
+    <Fetch url="/api/experiment">
+      {({ loading, error, data }) => (
+        <div>
+          {loading && <span>Loading...</span> }
+          {data && <VideoPlayer {...data} />}
+          {error && <span>Problem getting response from server!</span>}
+        </div>
+      )}
+    </Fetch>
+  );
 }
 
 export default ExperimentRunner;

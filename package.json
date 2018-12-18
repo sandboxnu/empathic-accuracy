@@ -6,6 +6,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
+    "react-fetch-component": "^7.0.1",
     "react-player": "^1.7.0",
     "react-scripts": "2.0.5",
     "whatwg-fetch": "^3.0.0"
@@ -22,7 +23,15 @@
   "eslintConfig": {
     "extends": "airbnb",
     "rules": {
-      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+      "react/jsx-filename-extension": [
+        1,
+        {
+          "extensions": [
+            ".js",
+            ".jsx"
+          ]
+        }
+      ]
     }
   },
   "browserslist": [
