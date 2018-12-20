@@ -2,6 +2,7 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 import PropTypes from 'prop-types';
 import VideoQuestion from './VideoQuestion';
+import { questionType } from './types';
 
 class VideoPlayer extends React.Component {
   constructor(props) {
@@ -20,26 +21,21 @@ class VideoPlayer extends React.Component {
   }
 
   render() {
-    const { videoId, question } = this.props;
+    const { videoId, questions } = this.props;
     const { paused } = this.state;
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
       <div>
         <ReactPlayer url={videoUrl} onPause={() => this.onPause()} onPlay={() => this.onPlay()} />
-        {paused ? <VideoQuestion question={question} /> : null}
+        {paused ? <VideoQuestion questions={questions} /> : null}
       </div>
     );
   }
 }
 
 VideoPlayer.propTypes = {
-  videoId: PropTypes.string,
-  question: PropTypes.string,
-};
-
-VideoPlayer.defaultProps = {
-  videoId: '121',
-  question: 'Default question',
+  videoId: PropTypes.string.isRequired,
+  questions: PropTypes.arrayOf(questionType).isRequired,
 };
 
 export default VideoPlayer;
