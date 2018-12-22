@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { questionType } from './types';
 import MultipleChoiceQuestion from './MultipleChoiceQuestion';
+import OpenQuestion from './OpenQuestion';
 
 class VideoQuestions extends React.Component {
   renderQuestions() {
@@ -12,7 +13,7 @@ class VideoQuestions extends React.Component {
       switch (type) {
         case 'mc': return <MultipleChoiceQuestion key={id} {...question} />;
         case 'scale': return <span>scale questions not supported yet</span>;
-        case 'open': return <span>scale questions not supported yet</span>;
+        case 'open': return <OpenQuestion key={id} {...question} />;
         case 'grid': return <span>scale questions not supported yet</span>;
         default: return null;
       }

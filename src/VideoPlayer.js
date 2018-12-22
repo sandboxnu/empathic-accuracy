@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
 import PropTypes from 'prop-types';
-import VideoQuestion from './VideoQuestion';
+import VideoQuestions from './VideoQuestions';
 import { questionType } from './types';
 
 class VideoPlayer extends React.Component {
@@ -27,7 +27,7 @@ class VideoPlayer extends React.Component {
     return (
       <div>
         <ReactPlayer url={videoUrl} onPause={() => this.onPause()} onPlay={() => this.onPlay()} />
-        {paused ? <VideoQuestion questions={questions} /> : null}
+        {paused ? <VideoQuestions questions={questions} /> : null}
       </div>
     );
   }
