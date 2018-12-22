@@ -4,25 +4,18 @@ import React from 'react';
 import { questionType } from './types';
 import MultipleChoiceQuestion from './MultipleChoiceQuestion';
 
-class VideoQuestion extends React.Component {
+class VideoQuestions extends React.Component {
   renderQuestions() {
     const { questions } = this.props;
-    const formQuestions = questions.map(({
-      mc, scale, open, grid,
-    }, i) => {
-      if (mc) {
-        return <MultipleChoiceQuestion key={i} {...mc} />;
+    const formQuestions = questions.map((question) => {
+      const { type, id } = question;
+      switch (type) {
+        case 'mc': return <MultipleChoiceQuestion key={id} {...question} />;
+        case 'scale': return <span>scale questions not supported yet</span>;
+        case 'open': return <span>scale questions not supported yet</span>;
+        case 'grid': return <span>scale questions not supported yet</span>;
+        default: return null;
       }
-      if (scale) {
-        return <span>temp</span>;
-      }
-      if (open) {
-        return <span>temp</span>;
-      }
-      if (grid) {
-        return <span>temp</span>;
-      }
-      return null;
     });
     return formQuestions;
   }
@@ -36,8 +29,8 @@ class VideoQuestion extends React.Component {
   }
 }
 
-VideoQuestion.propTypes = {
+VideoQuestions.propTypes = {
   questions: PropTypes.arrayOf(questionType).isRequired,
 };
 
-export default VideoQuestion;
+export default VideoQuestions;

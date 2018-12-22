@@ -24,6 +24,7 @@
   "eslintConfig": {
     "extends": "airbnb",
     "rules": {
+      "jsx-a11y/label-has-for": "off",
       "react/jsx-filename-extension": [
         1,
         {

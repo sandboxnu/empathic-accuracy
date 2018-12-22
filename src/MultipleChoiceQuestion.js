@@ -5,19 +5,19 @@ import { mcQuestionType } from './types';
 
 class MultipleChoiceQuestion extends React.Component {
   renderChoices() {
-    const { key, choices } = this.props;
+    const { id, choices } = this.props;
     const radios = choices.reduce((acc, choice, idx) => {
-      const id = `mc${key}-${idx}`;
-      acc.push(<Radio value={choice} id={id} />);
-      acc.push(<label htmlFor={id}>{choice}</label>);
+      const choiceId = `radio${id}-${idx}`;
+      // the key property is required by React to identify list elements.
+      acc.push(<Radio key={choiceId} value={choice} id={choiceId} />);
+      acc.push(<label key={`label${choiceId}`} htmlFor={choiceId}>{choice}</label>);
       return acc;
     }, []);
     return radios;
   }
 
   render() {
-    const { key, label } = this.props;
-    const id = `mc${key}`;
+    const { id, label } = this.props;
     return (
       <div>
         <label htmlFor={id}>{label}</label>
