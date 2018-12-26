@@ -1,6 +1,7 @@
 import React from 'react';
 import Fetch from 'react-fetch-component';
 import VideoPlayer from './VideoPlayer';
+import defaultConfig from './defaultConfig';
 
 function ExperimentRunner() {
   return (
@@ -9,7 +10,7 @@ function ExperimentRunner() {
         <div>
           {loading && <span>Loading...</span> }
           {data && <VideoPlayer {...data} />}
-          {error && <span>Problem getting response from server!</span>}
+          {error && <VideoPlayer {... defaultConfig} />}
         </div>
       )}
     </Fetch>
