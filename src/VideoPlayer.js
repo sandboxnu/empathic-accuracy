@@ -9,6 +9,7 @@ class VideoPlayer extends React.Component {
     super(props);
     this.state = {
       paused: false,
+      data: [],
     };
   }
 
@@ -20,6 +21,15 @@ class VideoPlayer extends React.Component {
     this.setState({ paused: false });
   }
 
+  // Add the new data point from VideoQuestions and resume the video
+  onSubmit(newValue) {
+    const { data } = this.state;
+    this.setState({
+      data: [...data, newValue],
+      paused: false,
+    });
+  }
+
   render() {
     const { videoId, questions } = this.props;
     const { paused } = this.state;
@@ -27,7 +37,7 @@ class VideoPlayer extends React.Component {
     return (
       <div>
         <ReactPlayer url={videoUrl} onPause={() => this.onPause()} onPlay={() => this.onPlay()} />
-        {paused ? <VideoQuestions questions={questions} /> : null}
+        {paused ? <VideoQuestions onSubmit={n => this.onSubmit(n)} questions={questions} /> : null}
       </div>
     );
   }

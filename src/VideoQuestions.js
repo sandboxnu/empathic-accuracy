@@ -6,6 +6,18 @@ import MultipleChoiceQuestion from './MultipleChoiceQuestion';
 import OpenQuestion from './OpenQuestion';
 
 class VideoQuestions extends React.Component {
+  // Get the Informed form api to extract form values
+  setFormApi(formApi) {
+    this.formApi = formApi;
+  }
+
+  // Pass the form values up
+  handleSubmit() {
+    const { onSubmit } = this.props;
+    onSubmit(this.formApi.getState().values);
+  }
+
+  // Render a list of questions
   renderQuestions() {
     const { questions } = this.props;
     const formQuestions = questions.map((question) => {
@@ -23,8 +35,9 @@ class VideoQuestions extends React.Component {
 
   render() {
     return (
-      <Form>
+      <Form getApi={formApi => this.setFormApi(formApi)}>
         {this.renderQuestions()}
+        <button onClick={() => this.handleSubmit()} type="submit">Save</button>
       </Form>
     );
   }
@@ -32,6 +45,7 @@ class VideoQuestions extends React.Component {
 
 VideoQuestions.propTypes = {
   questions: PropTypes.arrayOf(questionType).isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default VideoQuestions;
