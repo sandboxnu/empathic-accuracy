@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import VideoQuestions from './VideoQuestions';
 import { questionType } from './types';
 
-class VideoPlayer extends React.Component {
+class Experiment extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -90,10 +90,10 @@ class VideoPlayer extends React.Component {
   }
 }
 
-VideoPlayer.propTypes = {
+Experiment.propTypes = {
   videoId: PropTypes.string.isRequired,
   questions: PropTypes.arrayOf(questionType).isRequired,
   sendData: PropTypes.func.isRequired,
 };
 
-export default VideoPlayer;
+export default Experiment;

@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import ExperimentRunner from './ExperimentRunner';
+import ExperimentOnline from './ExperimentOnline';
 
 function App() {
   return (
     <div className="App">
-      <ExperimentRunner />
+      <ExperimentOnline />
     </div>
   );
 }

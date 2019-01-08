@@ -1,7 +1,7 @@
 import React from 'react';
 import Fetch from 'react-fetch-component';
 import Axios from 'axios';
-import VideoPlayer from './VideoPlayer';
+import Experiment from './Experiment';
 
 const SERVER_URL = 'http://142.93.49.129:3000';
 
@@ -20,13 +20,13 @@ function sendData(collected) {
 }
 
 /* In charge of talking to server */
-function ExperimentRunner() {
+function ExperimentOnline() {
   return (
     <Fetch url={`${SERVER_URL}/experiment`} as="json">
       {({ loading, error, data }) => (
         <div>
           {loading && <span>Loading...</span> }
-          {data && <VideoPlayer {...data} sendData={(collected) => { sendData(collected); }} />}
+          {data && <Experiment {...data} sendData={(collected) => { sendData(collected); }} />}
           {error && <span>Server error</span>}
         </div>
       )}
@@ -34,4 +34,4 @@ function ExperimentRunner() {
   );
 }
 
-export default ExperimentRunner;
+export default ExperimentOnline;
