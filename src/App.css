@@ -3,3 +3,21 @@
   width:640px;
   height:360px;
 }
+
+.App {
+  display: flex;
+  justify-content: center;
+}
+
+.questionContainer {
+  margin-top: 10px;
+  min-height: 100px;
+  padding: 10px;
+  background-color: #EEE;
+  border-radius: 5px;
+  display: flex;
+}
+
+.questionPlaceholder {
+  margin: auto;
+}

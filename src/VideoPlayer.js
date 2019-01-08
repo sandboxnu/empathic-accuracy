@@ -52,6 +52,12 @@ class VideoPlayer extends React.Component {
     });
   }
 
+  onEnded() {
+    const { data } = this.state;
+    const { sendData } = this.props;
+    sendData(data);
+  }
+
   getPlayerRef(ref) {
     this.player = ref;
   }
@@ -62,7 +68,6 @@ class VideoPlayer extends React.Component {
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
       <div>
-        <div id="opaqueLayer" />
         <ReactPlayer
           ref={r => this.getPlayerRef(r)}
           url={videoUrl}
@@ -70,8 +75,16 @@ class VideoPlayer extends React.Component {
           onPlay={() => this.onPlay()}
           onProgress={p => this.onProgress(p)}
           onSeek={() => this.onSeek()}
+          onEnded={() => this.onEnded()}
+          playing={!paused}
         />
-        {paused ? <VideoQuestions onSubmit={n => this.onSubmit(n)} questions={questions} /> : null}
+        <div className="questionContainer">
+          {paused ? (
+            <VideoQuestions onSubmit={n => this.onSubmit(n)} questions={questions} />
+          ) : (
+            <div className="questionPlaceholder">Pause the video and questions will appear here.</div>
+          )}
+        </div>
       </div>
     );
   }
@@ -80,6 +93,7 @@ class VideoPlayer extends React.Component {
 VideoPlayer.propTypes = {
   videoId: PropTypes.string.isRequired,
   questions: PropTypes.arrayOf(questionType).isRequired,
+  sendData: PropTypes.func.isRequired,
 };
 
 export default VideoPlayer;
