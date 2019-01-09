@@ -1,13 +1,18 @@
 import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import ExperimentOnline from './ExperimentOnline';
+import AdminPanel from './AdminPanel';
 
-function App() {
+function AppRouter() {
   return (
-    <div className="App">
-      <ExperimentOnline />
-    </div>
+    <Router>
+      <div className="App">
+        <Route path="/admin" exact component={AdminPanel} />
+        <Route path="/" exact component={ExperimentOnline} />
+      </div>
+    </Router>
   );
 }
 
-export default App;
+export default AppRouter;
