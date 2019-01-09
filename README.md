@@ -10,4 +10,10 @@ In development, there are two servers running: one for the React frontend and on
 
 # Deployment
 
-Pushing to GitHub deploys the app to [Zeit Now](https://zeit.co/now). The master branch is production. Zeit builds the app with now.json, which uses the `now-build` script inside the frontend package.json to build the React app for production and hosts the Node server. Zeit handles routing by hosting the Node server at `/api/` and React's static files at `/static/` and then routes every other url to React's compiled index.html.
+Pushing to GitHub deploys the app to [Zeit Now](https://zeit.co/now). The master branch is production. Zeit builds the app with now.json, which uses the `now-build` script inside package.json to build the React app for production. Zeit handles routing by hosting static files at `/static/` and then routes every other url to React's compiled index.html.
+
+# Code notes
+
+## Prop Types
+
+We use the `prop-types` package to validate props coming into React components. Custom types are declared in `types.js` - see `VideoQuestion.js` for an example of the types in use.
