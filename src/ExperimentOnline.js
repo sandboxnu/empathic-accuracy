@@ -3,7 +3,7 @@ import Fetch from 'react-fetch-component';
 import Axios from 'axios';
 import Experiment from './Experiment';
 
-const SERVER_URL = 'http://142.93.49.129:3000';
+const SERVER_URL = 'https://api.sandboxneu.com/empathic-accuracy';
 
 function sendData(collected) {
   const time = Math.floor(new Date().getTime() / 1000);
