@@ -80,7 +80,7 @@ class Experiment extends React.Component {
         />
         <div className="questionContainer">
           {paused ? (
-            <VideoQuestions onSubmit={n => this.onSubmit(n)} questions={questions} />
+            <VideoQuestions onSubmit={n => this.onSubmit(n)} questions={questions} lastPos={this.player.getCurrentTime()}/>
           ) : (
             <div className="questionPlaceholder">Pause the video and questions will appear here.</div>
           )}

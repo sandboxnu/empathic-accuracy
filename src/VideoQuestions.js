@@ -14,7 +14,10 @@ class VideoQuestions extends React.Component {
   // Pass the form values up
   handleSubmit() {
     const { onSubmit } = this.props;
-    onSubmit(this.formApi.getState().values);
+    var answers = this.formApi.getState().values;
+    // add the actual time stamp user is at here:
+    answers.timestamp = this.props.lastPos;
+    onSubmit(answers);
   }
 
   // Render a list of questions
