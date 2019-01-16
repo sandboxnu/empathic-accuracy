@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'informed';
-import { openQuestionType } from './types';
+import { openQuestionType } from '../types';
 
 
 class OpenQuestion extends React.Component {

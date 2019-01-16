@@ -1,6 +1,6 @@
 import React from 'react';
 import { RadioGroup, Radio } from 'informed';
-import { mcQuestionType } from './types';
+import { mcQuestionType } from '../types';
 
 
 class MultipleChoiceQuestion extends React.Component {

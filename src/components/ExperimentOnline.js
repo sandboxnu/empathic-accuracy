@@ -43,7 +43,8 @@ class ExperimentOnline extends React.Component {
         {({ loading, error, data }) => (
           <div>
             {loading && <span>Loading...</span> }
-            {data && <Experiment {...data} sendData={(collected) => { this.sendData(collected); }} />}
+            {data
+              && <Experiment {...data} sendData={(collected) => { this.sendData(collected); }} />}
             {error && <span>Server error</span>}
           </div>
         )}

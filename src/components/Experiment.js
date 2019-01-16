@@ -2,7 +2,7 @@ import React from 'react';
 import ReactPlayer from 'react-player';
 import PropTypes from 'prop-types';
 import VideoQuestions from './VideoQuestions';
-import { questionType } from './types';
+import { questionType } from '../types';
 
 class Experiment extends React.Component {
   constructor(props) {

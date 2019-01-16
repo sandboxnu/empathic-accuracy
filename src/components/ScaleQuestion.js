@@ -1,6 +1,6 @@
 import React from 'react';
 import { RadioGroup, Radio } from 'informed';
-import { scaleQuestionType } from './types';
+import { scaleQuestionType } from '../types';
 
 
 class ScaleQuestion extends React.Component {

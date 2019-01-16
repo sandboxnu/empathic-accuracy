@@ -1,7 +1,7 @@
 import { Form } from 'informed';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { questionType } from './types';
+import { questionType } from '../types';
 import MultipleChoiceQuestion from './MultipleChoiceQuestion';
 import OpenQuestion from './OpenQuestion';
 
