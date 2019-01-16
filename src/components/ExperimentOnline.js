@@ -2,15 +2,18 @@ import React from 'react';
 import Fetch from 'react-fetch-component';
 import Axios from 'axios';
 import Experiment from './Experiment';
+import Instructions from './Instructions';
 
 const SERVER_URL = 'https://api.sandboxneu.com/empathic-accuracy';
+
+const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 
 /* In charge of talking to server */
 class ExperimentOnline extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      done: false,
+      stage: StageEnum.instructions,
     };
   }
 
@@ -31,13 +34,11 @@ class ExperimentOnline extends React.Component {
       .catch(error => console.log(error));
   }
 
-  render() {
-    const { done } = this.state;
+  renderInstruction() {
+    return (<Instructions onFinish={() => this.setState({ stage: StageEnum.experiment })} />);
+  }
 
-    if (done) {
-      return (<span>Thank you for participating. You can close this browser tab.</span>);
-    }
-
+  renderExperiment() {
     return (
       <Fetch url={`${SERVER_URL}/experiment`} as="json">
         {({ loading, error, data }) => (
@@ -48,8 +49,23 @@ class ExperimentOnline extends React.Component {
             {error && <span>Server error</span>}
           </div>
         )}
-      </Fetch>
-    );
+      </Fetch>);
+  }
+
+
+  render() {
+    const { stage } = this.state;
+
+    switch (stage) {
+      case StageEnum.instructions:
+        return this.renderInstructions();
+      case StageEnum.experiment:
+        return this.renderExperiment();
+      case StageEnum.done:
+        return (<span>Thank you for participating. You can close this browser tab.</span>);
+      default:
+        return null;
+    }
   }
 }
 
