@@ -55,7 +55,12 @@ class Experiment extends React.Component {
   onEnded() {
     const { data } = this.state;
     const { sendData } = this.props;
-    sendData(data);
+    const dataWithBrowserInfo = {
+      answers: data,
+      browserWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      browserHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+    };
+    sendData(dataWithBrowserInfo);
   }
 
   getPlayerRef(ref) {
