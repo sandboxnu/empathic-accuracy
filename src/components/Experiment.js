@@ -17,6 +17,7 @@ class Experiment extends React.Component {
       data: [],
       stage: StageEnum.instructions,
       showQuestionTime: 0,
+      startTime: 0,
     };
   }
 
@@ -61,10 +62,16 @@ class Experiment extends React.Component {
     });
   }
 
+  componentDidMount() {
+    this.setState({
+      startTime: Date.now(),
+    });
+  }
+
   onEnded() {
-    const { data } = this.state;
+    const { data, startTime } = this.state;
     const { sendData } = this.props;
-    sendData(data);
+    sendData({ ...data, totalDuration: (Date.now() - startTime) / 1000 });
     this.setState({
       stage: StageEnum.done,
     });
