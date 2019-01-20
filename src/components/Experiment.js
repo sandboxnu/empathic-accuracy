@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
 import PropTypes from 'prop-types';
+import Beforeunload from 'react-beforeunload';
+import { reactLocalStorage } from 'reactjs-localstorage';
 import VideoQuestions from './VideoQuestions';
 import { questionType } from '../types';
 import Instructions from './Instructions';
@@ -18,8 +20,29 @@ class Experiment extends React.Component {
       stage: StageEnum.instructions,
       showQuestionTime: 0,
       startTime: 0,
+      elapsedTotalTime: 0,
     };
   }
+
+  componentDidMount() {
+    const restoredState = reactLocalStorage.getObject('var');
+    console.log(restoredState);
+    this.setState({
+      ...restoredState,
+      startTime: Date.now(),
+    });
+  }
+
+  // Add the new data point from VideoQuestions and resume the video
+  onSubmit(newValue) {
+    const { data, showQuestionTime } = this.state;
+    const newerValue = { ...newValue, questionTime: (Date.now() - showQuestionTime) / 1000 };
+    this.setState({
+      data: [...data, newerValue],
+      paused: false,
+    });
+  }
+
 
   onPause() {
     this.setState({
@@ -52,22 +75,6 @@ class Experiment extends React.Component {
     }
   }
 
-  // Add the new data point from VideoQuestions and resume the video
-  onSubmit(newValue) {
-    const { data, showQuestionTime } = this.state;
-    const newerValue = { ...newValue, questionTime: (Date.now() - showQuestionTime) / 1000 };
-    this.setState({
-      data: [...data, newerValue],
-      paused: false,
-    });
-  }
-
-  componentDidMount() {
-    this.setState({
-      startTime: Date.now(),
-    });
-  }
-
   onEnded() {
     const { data, startTime } = this.state;
     const { sendData } = this.props;
@@ -75,6 +82,10 @@ class Experiment extends React.Component {
     this.setState({
       stage: StageEnum.done,
     });
+  }
+
+  onClose() {
+    reactLocalStorage.setObject('var', this.state);
   }
 
   getPlayerRef(ref) {
@@ -122,7 +133,7 @@ class Experiment extends React.Component {
     );
   }
 
-  render() {
+  renderStage() {
     const { stage } = this.state;
 
     switch (stage) {
@@ -135,6 +146,14 @@ class Experiment extends React.Component {
       default:
         return null;
     }
+  }
+
+  render() {
+    return (
+      <Beforeunload onBeforeunload={() => { this.onClose(); }}>
+        { this.renderStage() }
+      </Beforeunload>
+    );
   }
 }
 
