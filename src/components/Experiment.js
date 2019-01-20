@@ -3,6 +3,9 @@ import ReactPlayer from 'react-player';
 import PropTypes from 'prop-types';
 import VideoQuestions from './VideoQuestions';
 import { questionType } from '../types';
+import Instructions from './Instructions';
+
+const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 
 class Experiment extends React.Component {
   constructor(props) {
@@ -12,6 +15,7 @@ class Experiment extends React.Component {
       justReset: false,
       paused: false,
       data: [],
+      stage: StageEnum.instructions,
     };
   }
 
@@ -56,13 +60,26 @@ class Experiment extends React.Component {
     const { data } = this.state;
     const { sendData } = this.props;
     sendData(data);
+    this.setState({
+      stage: StageEnum.done,
+    });
   }
 
   getPlayerRef(ref) {
     this.player = ref;
   }
 
-  render() {
+  renderInstructions() {
+    const { instructionScreens } = this.props;
+    return (
+      <Instructions
+        onFinish={() => this.setState({ stage: StageEnum.experiment })}
+        instructionScreens={instructionScreens}
+      />
+    );
+  }
+
+  renderExperiment() {
     const { videoId, questions } = this.props;
     const { paused } = this.state;
     const videoUrl = `https://vimeo.com/${videoId}`;
@@ -92,12 +109,28 @@ class Experiment extends React.Component {
       </div>
     );
   }
+
+  render() {
+    const { stage } = this.state;
+
+    switch (stage) {
+      case StageEnum.instructions:
+        return this.renderInstructions();
+      case StageEnum.experiment:
+        return this.renderExperiment();
+      case StageEnum.done:
+        return (<span>Thank you for participating. You can close this browser tab.</span>);
+      default:
+        return null;
+    }
+  }
 }
 
 Experiment.propTypes = {
   videoId: PropTypes.string.isRequired,
   questions: PropTypes.arrayOf(questionType).isRequired,
   sendData: PropTypes.func.isRequired,
+  instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default Experiment;
