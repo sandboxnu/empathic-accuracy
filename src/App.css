@@ -1,3 +1,14 @@
+a {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+}
+
+a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
 #opaqueLayer {
   position:absolute;
   width:640px;
@@ -21,3 +32,29 @@
 .questionPlaceholder {
   margin: auto;
 }
+
+.instructionsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.instructionsText {
+  max-width: 700px;
+  width: inherit;
+}
+
+.navigationButton {
+  border-radius: 5%;
+  background-color: #f1f1f1;
+  color: black;
+}
+
+.buttonContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
