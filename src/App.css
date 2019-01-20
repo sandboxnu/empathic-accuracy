@@ -5,8 +5,8 @@ a {
 }
 
 a:hover {
-  background-color: #ddd;
-  color: black;
+  background-color: #253b77;
+  color: white;
 }
 
 #opaqueLayer {
@@ -53,8 +53,8 @@ a:hover {
 
 .navigationButton {
   border-radius: 5%;
-  background-color: #f1f1f1;
-  color: black;
+  background-color: #3350a0;
+  color: white;
   font-size: 1.25em;
   font-weight: 400;
 }
