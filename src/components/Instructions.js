@@ -37,8 +37,8 @@ class Instructions extends React.Component {
           {instructionText}
         </div>
         <div className="buttonContainer">
-        {(section === 0) ? null : <a href="#" className="navigationButton" onClick={() => this.navigateBackward()}>&#8249; Previous </a> }
-        <a href="#" className="navigationButton" onClick={() => this.navigateForward()}> Next &#8250;</a>
+          {(section === 0) ? <div /> : <a href="#" className="navigationButton" onClick={() => this.navigateBackward()}>&#8249; Previous </a> }
+          <a href="#" className="navigationButton" onClick={() => this.navigateForward()}> Next &#8250;</a>
         </div>
       </div>
     );
