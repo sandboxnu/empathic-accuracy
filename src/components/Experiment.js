@@ -16,11 +16,16 @@ class Experiment extends React.Component {
       paused: false,
       data: [],
       stage: StageEnum.instructions,
+      showQuestionTime: 0,
+      startTime: 0,
     };
   }
 
   onPause() {
-    this.setState({ paused: true });
+    this.setState({
+      paused: true,
+      showQuestionTime: Date.now(),
+    });
   }
 
   onPlay() {
@@ -49,17 +54,24 @@ class Experiment extends React.Component {
 
   // Add the new data point from VideoQuestions and resume the video
   onSubmit(newValue) {
-    const { data } = this.state;
+    const { data, showQuestionTime } = this.state;
+    const newerValue = { ...newValue, questionTime: (Date.now() - showQuestionTime) / 1000 };
     this.setState({
-      data: [...data, newValue],
+      data: [...data, newerValue],
       paused: false,
     });
   }
 
+  componentDidMount() {
+    this.setState({
+      startTime: Date.now(),
+    });
+  }
+
   onEnded() {
-    const { data } = this.state;
+    const { data, startTime } = this.state;
     const { sendData } = this.props;
-    sendData(data);
+    sendData({ ...data, totalDuration: (Date.now() - startTime) / 1000 });
     this.setState({
       stage: StageEnum.done,
     });
