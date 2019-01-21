@@ -70,8 +70,12 @@ class Experiment extends React.Component {
 
   onEnded() {
     const { data, startTime } = this.state;
-    const { sendData } = this.props;
-    sendData({ ...data, totalDuration: (Date.now() - startTime) / 1000 });
+    const { sendData, completionID } = this.props;
+    sendData({
+      ...data,
+      totalDuration: (Date.now() - startTime) / 1000,
+      completionID,
+    });
     this.setState({
       stage: StageEnum.done,
     });
@@ -122,6 +126,25 @@ class Experiment extends React.Component {
     );
   }
 
+  renderDone() {
+    const { completionID } = this.props;
+    return (
+      <div className="instructionsContainer">
+        <p className="instructionsText">
+          Thank you for participating.
+        </p>
+        <p className="instructionsText">
+          Your completion ID is
+          {' '}
+          <span className="completionID">{completionID}</span>
+        </p>
+        <p className="instructionsText">
+        You can close this browser tab.
+        </p>
+      </div>
+    );
+  }
+
   render() {
     const { stage } = this.state;
 
@@ -131,7 +154,7 @@ class Experiment extends React.Component {
       case StageEnum.experiment:
         return this.renderExperiment();
       case StageEnum.done:
-        return (<span>Thank you for participating. You can close this browser tab.</span>);
+        return this.renderDone();
       default:
         return null;
     }
@@ -143,6 +166,7 @@ Experiment.propTypes = {
   questions: PropTypes.arrayOf(questionType).isRequired,
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
+  completionID: PropTypes.string.isRequired,
 };
 
 export default Experiment;
