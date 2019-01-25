@@ -51,6 +51,16 @@ class Experiment extends React.Component {
       paused: false,
     });
   }
+// stylistic errors:
+
+  getDocumentPPI() {
+      var elem = document.createElement('div');
+      elem.style.width = '1in';
+      document.body.appendChild(elem);
+      var ppi = elem.offsetWidth;
+      document.body.removeChild(elem);
+      return ppi;
+    }
 
   onEnded() {
     const { data } = this.state;
@@ -59,6 +69,7 @@ class Experiment extends React.Component {
       answers: data,
       browserWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
       browserHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+      thePPI: this.getDocumentPPI(),
     };
     sendData(dataWithBrowserInfo);
   }
