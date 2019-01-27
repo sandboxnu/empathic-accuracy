@@ -8,20 +8,21 @@ import { questionType } from '../types';
 import Instructions from './Instructions';
 
 const StageEnum = { instructions: 1, experiment: 2, done: 3 };
+const INITIALSTATE = {
+  lastPos: 0,
+  justReset: false,
+  paused: false,
+  data: [],
+  stage: StageEnum.instructions,
+  showQuestionTime: 0,
+  startTime: 0,
+  elapsedTotalTime: 0,
+};
 
 class Experiment extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      lastPos: 0,
-      justReset: false,
-      paused: false,
-      data: [],
-      stage: StageEnum.instructions,
-      showQuestionTime: 0,
-      startTime: 0,
-      elapsedTotalTime: 0,
-    };
+    this.state = INITIALSTATE;
   }
 
   componentDidMount() {
@@ -76,15 +77,20 @@ class Experiment extends React.Component {
   }
 
   onEnded() {
-    const { data, startTime } = this.state;
+    const { data, startTime, elapsedTotalTime } = this.state;
     const { sendData } = this.props;
-    sendData({ ...data, totalDuration: (Date.now() - startTime) / 1000 });
+    sendData({ ...data, totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000 });
     this.setState({
       stage: StageEnum.done,
     });
   }
 
   onClose() {
+    const { elapsedTotalTime, startTime } = this.state;
+    this.setState({
+      elapsedTotalTime: elapsedTotalTime + Date.now() - startTime,
+    });
+
     reactLocalStorage.setObject('var', this.state);
   }
 
@@ -142,7 +148,21 @@ class Experiment extends React.Component {
       case StageEnum.experiment:
         return this.renderExperiment();
       case StageEnum.done:
-        return (<span>Thank you for participating. You can close this browser tab.</span>);
+        return (
+          <div>
+            <span>Thank you for participating. You can close this browser tab. </span>
+            <button
+              type="button"
+              bsStyle="primary"
+              onClick={() => {
+                reactLocalStorage.clear();
+                this.setState(INITIALSTATE);
+              }}
+            >
+            Reset Progress
+            </button>
+          </div>
+        );
       default:
         return null;
     }
