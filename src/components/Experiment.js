@@ -3,6 +3,9 @@ import ReactPlayer from 'react-player';
 import PropTypes from 'prop-types';
 import VideoQuestions from './VideoQuestions';
 import { questionType } from '../types';
+import Instructions from './Instructions';
+
+const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 
 class Experiment extends React.Component {
   constructor(props) {
@@ -12,11 +15,17 @@ class Experiment extends React.Component {
       justReset: false,
       paused: false,
       data: [],
+      stage: StageEnum.instructions,
+      showQuestionTime: 0,
+      startTime: 0,
     };
   }
 
   onPause() {
-    this.setState({ paused: true });
+    this.setState({
+      paused: true,
+      showQuestionTime: Date.now(),
+    });
   }
 
   onPlay() {
@@ -45,9 +54,10 @@ class Experiment extends React.Component {
 
   // Add the new data point from VideoQuestions and resume the video
   onSubmit(newValue) {
-    const { data } = this.state;
+    const { data, showQuestionTime } = this.state;
+    const newerValue = { ...newValue, questionTime: (Date.now() - showQuestionTime) / 1000 };
     this.setState({
-      data: [...data, newValue],
+      data: [...data, newerValue],
       paused: false,
     });
   }
@@ -62,23 +72,43 @@ class Experiment extends React.Component {
       return ppi;
     }
 
+  componentDidMount() {
+    this.setState({
+      startTime: Date.now(),
+    });
+  }
+
   onEnded() {
-    const { data } = this.state;
+    const { data, startTime } = this.state;
     const { sendData } = this.props;
     const dataWithBrowserInfo = {
       answers: data,
       browserWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
       browserHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
       thePPI: this.getDocumentPPI(),
+      totalDuration: (Date.now() - startTime) / 1000,
     };
     sendData(dataWithBrowserInfo);
+    this.setState({
+      stage: StageEnum.done,
+    });
   }
 
   getPlayerRef(ref) {
     this.player = ref;
   }
 
-  render() {
+  renderInstructions() {
+    const { instructionScreens } = this.props;
+    return (
+      <Instructions
+        onFinish={() => this.setState({ stage: StageEnum.experiment })}
+        instructionScreens={instructionScreens}
+      />
+    );
+  }
+
+  renderExperiment() {
     const { videoId, questions } = this.props;
     const { paused } = this.state;
     const videoUrl = `https://vimeo.com/${videoId}`;
@@ -108,12 +138,28 @@ class Experiment extends React.Component {
       </div>
     );
   }
+
+  render() {
+    const { stage } = this.state;
+
+    switch (stage) {
+      case StageEnum.instructions:
+        return this.renderInstructions();
+      case StageEnum.experiment:
+        return this.renderExperiment();
+      case StageEnum.done:
+        return (<span>Thank you for participating. You can close this browser tab.</span>);
+      default:
+        return null;
+    }
+  }
 }
 
 Experiment.propTypes = {
   videoId: PropTypes.string.isRequired,
   questions: PropTypes.arrayOf(questionType).isRequired,
   sendData: PropTypes.func.isRequired,
+  instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default Experiment;
