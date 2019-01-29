@@ -9,8 +9,7 @@ import Instructions from './Instructions';
 
 const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 const INITIALSTATE = {
-  lastPos: 0,
-  justReset: false,
+  restoredPos: 0,
   paused: false,
   data: [],
   stage: StageEnum.instructions,
@@ -27,7 +26,6 @@ class Experiment extends React.Component {
 
   componentDidMount() {
     const restoredState = reactLocalStorage.getObject('var');
-    console.log(restoredState);
     this.setState({
       ...restoredState,
       startTime: Date.now(),
@@ -44,6 +42,11 @@ class Experiment extends React.Component {
     });
   }
 
+  // Seek the player to the position in video restored by localstorage.
+  onReady() {
+    const { restoredPos } = this.state;
+    this.player.seekTo(restoredPos);
+  }
 
   onPause() {
     this.setState({
@@ -56,26 +59,7 @@ class Experiment extends React.Component {
     this.setState({ paused: false });
   }
 
-  // Keep track of video progress to override user skipping around.
-  // Would just be better to hide controls, but that requires Vimeo Plus
-  onProgress({ played }) {
-    this.setState({ lastPos: played });
-  }
-
-  // Reset the video if user tries skipping around.
-  onSeek() {
-    // Have to keep track of justReset to avoid looping onSeek.
-    const { justReset, lastPos } = this.state;
-    if (justReset) {
-      this.setState({ justReset: false });
-    } else {
-      this.setState({ justReset: true });
-      this.player.seekTo(lastPos);
-      // eslint-disable-next-line no-alert, no-undef
-      alert('Please do not skip around the video');
-    }
-  }
-
+  // Send data up to server
   onEnded() {
     const { data, startTime, elapsedTotalTime } = this.state;
     const { sendData } = this.props;
@@ -85,13 +69,16 @@ class Experiment extends React.Component {
     });
   }
 
+  // The user has closed the tab - save data to localstorage.
   onClose() {
     const { elapsedTotalTime, startTime } = this.state;
-    this.setState({
+    const save = {
+      ...this.state,
       elapsedTotalTime: elapsedTotalTime + Date.now() - startTime,
-    });
+      restoredPos: this.player.getCurrentTime(),
+    };
 
-    reactLocalStorage.setObject('var', this.state);
+    reactLocalStorage.setObject('var', save);
   }
 
   getPlayerRef(ref) {
@@ -117,19 +104,19 @@ class Experiment extends React.Component {
         <ReactPlayer
           ref={r => this.getPlayerRef(r)}
           url={videoUrl}
+          onReady={() => this.onReady()}
           onPause={() => this.onPause()}
           onPlay={() => this.onPlay()}
-          onProgress={p => this.onProgress(p)}
           onSeek={() => this.onSeek()}
           onEnded={() => this.onEnded()}
           playing={!paused}
         />
         <div className="questionContainer">
-          {paused ? (
+          {paused && this.player ? (
             <VideoQuestions
               onSubmit={n => this.onSubmit(n)}
               questions={questions}
-              lastPos={this.player.getCurrentTime()}
+              videoPos={this.player.getCurrentTime()}
             />
           ) : (
             <div className="questionPlaceholder">Pause the video and questions will appear here.</div>
@@ -151,6 +138,7 @@ class Experiment extends React.Component {
         return (
           <div>
             <span>Thank you for participating. You can close this browser tab. </span>
+            <br />
             <button
               type="button"
               bsStyle="primary"
@@ -159,7 +147,7 @@ class Experiment extends React.Component {
                 this.setState(INITIALSTATE);
               }}
             >
-            Reset Progress
+            Start again
             </button>
           </div>
         );
