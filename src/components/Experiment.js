@@ -63,8 +63,8 @@ class Experiment extends React.Component {
   onEnded() {
     const { data, startTime, elapsedTotalTime } = this.state;
     const { sendData, completionID } = this.props;
-    sendData({ 
-      ...data, 
+    sendData({
+      ...data,
       totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
       completionID,
     });
@@ -147,7 +147,6 @@ class Experiment extends React.Component {
         </p>
         <button
           type="button"
-          bsStyle="primary"
           onClick={() => {
             reactLocalStorage.clear();
             this.setState(INITIALSTATE);
