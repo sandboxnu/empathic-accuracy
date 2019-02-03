@@ -4,6 +4,7 @@ import React from 'react';
 import { questionType } from '../types';
 import MultipleChoiceQuestion from './MultipleChoiceQuestion';
 import OpenQuestion from './OpenQuestion';
+import GridQuestion from './GridQuestion';
 
 class VideoQuestions extends React.Component {
   // Get the Informed form api to extract form values
@@ -29,7 +30,7 @@ class VideoQuestions extends React.Component {
         case 'mc': return <MultipleChoiceQuestion key={id} {...question} />;
         case 'scale': return <span>scale questions not supported yet</span>;
         case 'open': return <OpenQuestion key={id} {...question} />;
-        case 'grid': return <span>scale questions not supported yet</span>;
+        case 'grid': return <GridQuestion key={id} {...question} />;
         default: return null;
       }
     });

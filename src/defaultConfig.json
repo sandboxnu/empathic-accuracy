@@ -15,6 +15,11 @@
       "type": "open",
       "id": "2",
       "label": "other comments"
+    },
+    {
+      "type": "grid",
+      "id": "3",
+      "label": "grid"
     }
   ]
 }
