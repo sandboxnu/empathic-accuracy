@@ -13,10 +13,10 @@ class VideoQuestions extends React.Component {
 
   // Pass the form values up
   handleSubmit() {
-    const { onSubmit } = this.props;
-    var answers = this.formApi.getState().values;
+    const { onSubmit, videoPos } = this.props;
+    const answers = this.formApi.getState().values;
     // add the actual time stamp user is at here:
-    answers.timestamp = this.props.lastPos;
+    answers.timestamp = videoPos;
     onSubmit(answers);
   }
 
@@ -49,6 +49,7 @@ class VideoQuestions extends React.Component {
 VideoQuestions.propTypes = {
   questions: PropTypes.arrayOf(questionType).isRequired,
   onSubmit: PropTypes.func.isRequired,
+  videoPos: PropTypes.number.isRequired,
 };
 
 export default VideoQuestions;
