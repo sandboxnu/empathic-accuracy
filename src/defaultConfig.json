@@ -15,6 +15,16 @@
       "type": "open",
       "id": "2",
       "label": "other comments"
-    }
+  },
+  {
+      "type": "scale",
+      "id": "3",
+      "label": "test"
+  },
+  {
+      "type": "grid",
+      "id": "4",
+      "label": "grid"
+  }
   ]
 }
