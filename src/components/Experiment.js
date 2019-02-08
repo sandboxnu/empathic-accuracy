@@ -63,11 +63,15 @@ class Experiment extends React.Component {
   onEnded() {
     const { data, startTime, elapsedTotalTime } = this.state;
     const { sendData, completionID } = this.props;
-    sendData({
-      ...data,
+    const dataWithBrowserInfo = {
+      answers: data,
+      browserWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      browserHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
       totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
       completionID,
-    });
+    };
+    sendData(dataWithBrowserInfo);
+
     this.setState({
       stage: StageEnum.done,
     });
