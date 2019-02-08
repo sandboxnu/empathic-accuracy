@@ -1,12 +1,33 @@
-a {
-  text-decoration: none;
+button {
   display: inline-block;
-  padding: 8px 16px;
+  border: none;
+  padding: 10px 16px;
+  text-decoration: none;
+  background-color: #3350a0;
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: 1.15em;
+  font-weight: 400;
+  cursor: pointer;
+  text-align: center;
+  transition: background 250ms ease-in-out, 
+              transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
-a:hover {
-  background-color: #253b77;
-  color: white;
+button:hover,
+button:focus {
+  background: #253b77;
+}
+
+button:focus {
+    outline: 1px solid #fff;
+    outline-offset: -4px;
+}
+
+button:active {
+    transform: scale(0.99);
 }
 
 #opaqueLayer {
@@ -51,20 +72,11 @@ a:hover {
   padding-bottom: 20px;
 }
 
-.navigationButton {
-  border-radius: 5%;
-  background-color: #3350a0;
-  color: white;
-  font-size: 1.25em;
-  font-weight: 400;
-}
-
 .buttonContainer {
   display: flex;
   width: 100%;
   justify-content: space-between;
 }
-
 
 form .likert {
   list-style:none;
@@ -97,6 +109,10 @@ form .likert li input[type=radio] {
   top:0;
   left:50%;
   margin-left:-6px;
-
 }
 form .likert li label {width:100%;}
+
+.completionID {
+  font-weight: bold;
+}
+
