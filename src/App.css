@@ -66,16 +66,6 @@ a:hover {
 }
 
 
-
-
-
-form .statement {
-  display:block;
-  font-size: 14px;
-  font-weight: bold;
-  padding: 10px 0 10px 5%;
-  margin-bottom:10px;
-}
 form .likert {
   list-style:none;
   width:100%;
@@ -91,7 +81,7 @@ form .likert:before {
   top:11px;
   left:9.5%;
   display:block;
-  background-color:#efefef;
+  background-color:#fff;
   height:4px;
   width:78%;
 }
