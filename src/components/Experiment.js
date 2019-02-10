@@ -83,7 +83,7 @@ class Experiment extends React.Component {
     const save = {
       ...this.state,
       elapsedTotalTime: elapsedTotalTime + Date.now() - startTime,
-      restoredPos: this.player.getCurrentTime(),
+      restoredPos: this.player.getCurrentTime() || 0,
     };
 
     reactLocalStorage.setObject('var', save);

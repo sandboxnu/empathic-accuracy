@@ -9,6 +9,7 @@ class MultipleChoiceQuestion extends React.Component {
     const radios = choices.reduce((acc, choice, idx) => {
       const choiceId = `radio${id}-${idx}`;
       // the key property is required by React to identify list elements.
+      acc.push(<br />);
       acc.push(<Radio key={choiceId} value={choice} id={choiceId} />);
       acc.push(<label key={`label${choiceId}`} htmlFor={choiceId}>{choice}</label>);
       return acc;
