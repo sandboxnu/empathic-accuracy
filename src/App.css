@@ -79,7 +79,11 @@ button:active {
 }
 
 .grid {
-  width: 400px;
+  width: 400px; 
+}
+
+.configForm {
+  min-width: 400px;
 }
 form .likert {
   list-style:none;
