@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 
-import Form from 'react-jsonschema-form';
+import Form from 'react-jsonschema-form-bs4';
 
 const schema = {
   title: 'Todo',
