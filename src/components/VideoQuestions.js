@@ -4,6 +4,7 @@ import React from 'react';
 import { questionType } from '../types';
 import MultipleChoiceQuestion from './MultipleChoiceQuestion';
 import OpenQuestion from './OpenQuestion';
+import ScaleQuestion from './ScaleQuestion';
 
 class VideoQuestions extends React.Component {
   // Get the Informed form api to extract form values
@@ -13,10 +14,10 @@ class VideoQuestions extends React.Component {
 
   // Pass the form values up
   handleSubmit() {
-    const { onSubmit } = this.props;
-    var answers = this.formApi.getState().values;
+    const { onSubmit, videoPos } = this.props;
+    const answers = this.formApi.getState().values;
     // add the actual time stamp user is at here:
-    answers.timestamp = this.props.lastPos;
+    answers.timestamp = videoPos;
     onSubmit(answers);
   }
 
@@ -27,7 +28,7 @@ class VideoQuestions extends React.Component {
       const { type, id } = question;
       switch (type) {
         case 'mc': return <MultipleChoiceQuestion key={id} {...question} />;
-        case 'scale': return <span>scale questions not supported yet</span>;
+        case 'scale': return <ScaleQuestion key={id} {...question} />;
         case 'open': return <OpenQuestion key={id} {...question} />;
         case 'grid': return <span>scale questions not supported yet</span>;
         default: return null;
@@ -49,6 +50,7 @@ class VideoQuestions extends React.Component {
 VideoQuestions.propTypes = {
   questions: PropTypes.arrayOf(questionType).isRequired,
   onSubmit: PropTypes.func.isRequired,
+  videoPos: PropTypes.number.isRequired,
 };
 
 export default VideoQuestions;

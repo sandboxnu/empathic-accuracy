@@ -22,7 +22,28 @@ class ScaleQuestion extends React.Component {
       <div>
         <label htmlFor={id}>{label}</label>
         <RadioGroup id={id} field={id}>
-          {this.renderChoices()}
+        <ul className='likert'>
+          <li>
+            <Radio id="strong_agree" name="likert" value="strong_agree" />
+            <label htmlFor="strong_agree">Strongly agree</label>
+          </li>
+          <li>
+            <Radio id="agree" name="likert" value="agree" />
+            <label htmlFor="agree">Agree</label>
+          </li>
+          <li>
+            <Radio id="neutral" name="likert" value="neutral" />
+            <label htmlFor="neutral">Neutral</label>
+          </li>
+          <li>
+            <Radio id="disagree" name="likert" value="disagree" />
+            <label htmlFor="disagree">Disagree</label>
+          </li>
+          <li>
+            <Radio id="strong_disagree" name="likert" value="strong_disagree" />
+            <label htmlFor="strong_disagree">Strongly disagree</label>
+          </li>
+        </ul>
         </RadioGroup>
       </div>
     );

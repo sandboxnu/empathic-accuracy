@@ -21,6 +21,10 @@ function sendData(collected) {
     .catch(error => console.log(error));
 }
 
+function generateID() {
+  return Math.random().toString(36).substring(2, 12).toUpperCase();
+}
+
 /* In charge of talking to server */
 function ExperimentOnline() {
   return (
@@ -29,7 +33,7 @@ function ExperimentOnline() {
         <div>
           {loading && <span>Loading...</span> }
           {data
-              && <Experiment {...data} sendData={sendData} />}
+              && <Experiment {...data} completionID={generateID()} sendData={sendData} />}
           {error && <span>Server error</span>}
         </div>
       )}

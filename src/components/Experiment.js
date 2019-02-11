@@ -1,68 +1,92 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
 import PropTypes from 'prop-types';
+import Beforeunload from 'react-beforeunload';
+import { reactLocalStorage } from 'reactjs-localstorage';
 import VideoQuestions from './VideoQuestions';
 import { questionType } from '../types';
 import Instructions from './Instructions';
 
 const StageEnum = { instructions: 1, experiment: 2, done: 3 };
+const INITIALSTATE = {
+  restoredPos: 0,
+  paused: false,
+  data: [],
+  stage: StageEnum.instructions,
+  showQuestionTime: 0,
+  startTime: 0,
+  elapsedTotalTime: 0,
+};
 
 class Experiment extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      lastPos: 0,
-      justReset: false,
+    this.state = INITIALSTATE;
+  }
+
+  componentDidMount() {
+    const restoredState = reactLocalStorage.getObject('var');
+    this.setState({
+      ...restoredState,
+      startTime: Date.now(),
+    });
+  }
+
+  // Add the new data point from VideoQuestions and resume the video
+  onSubmit(newValue) {
+    const { data, showQuestionTime } = this.state;
+    const newerValue = { ...newValue, questionTime: (Date.now() - showQuestionTime) / 1000 };
+    this.setState({
+      data: [...data, newerValue],
       paused: false,
-      data: [],
-      stage: StageEnum.instructions,
-    };
+    });
+  }
+
+  // Seek the player to the position in video restored by localstorage.
+  onReady() {
+    const { restoredPos } = this.state;
+    this.player.seekTo(restoredPos);
   }
 
   onPause() {
-    this.setState({ paused: true });
+    this.setState({
+      paused: true,
+      showQuestionTime: Date.now(),
+    });
   }
 
   onPlay() {
     this.setState({ paused: false });
   }
 
-  // Keep track of video progress to override user skipping around.
-  // Would just be better to hide controls, but that requires Vimeo Plus
-  onProgress({ played }) {
-    this.setState({ lastPos: played });
-  }
-
-  // Reset the video if user tries skipping around.
-  onSeek() {
-    // Have to keep track of justReset to avoid looping onSeek.
-    const { justReset, lastPos } = this.state;
-    if (justReset) {
-      this.setState({ justReset: false });
-    } else {
-      this.setState({ justReset: true });
-      this.player.seekTo(lastPos);
-      // eslint-disable-next-line no-alert, no-undef
-      alert('Please do not skip around the video');
-    }
-  }
-
-  // Add the new data point from VideoQuestions and resume the video
-  onSubmit(newValue) {
-    const { data } = this.state;
-    this.setState({
-      data: [...data, newValue],
-      paused: false,
-    });
-  }
-
+  // Send data up to server
   onEnded() {
-    const { data } = this.state;
-    const { sendData } = this.props;
-    sendData(data);
+    const { data, startTime, elapsedTotalTime } = this.state;
+    const { sendData, completionID } = this.props;
+    const dataWithBrowserInfo = {
+      answers: data,
+      browserWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      browserHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+      totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
+      completionID,
+    };
+    sendData(dataWithBrowserInfo);
+
     this.setState({
       stage: StageEnum.done,
     });
+  }
+
+  // The user has closed the tab - save data to localstorage.
+  onClose() {
+    const { elapsedTotalTime, startTime } = this.state;
+    const save = {
+      ...this.state,
+      elapsedTotalTime: elapsedTotalTime + Date.now() - startTime,
+      restoredPos: this.player.getCurrentTime() || 0,
+    };
+
+    reactLocalStorage.setObject('var', save);
   }
 
   getPlayerRef(ref) {
@@ -88,19 +112,19 @@ class Experiment extends React.Component {
         <ReactPlayer
           ref={r => this.getPlayerRef(r)}
           url={videoUrl}
+          onReady={() => this.onReady()}
           onPause={() => this.onPause()}
           onPlay={() => this.onPlay()}
-          onProgress={p => this.onProgress(p)}
           onSeek={() => this.onSeek()}
           onEnded={() => this.onEnded()}
           playing={!paused}
         />
         <div className="questionContainer">
-          {paused ? (
+          {paused && this.player ? (
             <VideoQuestions
               onSubmit={n => this.onSubmit(n)}
               questions={questions}
-              lastPos={this.player.getCurrentTime()}
+              videoPos={this.player.getCurrentTime()}
             />
           ) : (
             <div className="questionPlaceholder">Pause the video and questions will appear here.</div>
@@ -110,7 +134,35 @@ class Experiment extends React.Component {
     );
   }
 
-  render() {
+  renderDone() {
+    const { completionID } = this.props;
+    return (
+      <div className="instructionsContainer">
+        <p className="instructionsText">
+          Thank you for participating.
+        </p>
+        <p className="instructionsText">
+          Your completion ID is
+          {' '}
+          <span className="completionID">{completionID}</span>
+        </p>
+        <p className="instructionsText">
+        You can close this browser tab.
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            reactLocalStorage.clear();
+            this.setState(INITIALSTATE);
+          }}
+        >
+          Start again
+        </button>
+      </div>
+    );
+  }
+
+  renderStage() {
     const { stage } = this.state;
 
     switch (stage) {
@@ -119,10 +171,18 @@ class Experiment extends React.Component {
       case StageEnum.experiment:
         return this.renderExperiment();
       case StageEnum.done:
-        return (<span>Thank you for participating. You can close this browser tab.</span>);
+        return this.renderDone();
       default:
         return null;
     }
+  }
+
+  render() {
+    return (
+      <Beforeunload onBeforeunload={() => { this.onClose(); }}>
+        { this.renderStage() }
+      </Beforeunload>
+    );
   }
 }
 
@@ -131,6 +191,7 @@ Experiment.propTypes = {
   questions: PropTypes.arrayOf(questionType).isRequired,
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
+  completionID: PropTypes.string.isRequired,
 };
 
 export default Experiment;
