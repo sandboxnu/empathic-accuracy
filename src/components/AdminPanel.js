@@ -16,7 +16,7 @@ function AdminPanel() {
         <input type="submit" value="Upload!" />
       </form>
       <h1>Download collected data</h1>
-      <a href={`${SERVER_URL}/data`} target="_blank">Download collected data</a>
+      <a href={`${SERVER_URL}/data`} rel="noopener noreferrer" target="_blank">Download collected data</a>
     </div>
   );
 }

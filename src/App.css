@@ -78,6 +78,10 @@ button:active {
   justify-content: space-between;
 }
 
+.grid {
+  width: 400px; 
+}
+
 .configForm {
   min-width: 400px;
 }
