@@ -78,6 +78,9 @@ button:active {
   justify-content: space-between;
 }
 
+.configForm {
+  min-width: 400px;
+}
 form .likert {
   list-style:none;
   width:100%;
