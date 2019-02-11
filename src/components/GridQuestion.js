@@ -1,22 +1,38 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React from 'react';
+import { asField } from 'informed';
 import { gridQuestionType } from '../types';
 import grid from './affect.png';
 
-class GridQuestion extends React.Component {
-
-  render() {
-    return ( <div> <img onClick={(e) => console.log(this.clickEvent(e))}
-        className = "grid" src={grid} alt="Grid" /> </div>);
-  }
-
-  clickEvent(e) {
-    // e = Mouse click event.
-    var rect = e.target.getBoundingClientRect();
-    var x = e.clientX - rect.left; //x position within the element.
-    var y = e.clientY - rect.top;  //y position within the element.
-    return x;
-  }
+function getRelativeClick(e) {
+  // e = Mouse click event.
+  const rect = e.target.getBoundingClientRect();
+  const x = e.clientX - rect.left; // x position within the element.
+  const y = e.clientY - rect.top; // y position within the element.
+  return { x, y };
 }
+
+// Make GridQuestion play nice with the informed library
+// https://joepuzzo.github.io/informed/?selectedKind=CustomInputs&selectedStory=Creating Custom Inputs
+const GridQuestion = asField(({ fieldState, fieldApi, ...props }) => {
+  const { value = [] } = fieldState;
+  const { setValue } = fieldApi;
+  return (
+    <div>
+      {' '}
+      <img
+        onClick={e => setValue([getRelativeClick(e), ...value])}
+        className="grid"
+        src={grid}
+        alt="Grid"
+      />
+      {' '}
+
+    </div>
+  );
+});
+
 
 GridQuestion.propTypes = gridQuestionType;
 

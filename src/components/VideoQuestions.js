@@ -30,7 +30,7 @@ class VideoQuestions extends React.Component {
         case 'mc': return <MultipleChoiceQuestion key={id} {...question} />;
         case 'scale': return <span>scale questions not supported yet</span>;
         case 'open': return <OpenQuestion key={id} {...question} />;
-        case 'grid': return <GridQuestion key={id} {...question} />;
+        case 'grid': return <GridQuestion key={id} field={id} {...question} />;
         default: return null;
       }
     });
