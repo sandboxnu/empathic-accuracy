@@ -65,3 +65,6 @@ a:hover {
   justify-content: space-between;
 }
 
+.configForm {
+  min-width: 400px;
+}
