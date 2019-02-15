@@ -4,6 +4,7 @@ import React from 'react';
 import { questionType } from '../types';
 import MultipleChoiceQuestion from './MultipleChoiceQuestion';
 import OpenQuestion from './OpenQuestion';
+import GridQuestion from './GridQuestion';
 import ScaleQuestion from './ScaleQuestion';
 
 class VideoQuestions extends React.Component {
@@ -30,7 +31,7 @@ class VideoQuestions extends React.Component {
         case 'mc': return <MultipleChoiceQuestion key={id} {...question} />;
         case 'scale': return <ScaleQuestion key={id} {...question} />;
         case 'open': return <OpenQuestion key={id} {...question} />;
-        case 'grid': return <span>scale questions not supported yet</span>;
+        case 'grid': return <GridQuestion key={id} field={id} {...question} />;
         default: return null;
       }
     });
