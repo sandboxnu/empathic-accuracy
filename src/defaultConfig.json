@@ -19,11 +19,18 @@
   {
       "type": "scale",
       "id": "3",
-      "label": "test"
+      "label": "test",
+      "choices": ["Strongly agree", "Agree", "Neutral", "Disagree", "Strongly disagree", "idk"]
+  },
+  {
+      "type": "scale",
+      "id": "4",
+      "label": "test",
+      "choices": ["a ", "b", "c", "d", "e", "idk"]
   },
   {
       "type": "grid",
-      "id": "4",
+      "id": "5",
       "label": "grid"
   }
   ]
