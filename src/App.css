@@ -10,7 +10,7 @@ button {
   font-weight: 400;
   cursor: pointer;
   text-align: center;
-  transition: background 250ms ease-in-out, 
+  transition: background 250ms ease-in-out,
               transform 150ms ease;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -49,6 +49,7 @@ button:active {
   background-color: #EEE;
   border-radius: 5px;
   display: flex;
+  align-items: stretch;
 }
 
 .questionPlaceholder {
@@ -90,25 +91,17 @@ form .likert {
   width:100%;
   margin:0;
   padding:0 0 20px;
-  display:block;
+  display: flex;
   border-bottom:2px solid #efefef;
+  justify-content: space-around;
+  flex-direction: row;
 }
-form .likert:last-of-type {border-bottom:0;}
-form .likert:before {
-  content: '';
-  position:relative;
-  top:11px;
-  left:9.5%;
-  display:block;
-  background-color:#fff;
-  height:4px;
-  width:78%;
-}
+
 form .likert li {
   display:inline-block;
-  width:19%;
   text-align:center;
   vertical-align: top;
+  flex-basis: 0;
 }
 form .likert li input[type=radio] {
   display:block;
@@ -122,4 +115,3 @@ form .likert li label {width:100%;}
 .completionID {
   font-weight: bold;
 }
-

@@ -9,8 +9,12 @@ class ScaleQuestion extends React.Component {
     const radios = choices.reduce((acc, choice, idx) => {
       const choiceId = `radio${id}-${idx}`;
       // the key property is required by React to identify list elements.
-      acc.push(<Radio key={choiceId} value={choice} id={choiceId} />);
-      acc.push(<label key={`label${choiceId}`} htmlFor={choiceId}>{choice}</label>);
+      acc.push(
+        <li>
+          <Radio id={choiceId} name="likert" value={choice} />
+          <label htmlFor={choiceId}>{choice}</label>
+        </li>,
+      );
       return acc;
     }, []);
     return radios;
@@ -22,27 +26,8 @@ class ScaleQuestion extends React.Component {
       <div>
         <label htmlFor={id}>{label}</label>
         <RadioGroup id={id} field={id}>
-        <ul className='likert'>
-          <li>
-            <Radio id="strong_agree" name="likert" value="strong_agree" />
-            <label htmlFor="strong_agree">Strongly agree</label>
-          </li>
-          <li>
-            <Radio id="agree" name="likert" value="agree" />
-            <label htmlFor="agree">Agree</label>
-          </li>
-          <li>
-            <Radio id="neutral" name="likert" value="neutral" />
-            <label htmlFor="neutral">Neutral</label>
-          </li>
-          <li>
-            <Radio id="disagree" name="likert" value="disagree" />
-            <label htmlFor="disagree">Disagree</label>
-          </li>
-          <li>
-            <Radio id="strong_disagree" name="likert" value="strong_disagree" />
-            <label htmlFor="strong_disagree">Strongly disagree</label>
-          </li>
+        <ul className='likert' >
+          {this.renderChoices()}
         </ul>
         </RadioGroup>
       </div>
