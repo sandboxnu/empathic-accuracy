@@ -82,6 +82,10 @@ button:active {
   width: 400px;
 }
 
+.configForm {
+  min-width: 400px;
+}
+
 .grid .circle {
   position: relative;
   border-radius: 50%;
