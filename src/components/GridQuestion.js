@@ -16,19 +16,18 @@ function getRelativeClick(e) {
 // Make GridQuestion play nice with the informed library
 // https://joepuzzo.github.io/informed/?selectedKind=CustomInputs&selectedStory=Creating Custom Inputs
 const GridQuestion = asField(({ fieldState, fieldApi, ...props }) => {
-  const { value = [] } = fieldState;
+  const { value = {} } = fieldState;
   const { setValue } = fieldApi;
   return (
-    <div>
-      {' '}
+    <div className="grid">
+      {value ? (
+        <div className="circle" style={{ top: value.y, left: value.x }} />
+      ) : null}
       <img
-        onClick={e => setValue([getRelativeClick(e), ...value])}
-        className="grid"
+        onClick={e => setValue(getRelativeClick(e))}
         src={grid}
         alt="Grid"
       />
-      {' '}
-
     </div>
   );
 });
