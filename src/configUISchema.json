@@ -1,0 +1,7 @@
+{
+  "instructionScreens": {
+    "items": {
+      "ui:widget": "textarea"
+    }
+  }
+}
