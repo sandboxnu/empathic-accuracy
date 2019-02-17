@@ -76,7 +76,7 @@
           }
         }
       }
-    }
+  },
+  "completionLink": { "type": "string", "title": "Completion Link: ", "default": "www.google.com" }
   }
 }
-

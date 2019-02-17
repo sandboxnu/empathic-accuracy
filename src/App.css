@@ -80,7 +80,7 @@ button:active {
 }
 
 .grid {
-  width: 400px; 
+  width: 400px;
 }
 
 .configForm {
@@ -113,5 +113,9 @@ form .likert li input[type=radio] {
 form .likert li label {width:100%;}
 
 .completionID {
+  font-weight: bold;
+}
+
+.completionLink {
   font-weight: bold;
 }

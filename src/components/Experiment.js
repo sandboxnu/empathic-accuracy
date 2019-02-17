@@ -134,7 +134,7 @@ class Experiment extends React.Component {
   }
 
   renderDone() {
-    const { completionID } = this.props;
+    const { completionID, completionLink } = this.props;
     return (
       <div className="instructionsContainer">
         <p className="instructionsText">
@@ -144,6 +144,11 @@ class Experiment extends React.Component {
           Your completion ID is
           {' '}
           <span className="completionID">{completionID}</span>
+        </p>
+        <p className="instructionsText">
+          Please take this survey at the following link:
+          {' '}
+          <a href={completionLink}>{completionLink}</a>
         </p>
         <p className="instructionsText">
         You can close this browser tab.
@@ -191,6 +196,7 @@ Experiment.propTypes = {
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
   completionID: PropTypes.string.isRequired,
+  completionLink: PropTypes.string.isRequired,
 };
 
 export default Experiment;
