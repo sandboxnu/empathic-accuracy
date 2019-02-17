@@ -87,13 +87,24 @@ form .OpenQuestion {
   justify-content: space-between;
 }
 
-.grid {
+.grid img {
   width: 400px;
 }
 
 .configForm {
   min-width: 400px;
 }
+
+.grid .circle {
+  position: relative;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  margin-bottom: -5px;
+  background: #000;
+}
+
 form .likert {
   list-style:none;
   width:100%;
