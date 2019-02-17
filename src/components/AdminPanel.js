@@ -43,7 +43,8 @@ class AdminPanel extends Component {
   onClose(e) {
     const { configOnServer, formData } = this.state;
     if (JSON.stringify(configOnServer) !== JSON.stringify(formData)) {
-      return e.preventDefault();
+      e.preventDefault();
+      return 'You have unsaved changes';
     }
     return null;
   }
