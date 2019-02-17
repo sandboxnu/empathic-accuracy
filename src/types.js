@@ -1,5 +1,5 @@
 import {
-  number, string, arrayOf, exact, oneOfType, oneOf,
+  string, arrayOf, oneOf,
 } from 'prop-types';
 
 const commonQuestion = {
@@ -16,9 +16,7 @@ export const mcQuestionType = {
 export const scaleQuestionType = {
   ...commonQuestion,
   type: oneOf(['scale']).isRequired,
-  leftLabel: string.isRequired,
-  rightLabel: string.isRequired,
-  numChoices: number.isRequired,
+  choices: arrayOf(string).isRequired,
 };
 
 export const openQuestionType = {
@@ -29,13 +27,4 @@ export const openQuestionType = {
 export const gridQuestionType = {
   ...commonQuestion,
   type: oneOf(['grid']).isRequired,
-  xaxis: string.isRequired,
-  yaxis: string.isRequired,
 };
-
-export const questionType = oneOfType([
-  exact(mcQuestionType),
-  exact(scaleQuestionType),
-  exact(openQuestionType),
-  exact(gridQuestionType),
-]);

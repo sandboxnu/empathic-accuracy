@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Beforeunload from 'react-beforeunload';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import VideoQuestions from './VideoQuestions';
-import { questionType } from '../types';
 import Instructions from './Instructions';
 
 const StageEnum = { instructions: 1, experiment: 2, done: 3 };
@@ -188,7 +187,7 @@ class Experiment extends React.Component {
 
 Experiment.propTypes = {
   videoId: PropTypes.string.isRequired,
-  questions: PropTypes.arrayOf(questionType).isRequired,
+  questions: PropTypes.arrayOf(PropTypes.object).isRequired,
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
   completionID: PropTypes.string.isRequired,
