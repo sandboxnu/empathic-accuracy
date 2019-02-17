@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'informed';
+import { TextArea } from 'informed';
 import { openQuestionType } from '../types';
 
 
@@ -9,7 +9,9 @@ class OpenQuestion extends React.Component {
     return (
       <div>
         <label htmlFor={id}>{label}</label>
-        <Text id={id} field={id} />
+        <br />
+        <TextArea id={id} field={id} cols="30" rows="5" className="OpenQuestion"
+          placeholder="Add your response here." />
       </div>
     );
   }
