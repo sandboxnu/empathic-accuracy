@@ -1,0 +1,82 @@
+{
+  "type": "object",
+  "required": ["videoId"],
+  "properties": {
+    "videoId": { "type": "string", "title": "Vimeo Video ID", "default": "314909286/3623e43bae" },
+    "instructionScreens": {
+      "type": "array",
+      "title": "Instructions",
+      "items": {
+        "type": "string",
+        "title": ""
+      },
+      "default": [
+        "Welcome to the empathy study, and thanks for participating! On the following screen, you will see more instructions on what you will be asked to do.",
+        "In this study, you will be shown a video and asked a set of questions about the video. You can answer these questions at any point. To be shown the questions, just pause the video. Click next to continue to the experiment."
+      ]
+    },
+    "questions": {
+      "type": "array",
+      "title": "Questions",
+      "items": {
+        "type": "object",
+        "title": "Question",
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type of Question",
+            "enum": ["mc", "scale", "grid", "open"],
+            "enumNames": ["Multiple Choice", "Rating Scale", "Affect Grid", "Open Response"],
+            "default": "mc"
+          },
+          "label": { "type": "string", "title": "Question Label" }
+        },
+        "dependencies": {
+          "type": {
+            "oneOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "mc"
+                    ]
+                  },
+                  "choices": {
+                    "type": "array",
+                    "title": "Answer Choices",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "scale"
+                    ]
+                  },
+                  "choices": {
+                    "type": "array",
+                    "title": "Scale Label",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              {
+                "properties": { "type": { "enum": [ "open" ] } }
+              },
+              {
+                "properties": { "type": { "enum": [ "grid" ] } }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+

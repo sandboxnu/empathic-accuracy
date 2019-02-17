@@ -1,7 +1,7 @@
+/* eslint-disable react/no-array-index-key */
 import { Form } from 'informed';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { questionType } from '../types';
 import MultipleChoiceQuestion from './MultipleChoiceQuestion';
 import OpenQuestion from './OpenQuestion';
 import GridQuestion from './GridQuestion';
@@ -25,12 +25,13 @@ class VideoQuestions extends React.Component {
   // Render a list of questions
   renderQuestions() {
     const { questions } = this.props;
-    const formQuestions = questions.map((question) => {
-      const { type, id } = question;
+    const formQuestions = questions.map((question, idx) => {
+      const { type } = question;
+      const id = idx.toString();
       switch (type) {
-        case 'mc': return <MultipleChoiceQuestion key={id} {...question} />;
-        case 'scale': return <ScaleQuestion key={id} {...question} />;
-        case 'open': return <OpenQuestion key={id} {...question} />;
+        case 'mc': return <MultipleChoiceQuestion key={id} id={id} {...question} />;
+        case 'scale': return <ScaleQuestion key={id} id={id} {...question} />;
+        case 'open': return <OpenQuestion key={id} id={id} {...question} />;
         case 'grid': return <GridQuestion key={id} field={id} {...question} />;
         default: return null;
       }
@@ -49,7 +50,7 @@ class VideoQuestions extends React.Component {
 }
 
 VideoQuestions.propTypes = {
-  questions: PropTypes.arrayOf(questionType).isRequired,
+  questions: PropTypes.arrayOf(PropTypes.object).isRequired,
   onSubmit: PropTypes.func.isRequired,
   videoPos: PropTypes.number.isRequired,
 };
