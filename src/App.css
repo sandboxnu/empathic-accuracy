@@ -52,6 +52,10 @@ button:active {
   align-items: stretch;
 }
 
+.questionContainer form {
+    width: 100%;
+}
+
 .questionPlaceholder {
   margin: auto;
 }
@@ -102,6 +106,7 @@ form .likert li {
   text-align:center;
   vertical-align: top;
   flex-basis: 0;
+  flex-grow: 1;
 }
 form .likert li input[type=radio] {
   display:block;
