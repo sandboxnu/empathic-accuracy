@@ -52,6 +52,14 @@ button:active {
   align-items: stretch;
 }
 
+.questionContainer form {
+    width: 100%;
+}
+
+form .OpenQuestion {
+    width: 100%;
+}
+
 .questionPlaceholder {
   margin: auto;
 }
@@ -79,7 +87,7 @@ button:active {
   justify-content: space-between;
 }
 
-.grid img{
+.grid img {
   width: 400px;
 }
 
@@ -113,6 +121,7 @@ form .likert li {
   text-align:center;
   vertical-align: top;
   flex-basis: 0;
+  flex-grow: 1;
 }
 form .likert li input[type=radio] {
   display:block;
@@ -124,5 +133,9 @@ form .likert li input[type=radio] {
 form .likert li label {width:100%;}
 
 .completionID {
+  font-weight: bold;
+}
+
+.completionLink {
   font-weight: bold;
 }
