@@ -1,8 +1,16 @@
 {
   "type": "object",
-  "required": ["videoId"],
+  "required": ["videoIds"],
   "properties": {
-    "videoId": { "type": "string", "title": "Vimeo Video ID", "default": "314909286/3623e43bae" },
+    "videoIds": { 
+      "type": "array", 
+      "title": "Vimeo Video IDs", 
+      "items": {
+        "type": "string",
+        "title": ""
+      },
+      "default": ["314909286/3623e43bae"] 
+    },
     "instructionScreens": {
       "type": "array",
       "title": "Instructions",

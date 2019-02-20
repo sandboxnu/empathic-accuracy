@@ -10,7 +10,8 @@ const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 const INITIALSTATE = {
   restoredPos: 0,
   paused: false,
-  data: [],
+  data: {},
+  videoIndex: 0,
   stage: StageEnum.instructions,
   showQuestionTime: 0,
   startTime: 0,
@@ -33,10 +34,14 @@ class Experiment extends React.Component {
 
   // Add the new data point from VideoQuestions and resume the video
   onSubmit(newValue) {
-    const { data, showQuestionTime } = this.state;
+    const { videoIndex, data, showQuestionTime } = this.state;
+    const { videoIds } = this.props;
+    const currentVideo = videoIds[videoIndex];
+    const videoData = data[currentVideo] || [];
     const newerValue = { ...newValue, questionTime: (Date.now() - showQuestionTime) / 1000 };
+    const updatedData = { ...data, [currentVideo]: [...videoData, newerValue] };
     this.setState({
-      data: [...data, newerValue],
+      data: updatedData,
       paused: false,
     });
   }
@@ -58,8 +63,38 @@ class Experiment extends React.Component {
     this.setState({ paused: false });
   }
 
+  onVideoEnd() {
+    const { videoIds } = this.props;
+    const { videoIndex } = this.state;
+    if (videoIndex === videoIds.length - 1) {
+      this.sendData();
+    } else {
+      this.setState({
+        videoIndex: videoIndex + 1,
+        paused: false,
+      });
+    }
+  }
+
+  // The user has closed the tab - save data to localstorage.
+  onClose() {
+    const { elapsedTotalTime, startTime, stage } = this.state;
+    const restoredPos = stage === 2 ? this.player.getCurrentTime() : 0;
+    const save = {
+      ...this.state,
+      elapsedTotalTime: elapsedTotalTime + Date.now() - startTime,
+      restoredPos,
+    };
+
+    reactLocalStorage.setObject('var', save);
+  }
+
+  getPlayerRef(ref) {
+    this.player = ref;
+  }
+
   // Send data up to server
-  onEnded() {
+  sendData() {
     const { data, startTime, elapsedTotalTime } = this.state;
     const { sendData, completionID } = this.props;
     const dataWithBrowserInfo = {
@@ -76,22 +111,6 @@ class Experiment extends React.Component {
     });
   }
 
-  // The user has closed the tab - save data to localstorage.
-  onClose() {
-    const { elapsedTotalTime, startTime } = this.state;
-    const save = {
-      ...this.state,
-      elapsedTotalTime: elapsedTotalTime + Date.now() - startTime,
-      restoredPos: this.player.getCurrentTime() || 0,
-    };
-
-    reactLocalStorage.setObject('var', save);
-  }
-
-  getPlayerRef(ref) {
-    this.player = ref;
-  }
-
   renderInstructions() {
     const { instructionScreens } = this.props;
     return (
@@ -103,8 +122,9 @@ class Experiment extends React.Component {
   }
 
   renderExperiment() {
-    const { videoId, questions } = this.props;
-    const { paused } = this.state;
+    const { videoIds, questions } = this.props;
+    const { paused, videoIndex } = this.state;
+    const videoId = videoIds[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
       <div>
@@ -115,7 +135,7 @@ class Experiment extends React.Component {
           onPause={() => this.onPause()}
           onPlay={() => this.onPlay()}
           onSeek={() => this.onSeek()}
-          onEnded={() => this.onEnded()}
+          onEnded={() => this.onVideoEnd()}
           playing={!paused}
         />
         <div className="questionContainer">
@@ -191,7 +211,7 @@ class Experiment extends React.Component {
 }
 
 Experiment.propTypes = {
-  videoId: PropTypes.string.isRequired,
+  videoIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
