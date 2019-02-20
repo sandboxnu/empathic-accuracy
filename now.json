@@ -8,5 +8,8 @@
       {"src": "^/static/(.*)", "dest": "/static/$1"},
       {"src": "/.*", "dest": "/index.html"}
     ],
-    "alias": "empathic.sandboxneu.com"
+    "alias": "empathic.sandboxneu.com",
+    "env": {
+        "NODE_ENV": "production"
+    }
 }
