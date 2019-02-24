@@ -42,6 +42,14 @@ button:active {
   height: 100vh;
 }
 
+.questionContainer form > div {
+  display: none;
+}
+
+.questionContainer form div.activeQuestion {
+  display: block;
+}
+
 .questionContainer {
   margin-top: 10px;
   min-height: 100px;
@@ -82,6 +90,7 @@ form .OpenQuestion {
 }
 
 .buttonContainer {
+  max-width: 700px;
   display: flex;
   width: 100%;
   justify-content: space-between;
