@@ -1,6 +1,7 @@
 import React from 'react';
 import Fetch from 'react-fetch-component';
 import Axios from 'axios';
+import { reactLocalStorage } from 'reactjs-localstorage';
 import Experiment from './Experiment';
 
 const SERVER_URL = 'https://api.sandboxneu.com/empathic-accuracy';
@@ -22,7 +23,9 @@ function sendData(collected) {
 }
 
 function generateID() {
-  return Math.random().toString(36).substring(2, 12).toUpperCase();
+  const completionID = reactLocalStorage.get('completionID', Math.random().toString(36).substring(2, 12).toUpperCase());
+  reactLocalStorage.set('completionID', completionID);
+  return completionID;
 }
 
 /* In charge of talking to server */
