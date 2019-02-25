@@ -17,11 +17,32 @@ const INITIALSTATE = {
   startTime: 0,
   elapsedTotalTime: 0,
 };
+/**
+* Shuffles array in place.
+* @param {Array} a items An array containing the items.
+*/
+function shuffle(a) {
+  let j;
+  let x;
+  let i;
+  const b = [];
+  for (i = a.length - 1; i > 0; i -= 1) {
+    j = Math.floor(Math.random() * (i + 1));
+    x = a[i];
+    b[i] = a[j];
+    b[j] = x;
+  }
+  return b;
+}
 
 class Experiment extends React.Component {
   constructor(props) {
     super(props);
-    this.state = INITIALSTATE;
+    const { videoIds } = this.props;
+    this.state = {
+      shuffledVideos: shuffle(videoIds),
+      INITIALSTATE,
+    };
   }
 
   componentDidMount() {
@@ -34,9 +55,8 @@ class Experiment extends React.Component {
 
   // Add the new data point from VideoQuestions and resume the video
   onSubmit(newValue) {
-    const { videoIndex, data, showQuestionTime } = this.state;
-    const { videoIds } = this.props;
-    const currentVideo = videoIds[videoIndex];
+    const { videoIndex, data, showQuestionTime, shuffledVideos } = this.state;
+    const currentVideo = shuffledVideos[videoIndex];
     const videoData = data[currentVideo] || [];
     const newerValue = { ...newValue, questionTime: (Date.now() - showQuestionTime) / 1000 };
     const updatedData = { ...data, [currentVideo]: [...videoData, newerValue] };
@@ -64,9 +84,8 @@ class Experiment extends React.Component {
   }
 
   onVideoEnd() {
-    const { videoIds } = this.props;
-    const { videoIndex } = this.state;
-    if (videoIndex === videoIds.length - 1) {
+    const { videoIndex, shuffledVideos } = this.state;
+    if (videoIndex === shuffledVideos.length - 1) {
       this.sendData();
     } else {
       this.setState({
@@ -122,9 +141,9 @@ class Experiment extends React.Component {
   }
 
   renderExperiment() {
-    const { videoIds, questions } = this.props;
-    const { paused, videoIndex } = this.state;
-    const videoId = videoIds[videoIndex];
+    const { questions } = this.props;
+    const { paused, videoIndex, shuffledVideos } = this.state;
+    const videoId = shuffledVideos[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
       <div>
