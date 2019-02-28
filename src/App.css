@@ -96,6 +96,39 @@ form .OpenQuestion {
   justify-content: space-between;
 }
 
+.video {
+  margin-top: 10px;
+  box-shadow: 3px 3px 5px 1px #ccc;
+}
+
+.questionContainer form input[type=radio] {
+  margin-right: 10px;
+}
+
+.questionContainer form .questionTitle {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.questionContainer form .likertQ {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.questionContainer label {
+  font-weight: lighter;
+}
+
+.questionContainer form button {
+  float: right;
+  padding: 5px 10px;
+}
+
+.questionContainer form textarea {
+  padding-left: 10px !important;
+  padding-top: 10px;
+}
+
 .grid img {
   width: 400px;
 }

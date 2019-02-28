@@ -24,7 +24,7 @@ class ScaleQuestion extends React.Component {
     const { id, label } = this.props;
     return (
       <div>
-        <label htmlFor={id}>{label}</label>
+        <label className="questionTitle" htmlFor={id}>{label}</label>
         <RadioGroup id={id} field={id}>
         <ul className='likert' >
           {this.renderChoices()}

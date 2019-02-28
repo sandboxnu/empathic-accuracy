@@ -128,7 +128,7 @@ class Experiment extends React.Component {
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
       <div>
-        <ReactPlayer
+        <ReactPlayer className="video"
           ref={r => this.getPlayerRef(r)}
           url={videoUrl}
           onReady={() => this.onReady()}
