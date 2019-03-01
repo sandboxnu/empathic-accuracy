@@ -1,4 +1,9 @@
 {
+  "videoIds": {
+    "ui:options": {
+      "orderable": false
+    }
+  },
   "instructionScreens": {
     "items": {
       "ui:widget": "textarea"
