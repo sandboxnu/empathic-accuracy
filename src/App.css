@@ -70,6 +70,7 @@ form .OpenQuestion {
 
 .questionPlaceholder {
   margin: auto;
+  font-size: 16px;
 }
 
 .instructionsContainer {
@@ -105,6 +106,10 @@ form .OpenQuestion {
   margin-right: 10px;
 }
 
+.questionContainer form input[type=radio]:hover {
+  cursor: pointer;
+}
+
 .questionContainer form .questionTitle {
   font-size: 20px;
   font-weight: 500;
@@ -115,7 +120,7 @@ form .OpenQuestion {
   font-weight: 500;
 }
 
-.questionContainer label {
+.questionContainer label, .questionContainer .questionPlaceholder {
   font-weight: lighter;
 }
 
@@ -150,8 +155,7 @@ form .OpenQuestion {
 form .likert {
   list-style:none;
   width:100%;
-  margin:0;
-  padding:0 0 20px;
+  margin:10px 0px 10px 0px;
   display: flex;
   border-bottom:2px solid #efefef;
   justify-content: space-around;
@@ -180,4 +184,63 @@ form .likert li label {width:100%;}
 
 .completionLink {
   font-weight: bold;
+}
+
+.instructions2 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 3px 0px 0px 7px;
+}
+
+.instructions2:hover {
+  cursor: pointer;
+  color: #656569;
+  display: block;
+  transition: 0.1s;
+}
+
+.videoInstructions {
+  font-size: 100px;
+}
+
+.instructions2 .overlay {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0, 0.9);
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.instructions2 .overlay-content {
+  position: relative;
+  top: 25%;
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+}
+
+.instructions2 .overlay a {
+  padding: 8px;
+  text-decoration: none;
+  font-size: 36px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.instructions2 .overlay a:hover, .overlay a:focus {
+  color: #f1f1f1;
+}
+
+.instructions2 .overlay .closebtn {
+  position: absolute;
+  top: 20px;
+  right: 45px;
+  font-size: 60px;
 }

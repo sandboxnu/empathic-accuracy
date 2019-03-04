@@ -6,6 +6,7 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import VideoQuestions from './VideoQuestions';
 import Instructions from './Instructions';
 
+
 const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 const INITIALSTATE = {
   restoredPos: 0,
@@ -123,12 +124,14 @@ class Experiment extends React.Component {
 
   renderExperiment() {
     const { videoIds, questions } = this.props;
+    const { instructionScreens } = this.props;
     const { paused, videoIndex } = this.state;
     const videoId = videoIds[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
       <div>
-        <ReactPlayer className="video"
+        <ReactPlayer
+          className="video"
           ref={r => this.getPlayerRef(r)}
           url={videoUrl}
           onReady={() => this.onReady()}
@@ -138,6 +141,21 @@ class Experiment extends React.Component {
           onEnded={() => this.onVideoEnd()}
           playing={!paused}
         />
+        <div className="instructions2">
+          <div id="myNav" className="overlay">
+            <a href="javascript:void(0)" className="closebtn" onClick={() => { document.getElementById('myNav').style.width = '0%'; }}>&times;</a>
+            <Instructions className="videoInstructions"
+              onFinish={() => this.setState({ stage: StageEnum.experiment })}
+              instructionScreens={instructionScreens}
+            />
+            <div className="overlay-content">
+              <a href="asdf">About</a>
+            </div>
+          </div>
+          <span onClick={() => { document.getElementById('myNav').style.width = '100%'; }}>
+            Instructions
+          </span>
+        </div>
         <div className="questionContainer">
           {paused && this.player ? (
             <VideoQuestions
