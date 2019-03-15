@@ -21,18 +21,25 @@ const INITIALSTATE = {
 * Shuffles array in place.
 * @param {Array} a items An array containing the items.
 */
-function shuffle(a) {
-  let j;
-  let x;
-  let i;
-  const b = [];
-  for (i = a.length - 1; i > 0; i -= 1) {
-    j = Math.floor(Math.random() * (i + 1));
-    x = a[i];
-    b[i] = a[j];
-    b[j] = x;
+function shuffle(array) {
+  let counter = array.length;
+  const ret = array.slice();
+
+  // While there are elements in the array
+  while (counter > 0) {
+    // Pick a random index
+    const index = Math.floor(Math.random() * counter);
+
+    // Decrease counter by 1
+    counter -= 1;
+
+    // And swap the last element with it
+    const temp = ret[counter];
+    ret[counter] = ret[index];
+    ret[index] = temp;
   }
-  return b;
+
+  return ret;
 }
 
 class Experiment extends React.Component {
@@ -55,7 +62,9 @@ class Experiment extends React.Component {
 
   // Add the new data point from VideoQuestions and resume the video
   onSubmit(newValue) {
-    const { videoIndex, data, showQuestionTime, shuffledVideos } = this.state;
+    const {
+      videoIndex, data, showQuestionTime, shuffledVideos,
+    } = this.state;
     const currentVideo = shuffledVideos[videoIndex];
     const videoData = data[currentVideo] || [];
     const newerValue = { ...newValue, questionTime: (Date.now() - showQuestionTime) / 1000 };
