@@ -41,7 +41,7 @@ class Experiment extends React.Component {
     const { videoIds } = this.props;
     this.state = {
       shuffledVideos: shuffle(videoIds),
-      INITIALSTATE,
+      ...INITIALSTATE,
     };
   }
 
