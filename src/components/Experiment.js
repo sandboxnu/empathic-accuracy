@@ -125,7 +125,7 @@ class Experiment extends React.Component {
   renderExperiment() {
     const { videoIds, questions } = this.props;
     const { instructionScreens } = this.props;
-    const { paused, videoIndex } = this.state;
+    const { paused, videoIndex, isInstructionOpen } = this.state;
     const videoId = videoIds[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
@@ -142,19 +142,15 @@ class Experiment extends React.Component {
           playing={!paused}
         />
         <div className="instructions2">
-          <div id="myNav" className="overlay">
-            <a href="javascript:void(0)" className="closebtn" onClick={() => { document.getElementById('myNav').style.width = '0%'; }}>&times;</a>
-            <Instructions className="videoInstructions"
-              onFinish={() => this.setState({ stage: StageEnum.experiment })}
-              instructionScreens={instructionScreens}
-            />
+          <div id="myNav" className="overlay" style={{ width: (isInstructionOpen ? '100%' : '0%') }}>
+            <a href="javascript:void(0)" className="closebtn" onClick={() => { this.setState({ isInstructionOpen: false }); }}>&times;</a>
             <div className="overlay-content">
-              <a href="asdf">About</a>
+              <div>hello, instructions</div>
             </div>
           </div>
-          <span onClick={() => { document.getElementById('myNav').style.width = '100%'; }}>
-            Instructions
-          </span>
+          <div className="instructionsButton" onClick={() => { this.setState({ isInstructionOpen: true }); }}>
+            <button type="button">Help</button>
+          </div>
         </div>
         <div className="questionContainer">
           {paused && this.player ? (

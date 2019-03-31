@@ -193,11 +193,15 @@ form .likert li label {width:100%;}
   margin: 3px 0px 0px 7px;
 }
 
-.instructions2:hover {
+.instructions2 .instructionsButton:hover {
   cursor: pointer;
   color: #656569;
   display: block;
   transition: 0.1s;
+}
+
+.instructions2 .instructionsButton button {
+  padding: 5px 10px;
 }
 
 .videoInstructions {
@@ -205,6 +209,7 @@ form .likert li label {width:100%;}
 }
 
 .instructions2 .overlay {
+  color: #bebebe;
   height: 100%;
   width: 0;
   position: fixed;
