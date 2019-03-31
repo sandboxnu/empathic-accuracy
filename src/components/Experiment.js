@@ -148,7 +148,7 @@ class Experiment extends React.Component {
               <div>hello, instructions</div>
             </div>
           </div>
-          <div className="instructionsButton" onClick={() => { this.setState({ isInstructionOpen: true }); }}>
+          <div className="instructionsButton" onClick={() => { this.setState({ isInstructionOpen: true, paused: true }); }}>
             <button type="button">Help</button>
           </div>
         </div>
