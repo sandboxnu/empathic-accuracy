@@ -148,3 +148,7 @@ form .likert li label {width:100%;}
 .completionLink {
   font-weight: bold;
 }
+
+.panel h2{
+  margin-top:20px;
+}
