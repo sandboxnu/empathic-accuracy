@@ -129,7 +129,7 @@ class Experiment extends React.Component {
     const videoId = videoIds[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
-      <div>
+      <div className="Video">
         <ReactPlayer
           className="video"
           ref={r => this.getPlayerRef(r)}
@@ -140,6 +140,8 @@ class Experiment extends React.Component {
           onSeek={() => this.onSeek()}
           onEnded={() => this.onVideoEnd()}
           playing={!paused}
+          width = {window.innerWidth * 0.65}
+          height = {(window.innerWidth * 0.65)*0.5625}
         />
         <div className="instructions2">
           <div id="myNav" className="overlay" style={{ width: (isInstructionOpen ? '100%' : '0%') }}>

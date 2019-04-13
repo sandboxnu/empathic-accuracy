@@ -42,6 +42,10 @@ button:active {
   height: 100vh;
 }
 
+.Video {
+  width: 65%;
+}
+
 .questionContainer form > div {
   display: none;
 }
