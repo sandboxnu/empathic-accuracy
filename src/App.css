@@ -42,8 +42,8 @@ button:active {
   height: 100vh;
 }
 
-.Video {
-  width: 65%;
+.video {
+  box-shadow: 3px 3px 5px 1px #ccc;
 }
 
 .questionContainer form > div {
@@ -65,11 +65,11 @@ button:active {
 }
 
 .questionContainer form {
-    width: 100%;
+  width: 100%;
 }
 
 form .OpenQuestion {
-    width: 100%;
+  width: 100%;
 }
 
 .questionPlaceholder {
@@ -99,11 +99,6 @@ form .OpenQuestion {
   display: flex;
   width: 100%;
   justify-content: space-between;
-}
-
-.video {
-  margin-top: 10px;
-  box-shadow: 3px 3px 5px 1px #ccc;
 }
 
 .questionContainer form input[type=radio] {
@@ -191,10 +186,7 @@ form .likert li label {width:100%;}
 }
 
 .instructions2 {
-  position: absolute;
-  left: 0;
-  top: 0;
-  margin: 3px 0px 0px 7px;
+  left: 1%;
 }
 
 .instructions2 .instructionsButton:hover {
@@ -206,6 +198,20 @@ form .likert li label {width:100%;}
 
 .instructions2 .instructionsButton button {
   padding: 5px 10px;
+  background-color: #bebebe;
+  font-weight: lighter;
+  font-size: 13px;
+  color: #000000;
+}
+
+.instructionsButton {
+  position: fixed;
+  left: 0.5%;
+}
+
+.Video {
+  position: fixed;
+  top: 1%;
 }
 
 .videoInstructions {
@@ -231,7 +237,6 @@ form .likert li label {width:100%;}
   top: 25%;
   width: 100%;
   text-align: center;
-  margin-top: 30px;
 }
 
 .instructions2 .overlay a {

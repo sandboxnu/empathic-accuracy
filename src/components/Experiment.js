@@ -130,19 +130,6 @@ class Experiment extends React.Component {
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
       <div className="Video">
-        <ReactPlayer
-          className="video"
-          ref={r => this.getPlayerRef(r)}
-          url={videoUrl}
-          onReady={() => this.onReady()}
-          onPause={() => this.onPause()}
-          onPlay={() => this.onPlay()}
-          onSeek={() => this.onSeek()}
-          onEnded={() => this.onVideoEnd()}
-          playing={!paused}
-          width = {window.innerWidth * 0.65}
-          height = {(window.innerWidth * 0.65)*0.5625}
-        />
         <div className="instructions2">
           <div id="myNav" className="overlay" style={{ width: (isInstructionOpen ? '100%' : '0%') }}>
             <a href="javascript:void(0)" className="closebtn" onClick={() => { this.setState({ isInstructionOpen: false }); }}>&times;</a>
@@ -154,6 +141,20 @@ class Experiment extends React.Component {
             <button type="button">Help</button>
           </div>
         </div>
+        <ReactPlayer
+          className="video"
+          ref={r => this.getPlayerRef(r)}
+          url={videoUrl}
+          onReady={() => this.onReady()}
+          onPause={() => this.onPause()}
+          onPlay={() => this.onPlay()}
+          onSeek={() => this.onSeek()}
+          onEnded={() => this.onVideoEnd()}
+          playing={!paused}
+          width={window.innerWidth * 0.65}
+          height={(window.innerWidth * 0.65) * 0.5625}
+          // 0.5625 used to maintain video dimensions + avoid black bars
+        />
         <div className="questionContainer">
           {paused && this.player ? (
             <VideoQuestions
