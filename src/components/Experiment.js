@@ -162,7 +162,9 @@ class Experiment extends React.Component {
 
   renderExperiment() {
     const { questions } = this.props;
-    const { paused, videoIndex, shuffledVideos, isInstructionOpen } = this.state;
+    const {
+      paused, videoIndex, shuffledVideos, isInstructionOpen,
+    } = this.state;
     const videoId = shuffledVideos[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
@@ -202,13 +204,13 @@ class Experiment extends React.Component {
             onPlay={() => this.onPlay()}
             onSeek={() => this.onSeek()}
             onEnded={() => this.onVideoEnd()}
-            playing={!paused}
+            playing={true}
             width="100%"
             height="100%"
           />
         </div>
         <div className="questionContainer">
-          {paused && this.player ? (
+          {true && this.player ? (
             <VideoQuestions
               onSubmit={n => this.onSubmit(n)}
               questions={questions}
