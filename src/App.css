@@ -141,13 +141,19 @@ form .OpenQuestion {
   min-width: 400px;
 }
 
-.grid .circle {
+.grid .CircleContainer {
   position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.grid .circle {
+  position: absolute;
   border-radius: 50%;
   width: 10px;
   height: 10px;
   margin-left: -5px;
-  margin-bottom: -5px;
+  margin-top: -5px;
   background: #000;
 }
 
