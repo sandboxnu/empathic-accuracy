@@ -110,6 +110,8 @@ class Experiment extends React.Component {
         document.documentElement.clientHeight,
         window.innerHeight || 0,
       ),
+      videoWidth: this.player.wrapper.clientWidth,
+      videoHeight: this.player.wrapper.clientHeight,
       totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
       completionID,
     };
@@ -132,7 +134,6 @@ class Experiment extends React.Component {
 
   renderExperiment() {
     const { videoIds, questions } = this.props;
-    const { instructionScreens } = this.props;
     const { paused, videoIndex, isInstructionOpen } = this.state;
     const videoId = videoIds[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
