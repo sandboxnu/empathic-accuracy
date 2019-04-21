@@ -10,6 +10,7 @@
     "prop-types": "^15.6.2",
     "react": "^16.6.0",
     "react-beforeunload": "^1.0.4",
+    "react-burger-menu": "^2.6.5",
     "react-dom": "^16.6.0",
     "react-fetch-component": "^7.0.1",
     "react-jsonschema-form-bs4": "^1.0.6",

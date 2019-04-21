@@ -8,7 +8,7 @@ class OpenQuestion extends React.Component {
     const { id, label } = this.props;
     return (
       <div>
-        <label htmlFor={id}>{label}</label>
+        <label className="questionTitle" htmlFor={id}>{label}</label>
         <br />
         <TextArea id={id} field={id} cols="30" rows="5" className="OpenQuestion"
           placeholder="Add your response here." />

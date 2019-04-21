@@ -42,6 +42,10 @@ button:active {
   height: 100vh;
 }
 
+.video {
+  box-shadow: 3px 3px 5px 1px #ccc;
+}
+
 .questionContainer form > div {
   display: none;
 }
@@ -61,15 +65,16 @@ button:active {
 }
 
 .questionContainer form {
-    width: 100%;
+  width: 100%;
 }
 
 form .OpenQuestion {
-    width: 100%;
+  width: 100%;
 }
 
 .questionPlaceholder {
   margin: auto;
+  font-size: 16px;
 }
 
 .instructionsContainer {
@@ -96,6 +101,38 @@ form .OpenQuestion {
   justify-content: space-between;
 }
 
+.questionContainer form input[type=radio] {
+  margin-right: 10px;
+}
+
+.questionContainer form input[type=radio]:hover {
+  cursor: pointer;
+}
+
+.questionContainer form .questionTitle {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.questionContainer form .likertQ {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.questionContainer label, .questionContainer .questionPlaceholder {
+  font-weight: lighter;
+}
+
+.questionContainer form button {
+  float: right;
+  padding: 5px 10px;
+}
+
+.questionContainer form textarea {
+  padding-left: 10px !important;
+  padding-top: 10px;
+}
+
 .grid img {
   width: 400px;
 }
@@ -117,8 +154,7 @@ form .OpenQuestion {
 form .likert {
   list-style:none;
   width:100%;
-  margin:0;
-  padding:0 0 20px;
+  margin:10px 0px 10px 0px;
   display: flex;
   border-bottom:2px solid #efefef;
   justify-content: space-around;
@@ -147,6 +183,88 @@ form .likert li label {width:100%;}
 
 .completionLink {
   font-weight: bold;
+}
+
+.instructionsButton:hover {
+  cursor: pointer;
+  color: #656569;
+  display: block;
+  transition: 0.1s;
+}
+
+.instructionsButton {
+  padding: 5px 10px;
+  background-color: #bebebe;
+  font-weight: lighter;
+  font-size: 13px;
+  color: #000000;
+  position: fixed;
+  left: 5px;
+  top: 5px;
+}
+
+.Video {
+  width: 80%;
+  max-width: 150vh;
+}
+
+.videoContainer {
+  position: relative;
+  padding-top: 56.25% 
+}
+
+.videoPlayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.videoInstructions {
+  font-size: 100px;
+}
+
+.overlay {
+  color: #bebebe;
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0, 0.9);
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.overlay .overlay-content {
+  position: relative;
+  top: 25%;
+  width: 100%;
+  text-align: center;
+}
+
+.overlay a {
+  padding: 8px;
+  text-decoration: none;
+  font-size: 36px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.overlay a:hover, .overlay a:focus {
+  color: #f1f1f1;
+}
+
+.overlay .closebtn {
+  position: absolute;
+  cursor: pointer;
+  top: 20px;
+  right: 45px;
+  font-size: 60px;
 }
 
 .panel h2{
