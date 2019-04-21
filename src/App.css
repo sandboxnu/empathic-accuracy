@@ -185,40 +185,48 @@ form .likert li label {width:100%;}
   font-weight: bold;
 }
 
-.instructions2 {
-  left: 1%;
-}
 
-.instructions2 .instructionsButton:hover {
+.instructionsButton:hover {
   cursor: pointer;
   color: #656569;
   display: block;
   transition: 0.1s;
 }
 
-.instructions2 .instructionsButton button {
+.instructionsButton {
   padding: 5px 10px;
   background-color: #bebebe;
   font-weight: lighter;
   font-size: 13px;
   color: #000000;
-}
-
-.instructionsButton {
   position: fixed;
-  left: 0.5%;
+  left: 5px;
+  top: 5px;
 }
 
 .Video {
-  position: fixed;
-  top: 1%;
+  width: 80%;
+  max-width: 150vh;
+}
+
+.videoContainer {
+  position: relative;
+  padding-top: 56.25% 
+}
+
+.videoPlayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .videoInstructions {
   font-size: 100px;
 }
 
-.instructions2 .overlay {
+.overlay {
   color: #bebebe;
   height: 100%;
   width: 0;
@@ -232,14 +240,14 @@ form .likert li label {width:100%;}
   transition: 0.5s;
 }
 
-.instructions2 .overlay-content {
+.overlay .overlay-content {
   position: relative;
   top: 25%;
   width: 100%;
   text-align: center;
 }
 
-.instructions2 .overlay a {
+.overlay a {
   padding: 8px;
   text-decoration: none;
   font-size: 36px;
@@ -248,12 +256,13 @@ form .likert li label {width:100%;}
   transition: 0.3s;
 }
 
-.instructions2 .overlay a:hover, .overlay a:focus {
+.overlay a:hover, .overlay a:focus {
   color: #f1f1f1;
 }
 
-.instructions2 .overlay .closebtn {
+.overlay .closebtn {
   position: absolute;
+  cursor: pointer;
   top: 20px;
   right: 45px;
   font-size: 60px;

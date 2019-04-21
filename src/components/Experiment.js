@@ -6,7 +6,6 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import VideoQuestions from './VideoQuestions';
 import Instructions from './Instructions';
 
-
 const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 const INITIALSTATE = {
   restoredPos: 0,
@@ -39,7 +38,10 @@ class Experiment extends React.Component {
     const { videoIds } = this.props;
     const currentVideo = videoIds[videoIndex];
     const videoData = data[currentVideo] || [];
-    const newerValue = { ...newValue, questionTime: (Date.now() - showQuestionTime) / 1000 };
+    const newerValue = {
+      ...newValue,
+      questionTime: (Date.now() - showQuestionTime) / 1000,
+    };
     const updatedData = { ...data, [currentVideo]: [...videoData, newerValue] };
     this.setState({
       data: updatedData,
@@ -100,8 +102,14 @@ class Experiment extends React.Component {
     const { sendData, completionID } = this.props;
     const dataWithBrowserInfo = {
       answers: data,
-      browserWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-      browserHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+      browserWidth: Math.max(
+        document.documentElement.clientWidth,
+        window.innerWidth || 0,
+      ),
+      browserHeight: Math.max(
+        document.documentElement.clientHeight,
+        window.innerHeight || 0,
+      ),
       totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
       completionID,
     };
@@ -130,31 +138,46 @@ class Experiment extends React.Component {
     const videoUrl = `https://vimeo.com/${videoId}`;
     return (
       <div className="Video">
-        <div className="instructions2">
-          <div id="myNav" className="overlay" style={{ width: (isInstructionOpen ? '100%' : '0%') }}>
-            <a href="javascript:void(0)" className="closebtn" onClick={() => { this.setState({ isInstructionOpen: false }); }}>&times;</a>
-            <div className="overlay-content">
-              <div>hello, instructions</div>
-            </div>
+        <div
+          id="myNav"
+          className="overlay"
+          style={{ width: isInstructionOpen ? '100%' : '0%' }}
+        >
+          <div
+            className="closebtn"
+            onClick={() => {
+              this.setState({ isInstructionOpen: false });
+            }}
+          >
+            &times;
           </div>
-          <div className="instructionsButton" onClick={() => { this.setState({ isInstructionOpen: true, paused: true }); }}>
-            <button type="button">Help</button>
+          <div className="overlay-content">
+            <div>hello, instructions</div>
           </div>
         </div>
-        <ReactPlayer
-          className="video"
-          ref={r => this.getPlayerRef(r)}
-          url={videoUrl}
-          onReady={() => this.onReady()}
-          onPause={() => this.onPause()}
-          onPlay={() => this.onPlay()}
-          onSeek={() => this.onSeek()}
-          onEnded={() => this.onVideoEnd()}
-          playing={!paused}
-          width={window.innerWidth * 0.65}
-          height={(window.innerWidth * 0.65) * 0.5625}
-          // 0.5625 used to maintain video dimensions + avoid black bars
-        />
+        <div
+          className="instructionsButton"
+          onClick={() => {
+            this.setState({ isInstructionOpen: true, paused: true });
+          }}
+        >
+            Help
+        </div>
+        <div className="videoContainer">
+          <ReactPlayer
+            className="videoPlayer"
+            ref={r => this.getPlayerRef(r)}
+            url={videoUrl}
+            onReady={() => this.onReady()}
+            onPause={() => this.onPause()}
+            onPlay={() => this.onPlay()}
+            onSeek={() => this.onSeek()}
+            onEnded={() => this.onVideoEnd()}
+            playing={!paused}
+            width="100%"
+            height="100%"
+          />
+        </div>
         <div className="questionContainer">
           {paused && this.player ? (
             <VideoQuestions
@@ -163,7 +186,9 @@ class Experiment extends React.Component {
               videoPos={this.player.getCurrentTime()}
             />
           ) : (
-            <div className="questionPlaceholder">Pause the video and questions will appear here.</div>
+            <div className="questionPlaceholder">
+              Pause the video and questions will appear here.
+            </div>
           )}
         </div>
       </div>
@@ -174,9 +199,7 @@ class Experiment extends React.Component {
     const { completionID, completionLink } = this.props;
     return (
       <div className="instructionsContainer">
-        <p className="instructionsText">
-          Thank you for participating.
-        </p>
+        <p className="instructionsText">Thank you for participating.</p>
         <p className="instructionsText">
           Your completion ID is
           {' '}
@@ -187,9 +210,7 @@ class Experiment extends React.Component {
           {' '}
           <a href={completionLink}>{completionLink}</a>
         </p>
-        <p className="instructionsText">
-        You can close this browser tab.
-        </p>
+        <p className="instructionsText">You can close this browser tab.</p>
         <button
           type="button"
           onClick={() => {
@@ -220,8 +241,12 @@ class Experiment extends React.Component {
 
   render() {
     return (
-      <Beforeunload onBeforeunload={() => { this.onClose(); }}>
-        { this.renderStage() }
+      <Beforeunload
+        onBeforeunload={() => {
+          this.onClose();
+        }}
+      >
+        {this.renderStage()}
       </Beforeunload>
     );
   }
