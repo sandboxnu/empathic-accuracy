@@ -204,7 +204,7 @@ class Experiment extends React.Component {
             onPlay={() => this.onPlay()}
             onSeek={() => this.onSeek()}
             onEnded={() => this.onVideoEnd()}
-            playing={true}
+            playing
             width="100%"
             height="100%"
           />
