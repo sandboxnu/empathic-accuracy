@@ -185,7 +185,6 @@ form .likert li label {width:100%;}
   font-weight: bold;
 }
 
-
 .instructionsButton:hover {
   cursor: pointer;
   color: #656569;
@@ -266,4 +265,8 @@ form .likert li label {width:100%;}
   top: 20px;
   right: 45px;
   font-size: 60px;
+}
+
+.panel h2{
+  margin-top:20px;
 }
