@@ -1,26 +1,27 @@
-import React from 'react';
-import ReactPlayer from 'react-player';
-import PropTypes from 'prop-types';
-import Beforeunload from 'react-beforeunload';
-import { reactLocalStorage } from 'reactjs-localstorage';
-import VideoQuestions from './VideoQuestions';
-import Instructions from './Instructions';
+import React from "react";
+import ReactPlayer from "react-player";
+import PropTypes from "prop-types";
+import Beforeunload from "react-beforeunload";
+import { reactLocalStorage } from "reactjs-localstorage";
+import VideoQuestions from "./VideoQuestions";
+import Instructions from "./Instructions";
+import PreGrid from "./PreGrid";
 
 const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 const INITIALSTATE = {
   restoredPos: 0,
-  paused: false,
+  paused: true,
   data: {},
   videoIndex: 0,
   stage: StageEnum.instructions,
   showQuestionTime: 0,
   startTime: 0,
-  elapsedTotalTime: 0,
+  elapsedTotalTime: 0
 };
 /**
-* Shuffles array in place.
-* @param {Array} a items An array containing the items.
-*/
+ * Shuffles array in place.
+ * @param {Array} a items An array containing the items.
+ */
 function shuffle(array) {
   let counter = array.length;
   const ret = array.slice();
@@ -48,33 +49,31 @@ class Experiment extends React.Component {
     const { videoIds } = this.props;
     this.state = {
       shuffledVideos: shuffle(videoIds),
-      ...INITIALSTATE,
+      ...INITIALSTATE
     };
   }
 
   componentDidMount() {
-    const restoredState = reactLocalStorage.getObject('var');
+    const restoredState = reactLocalStorage.getObject("var");
     this.setState({
       ...restoredState,
-      startTime: Date.now(),
+      startTime: Date.now()
     });
   }
 
   // Add the new data point from VideoQuestions and resume the video
   onSubmit(newValue) {
-    const {
-      videoIndex, data, showQuestionTime, shuffledVideos,
-    } = this.state;
+    const { videoIndex, data, showQuestionTime, shuffledVideos } = this.state;
     const currentVideo = shuffledVideos[videoIndex];
     const videoData = data[currentVideo] || [];
     const newerValue = {
       ...newValue,
-      questionTime: (Date.now() - showQuestionTime) / 1000,
+      questionTime: (Date.now() - showQuestionTime) / 1000
     };
     const updatedData = { ...data, [currentVideo]: [...videoData, newerValue] };
     this.setState({
       data: updatedData,
-      paused: false,
+      paused: false
     });
   }
 
@@ -87,7 +86,7 @@ class Experiment extends React.Component {
   onPause() {
     this.setState({
       paused: true,
-      showQuestionTime: Date.now(),
+      showQuestionTime: Date.now()
     });
   }
 
@@ -102,7 +101,7 @@ class Experiment extends React.Component {
     } else {
       this.setState({
         videoIndex: videoIndex + 1,
-        paused: false,
+        paused: false
       });
     }
   }
@@ -114,14 +113,19 @@ class Experiment extends React.Component {
     const save = {
       ...this.state,
       elapsedTotalTime: elapsedTotalTime + Date.now() - startTime,
-      restoredPos,
+      restoredPos
     };
 
-    reactLocalStorage.setObject('var', save);
+    reactLocalStorage.setObject("var", save);
   }
 
   getPlayerRef(ref) {
     this.player = ref;
+  }
+
+  async awaitPlayer() {
+    await this.player;
+    return this.player;
   }
 
   // Send data up to server
@@ -132,21 +136,21 @@ class Experiment extends React.Component {
       answers: data,
       browserWidth: Math.max(
         document.documentElement.clientWidth,
-        window.innerWidth || 0,
+        window.innerWidth || 0
       ),
       browserHeight: Math.max(
         document.documentElement.clientHeight,
-        window.innerHeight || 0,
+        window.innerHeight || 0
       ),
       videoWidth: this.player.wrapper.clientWidth,
       videoHeight: this.player.wrapper.clientHeight,
       totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
-      completionID,
+      completionID
     };
     sendData(dataWithBrowserInfo);
 
     this.setState({
-      stage: StageEnum.done,
+      stage: StageEnum.done
     });
   }
 
@@ -160,19 +164,28 @@ class Experiment extends React.Component {
     );
   }
 
-  renderExperiment() {
+  handleClick() {
+    this.setState({ paused: false });
+  }
+
+  renderContinuousExperiment() {
+    const vidQ = "waiting";
     const { questions } = this.props;
     const {
-      paused, videoIndex, shuffledVideos, isInstructionOpen,
+      paused,
+      videoIndex,
+      shuffledVideos,
+      isInstructionOpen
     } = this.state;
     const videoId = shuffledVideos[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
+
     return (
       <div className="Video">
         <div
           id="myNav"
           className="overlay"
-          style={{ width: isInstructionOpen ? '100%' : '0%' }}
+          style={{ width: isInstructionOpen ? "100%" : "0%" }}
         >
           <div
             className="closebtn"
@@ -192,7 +205,81 @@ class Experiment extends React.Component {
             this.setState({ isInstructionOpen: true, paused: true });
           }}
         >
-            Help
+          Help
+        </div>
+        <div className="videoContainer">
+          <ReactPlayer
+            className="videoPlayer"
+            ref={r => this.getPlayerRef(r)}
+            url={videoUrl}
+            onReady={() => this.onReady()}
+            onPause={() => this.onPause()}
+            onPlay={() => this.onPlay()}
+            onSeek={() => this.onSeek()}
+            onEnded={() => this.onVideoEnd()}
+            playing={!paused}
+            width="100%"
+            height="100%"
+          />
+        </div>
+        <div className="questionContainer">
+          {true && this.player ? (
+            <VideoQuestions
+              onSubmit={n => this.onSubmit(n)}
+              questions={questions}
+              videoPos={this.player.getCurrentTime()}
+              onGridExit={() => {
+                this.setState({ paused: true });
+              }}
+            />
+          ) : (
+            <PreGrid
+              questions={questions}
+              player={this.awaitPlayer()}
+              handleClick={this.handleClick.bind(this)}
+            />
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  renderExperiment() {
+    const { questions } = this.props;
+    const {
+      paused,
+      videoIndex,
+      shuffledVideos,
+      isInstructionOpen
+    } = this.state;
+    const videoId = shuffledVideos[videoIndex];
+    const videoUrl = `https://vimeo.com/${videoId}`;
+    return (
+      <div className="Video">
+        <div
+          id="myNav"
+          className="overlay"
+          style={{ width: isInstructionOpen ? "100%" : "0%" }}
+        >
+          <div
+            className="closebtn"
+            onClick={() => {
+              this.setState({ isInstructionOpen: false });
+            }}
+          >
+            &times;
+          </div>
+          <div className="overlay-content">
+            <div>hello, instructions</div>
+          </div>
+        </div>
+        <div
+          className="instructionsButton"
+          onClick={() => {
+            this.setState({ isInstructionOpen: true, paused: true });
+          }}
+        >
+          Help
         </div>
         <div className="videoContainer">
           <ReactPlayer
@@ -232,13 +319,11 @@ class Experiment extends React.Component {
       <div className="instructionsContainer">
         <p className="instructionsText">Thank you for participating.</p>
         <p className="instructionsText">
-          Your completion ID is
-          {' '}
+          Your completion ID is{" "}
           <span className="completionID">{completionID}</span>
         </p>
         <p className="instructionsText">
-          Please take this survey at the following link:
-          {' '}
+          Please take this survey at the following link:{" "}
           <a href={completionLink}>{completionLink}</a>
         </p>
         <p className="instructionsText">You can close this browser tab.</p>
@@ -262,7 +347,7 @@ class Experiment extends React.Component {
       case StageEnum.instructions:
         return this.renderInstructions();
       case StageEnum.experiment:
-        return this.renderExperiment();
+        return this.renderContinuousExperiment();
       case StageEnum.done:
         return this.renderDone();
       default:
@@ -289,7 +374,7 @@ Experiment.propTypes = {
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
   completionID: PropTypes.string.isRequired,
-  completionLink: PropTypes.string.isRequired,
+  completionLink: PropTypes.string.isRequired
 };
 
 export default Experiment;
