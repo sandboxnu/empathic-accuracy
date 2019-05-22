@@ -1,12 +1,12 @@
 /* eslint-disable react/no-array-index-key */
-import { Form } from "informed";
-import PropTypes from "prop-types";
-import React from "react";
-import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
-import OpenQuestion from "./OpenQuestion";
-import GridQuestion from "./GridQuestion";
-import ContinuousGrid from "./ContinuousGridQuestions";
-import ScaleQuestion from "./ScaleQuestion";
+import { Form } from 'informed';
+import PropTypes from 'prop-types';
+import React from 'react';
+import MultipleChoiceQuestion from './MultipleChoiceQuestion';
+import OpenQuestion from './OpenQuestion';
+import GridQuestion from './GridQuestion';
+import ContinuousGrid from './ContinuousGridQuestions';
+import ScaleQuestion from './ScaleQuestion';
 
 class VideoQuestions extends React.Component {
   constructor(props) {
@@ -36,31 +36,35 @@ class VideoQuestions extends React.Component {
   // Render a list of questions
   renderQuestions() {
     const { activeQIndex } = this.state;
-    const { questions, videoPos, onGridExit } = this.props;
+    const {
+      questions, videoPos, onGridExit, paused, onPlay,
+    } = this.props;
     const formQuestions = questions.map((question, idx) => {
       const { type } = question;
       const id = idx.toString();
       const isActive = activeQIndex === idx;
       return (
-        <div className={isActive ? "activeQuestion" : ""}>
+        <div className={isActive ? 'activeQuestion' : ''}>
           {(() => {
             switch (type) {
-              case "mc":
+              case 'mc':
                 return (
                   <MultipleChoiceQuestion key={id} id={id} {...question} />
                 );
-              case "scale":
+              case 'scale':
                 return <ScaleQuestion key={id} id={id} {...question} />;
-              case "open":
+              case 'open':
                 return <OpenQuestion key={id} id={id} {...question} />;
-              case "grid":
+              case 'grid':
                 return (
                   <ContinuousGrid
                     key={id}
                     field={id}
                     {...question}
-                    videoPos
+                    videoPos={videoPos}
                     onGridExit={onGridExit}
+                    paused={paused}
+                    onPlay={onPlay}
                   />
                 );
               default:
@@ -97,7 +101,7 @@ class VideoQuestions extends React.Component {
 VideoQuestions.propTypes = {
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
   onSubmit: PropTypes.func.isRequired,
-  videoPos: PropTypes.number.isRequired
+  videoPos: PropTypes.number.isRequired,
 };
 
 export default VideoQuestions;

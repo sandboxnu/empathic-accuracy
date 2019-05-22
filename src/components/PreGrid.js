@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import VideoQuestions from "./VideoQuestions";
-import ReactDOM from "react-dom";
-import PointerLock from "react-pointerlock";
 
 class PreGrid extends Component {
   state = {

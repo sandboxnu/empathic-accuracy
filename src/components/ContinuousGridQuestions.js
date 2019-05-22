@@ -1,15 +1,16 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React from "react";
-import { asField } from "informed";
-import { gridQuestionType } from "../types";
-import grid from "./affect.png";
+import React from 'react';
+import { asField } from 'informed';
+import { gridQuestionType } from '../types';
+import grid from './affect.png';
 
 const startTime = new Date().getTime();
 
 function getRelativeClick(e) {
+  console.log(e.clientX, e.clientY);
   // e = Mouse click event.
-  const rect = e.target.getBoundingClientRect();
+  const rect = e.currentTarget.getBoundingClientRect();
   const x = e.clientX - rect.left; // x position within the element.
   const y = e.clientY - rect.top; // y position within the element.
   return { x, y };
@@ -26,9 +27,9 @@ function renderTrail(value) {
           style={{
             top: value[value.length - i].pos.y,
             left: value[value.length - i].pos.x,
-            background: `#${i}${i}${i}`
+            background: `#${i}${i}${i}`,
           }}
-        />
+        />,
       );
     }
   }
@@ -38,29 +39,51 @@ function renderTrail(value) {
 // Make GridQuestion play nice with the informed library
 // https://joepuzzo.github.io/informed/?selectedKind=CustomInputs&selectedStory=Creating Custom Inputs
 const ContinuousGrid = asField(({ fieldState, fieldApi, ...props }) => {
-  const { videoPos, onGridExit } = props;
+  const {
+    videoPos, onGridExit, onPlay, paused,
+  } = props;
   const { value = [] } = fieldState;
   const { setValue } = fieldApi;
   return (
-    <div className="grid">
-      <div className="CircleContainer">
-        {renderTrail(value)}
-        {value.length > 0 ? (
+    <div
+      className="grid"
+      // ! why does it pause on enter instead of exit??
+      onMouseLeave={onGridExit}
+      onMouseMoveCapture={(e) => {
+        if (!paused) {
+          setValue([...value, { pos: getRelativeClick(e), time: videoPos }]);
+        }
+      }}
+    >
+      <div
+        className="CircleContainer"
+      >
+        {paused ? (
           <div
             className="circle"
+            onClick={onPlay}
             style={{
-              top: value[value.length - 1].pos.y,
-              left: value[value.length - 1].pos.x
+              background: 'green',
+              top: '180px',
+              left: '200px',
             }}
           />
-        ) : null}
+        ) : (
+          <div>
+            {renderTrail(value)}
+            {value.length > 0 ? (
+              <div
+                className="circle"
+                style={{
+                  top: value[value.length - 1].pos.y,
+                  left: value[value.length - 1].pos.x,
+                }}
+              />
+            ) : null}
+          </div>
+        )}
       </div>
       <img
-        // ! why does it pause on enter instead of exit??
-        onMouseLeave={onGridExit}
-        onMouseMove={e => {
-          setValue([...value, { pos: getRelativeClick(e), time: videoPos }]);
-        }}
         id="grid"
         src={grid}
         alt="Grid"

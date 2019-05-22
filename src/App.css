@@ -85,6 +85,7 @@ form .OpenQuestion {
   display: flex;
   flex-direction: column;
   padding: 20px;
+  min-width: 400px;
 }
 
 .instructionsContainer {
