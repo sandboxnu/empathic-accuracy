@@ -33,12 +33,12 @@ function ExperimentOnline() {
   return (
     <Fetch url={`${SERVER_URL}/experiment`} as="json">
       {({ loading, error, data }) => (
-        <div>
+        <React.Fragment>
           {loading && <span>Loading...</span> }
           {data
               && <Experiment {...data} completionID={generateID()} sendData={sendData} />}
           {error && <span>Server error</span>}
-        </div>
+        </React.Fragment>
       )}
     </Fetch>);
 }
