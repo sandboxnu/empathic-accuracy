@@ -36,62 +36,52 @@ function renderTrail(value) {
   return trail;
 }
 
-// Make GridQuestion play nice with the informed library
-// https://joepuzzo.github.io/informed/?selectedKind=CustomInputs&selectedStory=Creating Custom Inputs
-const ContinuousGrid = asField(({ fieldState, fieldApi, ...props }) => {
-  const {
-    videoPos, onGridExit, onPlay, paused,
-  } = props;
-  const { value = [] } = fieldState;
-  const { setValue } = fieldApi;
-  return (
-    <div
-      className="grid"
+const ContinuousGrid = ({
+  values = [], addValue, videoPos, onGridExit, onPlay, paused,
+}) => (
+  <div
+    className="grid"
       // ! why does it pause on enter instead of exit??
-      onMouseLeave={onGridExit}
-      onMouseMoveCapture={(e) => {
-        if (!paused) {
-          setValue([...value, { pos: getRelativeClick(e), time: videoPos }]);
-        }
-      }}
+    onMouseLeave={onGridExit}
+    onMouseMoveCapture={(e) => {
+      if (!paused) {
+        addValue({ pos: getRelativeClick(e), time: videoPos });
+      }
+    }}
+  >
+    <div
+      className="CircleContainer"
     >
-      <div
-        className="CircleContainer"
-      >
-        {paused ? (
-          <div
-            className="circle"
-            onClick={onPlay}
-            style={{
-              background: 'green',
-              top: '180px',
-              left: '200px',
-            }}
-          />
-        ) : (
-          <div>
-            {renderTrail(value)}
-            {value.length > 0 ? (
-              <div
-                className="circle"
-                style={{
-                  top: value[value.length - 1].pos.y,
-                  left: value[value.length - 1].pos.x,
-                }}
-              />
-            ) : null}
-          </div>
-        )}
-      </div>
-      <img
-        id="grid"
-        src={grid}
-        alt="Grid"
-      />
+      {paused ? (
+        <div
+          className="circle"
+          onClick={onPlay}
+          style={{
+            background: 'green',
+            top: '180px',
+            left: '200px',
+          }}
+        />
+      ) : (
+        <div>
+          {values.length > 0 ? (
+            <div
+              className="circle"
+              style={{
+                top: values[values.length - 1].pos.y,
+                left: values[values.length - 1].pos.x,
+              }}
+            />
+          ) : null}
+        </div>
+      )}
     </div>
-  );
-});
-
-ContinuousGrid.propTypes = gridQuestionType;
+    <img
+      id="grid"
+      src={grid}
+      alt="Grid"
+    />
+  </div>
+);
 
 export default ContinuousGrid;
