@@ -32,19 +32,14 @@ function generateID() {
 function ExperimentOnline() {
   return (
     <Fetch url={`${SERVER_URL}/experiment`} as="json">
-      {({ loading, error, data }) => {
-        if (loading) {
-          return <span>Loading...</span>;
-        }
-        if (data) {
-          return <Experiment {...data} completionID={generateID()} sendData={sendData} />;
-        }
-        if (error) {
-          return <span>Server error</span>;
-        }
-        return null;
-      }
-      }
+      {({ loading, error, data }) => (
+        <React.Fragment>
+          {loading && <span>Loading...</span> }
+          {data
+              && <Experiment {...data} completionID={generateID()} sendData={sendData} />}
+          {error && <span>Server error</span>}
+        </React.Fragment>
+      )}
     </Fetch>);
 }
 
