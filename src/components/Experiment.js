@@ -10,7 +10,6 @@ import ContinuousGrid from './ContinuousGridQuestions';
 const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 const INITIALSTATE = {
   restoredPos: 0,
-  paused: true,
   data: {},
   videoIndex: 0,
   stage: StageEnum.instructions,
@@ -46,10 +45,11 @@ function shuffle(array) {
 class Experiment extends React.Component {
   constructor(props) {
     super(props);
-    const { videoIds } = this.props;
+    const { videoIds, paradigm } = this.props;
     this.state = {
       shuffledVideos: shuffle(videoIds),
       ...INITIALSTATE,
+      paused: paradigm === 'continuous',
     };
   }
 
@@ -271,7 +271,7 @@ class Experiment extends React.Component {
   }
 
   renderDone() {
-    const { completionID, completionLink } = this.props;
+    const { completionID, completionLink, paradigm } = this.props;
     return (
       <div className="instructionsContainer">
         <p className="instructionsText">Thank you for participating.</p>
@@ -290,7 +290,10 @@ class Experiment extends React.Component {
           type="button"
           onClick={() => {
             reactLocalStorage.clear();
-            this.setState(INITIALSTATE);
+            this.setState({
+              ...INITIALSTATE,
+              paused: paradigm === 'continuous',
+            });
           }}
         >
           Start again

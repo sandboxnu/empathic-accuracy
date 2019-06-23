@@ -41,7 +41,7 @@ const ContinuousGrid = ({
 }) => (
   <div
     className="grid"
-      // ! why does it pause on enter instead of exit??
+    // ! why does it pause on enter instead of exit??
     onMouseLeave={onGridExit}
     onMouseMoveCapture={(e) => {
       if (!paused) {
@@ -49,9 +49,7 @@ const ContinuousGrid = ({
       }
     }}
   >
-    <div
-      className="CircleContainer"
-    >
+    <div className="CircleContainer">
       {paused ? (
         <div
           className="circle"
@@ -76,11 +74,7 @@ const ContinuousGrid = ({
         </div>
       )}
     </div>
-    <img
-      id="grid"
-      src={grid}
-      alt="Grid"
-    />
+    <img id="grid" src={grid} alt="Grid" />
   </div>
 );
 
