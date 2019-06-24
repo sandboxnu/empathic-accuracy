@@ -64,9 +64,9 @@ class Experiment extends React.Component {
   // Add the new data point from VideoQuestions and resume the video
   onSubmit(newValue) {
     const {
-      videoIndex, data, showQuestionTime, shuffledVideos,
+      data, showQuestionTime,
     } = this.state;
-    const currentVideo = shuffledVideos[videoIndex];
+    const currentVideo = this.getCurrentVideoId();
     const videoData = data[currentVideo] || [];
     const newerValue = {
       ...newValue,
@@ -120,6 +120,11 @@ class Experiment extends React.Component {
     reactLocalStorage.setObject('var', save);
   }
 
+  getCurrentVideoId() {
+    const { shuffledVideos, videoIndex } = this.state;
+    return shuffledVideos[videoIndex];
+  }
+
   getPlayerRef(ref) {
     this.player = ref;
   }
@@ -167,12 +172,9 @@ class Experiment extends React.Component {
   renderExperiment() {
     const {
       paused,
-      videoIndex,
-      shuffledVideos,
       isInstructionOpen,
     } = this.state;
-    const videoId = shuffledVideos[videoIndex];
-    const videoUrl = `https://vimeo.com/${videoId}`;
+    const videoUrl = `https://vimeo.com/${this.getCurrentVideoId()}`;
 
     return (
       <div className="Video">
@@ -227,10 +229,8 @@ class Experiment extends React.Component {
     const { paused } = this.state;
     const { paradigm, questions } = this.props;
     if (paradigm === 'continuous') {
-      const {
-        videoIndex, data, shuffledVideos,
-      } = this.state;
-      const currentVideo = shuffledVideos[videoIndex];
+      const { data } = this.state;
+      const currentVideo = this.getCurrentVideoId();
       return (
         <div>
           <ContinuousGrid
