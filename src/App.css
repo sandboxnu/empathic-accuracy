@@ -10,8 +10,7 @@ button {
   font-weight: 400;
   cursor: pointer;
   text-align: center;
-  transition: background 250ms ease-in-out,
-              transform 150ms ease;
+  transition: background 250ms ease-in-out, transform 150ms ease;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
@@ -22,18 +21,18 @@ button:focus {
 }
 
 button:focus {
-    outline: 1px solid #fff;
-    outline-offset: -4px;
+  outline: 1px solid #fff;
+  outline-offset: -4px;
 }
 
 button:active {
-    transform: scale(0.99);
+  transform: scale(0.99);
 }
 
 #opaqueLayer {
-  position:absolute;
-  width:640px;
-  height:360px;
+  position: absolute;
+  width: 640px;
+  height: 360px;
 }
 
 .App {
@@ -52,29 +51,41 @@ button:active {
 
 .questionContainer form div.activeQuestion {
   display: block;
+  align-self: start;
 }
 
 .questionContainer {
-  margin-top: 10px;
   min-height: 100px;
   padding: 10px;
-  background-color: #EEE;
+  background-color: #eee;
   border-radius: 5px;
   display: flex;
-  align-items: stretch;
+  justify-content: center;
+  grid-row: 2/8;
 }
 
 .questionContainer form {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
 }
 
 form .OpenQuestion {
   width: 100%;
 }
 
+.textarea {
+  resize: both;
+}
+
 .questionPlaceholder {
   margin: auto;
-  font-size: 16px;
+  font-size: 1.15vw;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  min-width: 400px;
 }
 
 .instructionsContainer {
@@ -101,11 +112,11 @@ form .OpenQuestion {
   justify-content: space-between;
 }
 
-.questionContainer form input[type=radio] {
+.questionContainer form input[type="radio"] {
   margin-right: 10px;
 }
 
-.questionContainer form input[type=radio]:hover {
+.questionContainer form input[type="radio"]:hover {
   cursor: pointer;
 }
 
@@ -119,18 +130,25 @@ form .OpenQuestion {
   font-weight: 500;
 }
 
-.questionContainer label, .questionContainer .questionPlaceholder {
+.questionContainer label,
+.questionContainer .questionPlaceholder {
   font-weight: lighter;
 }
 
-.questionContainer form button {
-  float: right;
+.questionContainer form button,
+.questionPlaceholder button {
+  align-self: end;
+  margin-top: 10px;
   padding: 5px 10px;
 }
 
 .questionContainer form textarea {
   padding-left: 10px !important;
   padding-top: 10px;
+}
+
+.activeQuestion {
+  align-self: center;
 }
 
 .grid img {
@@ -141,41 +159,49 @@ form .OpenQuestion {
   min-width: 400px;
 }
 
-.grid .circle {
+.grid .CircleContainer {
   position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.grid .circle {
+  position: absolute;
   border-radius: 50%;
   width: 10px;
   height: 10px;
   margin-left: -5px;
-  margin-bottom: -5px;
+  margin-top: -5px;
   background: #000;
 }
 
 form .likert {
-  list-style:none;
-  width:100%;
-  margin:10px 0px 10px 0px;
+  list-style: none;
+  width: 100%;
+  margin: 10px 0px 10px 0px;
   display: flex;
-  border-bottom:2px solid #efefef;
+  border-bottom: 2px solid #efefef;
   justify-content: space-around;
   flex-direction: row;
 }
 
 form .likert li {
-  display:inline-block;
-  text-align:center;
+  display: inline-block;
+  text-align: center;
   vertical-align: top;
   flex-basis: 0;
   flex-grow: 1;
 }
-form .likert li input[type=radio] {
-  display:block;
-  position:relative;
-  top:0;
-  left:50%;
-  margin-left:-6px;
+form .likert li input[type="radio"] {
+  display: block;
+  position: relative;
+  top: 0;
+  left: 50%;
+  margin-left: -6px;
 }
-form .likert li label {width:100%;}
+form .likert li label {
+  width: 100%;
+}
 
 .completionID {
   font-weight: bold;
@@ -204,13 +230,16 @@ form .likert li label {width:100%;}
 }
 
 .Video {
-  width: 80%;
-  max-width: 150vh;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: repeat(8, 1fr);
+  width: 90%;
+  grid-column-gap: 5px;
 }
 
 .videoContainer {
   position: relative;
-  padding-top: 56.25% 
+  grid-row: 2/8;
 }
 
 .videoPlayer {
@@ -233,8 +262,8 @@ form .likert li label {width:100%;}
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0, 0.9);
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.9);
   overflow-x: hidden;
   transition: 0.5s;
 }
@@ -255,7 +284,8 @@ form .likert li label {width:100%;}
   transition: 0.3s;
 }
 
-.overlay a:hover, .overlay a:focus {
+.overlay a:hover,
+.overlay a:focus {
   color: #f1f1f1;
 }
 
@@ -267,6 +297,6 @@ form .likert li label {width:100%;}
   font-size: 60px;
 }
 
-.panel h2{
-  margin-top:20px;
+.panel h2 {
+  margin-top: 20px;
 }

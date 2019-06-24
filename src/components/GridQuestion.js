@@ -20,20 +20,14 @@ const GridQuestion = asField(({ fieldState, fieldApi, ...props }) => {
   const { setValue } = fieldApi;
   return (
     <div className="grid">
-      {value ? (
-        <div className="circle" style={{ top: value.y, left: value.x }} />
-      ) : null}
-      <img
-        onClick={e => setValue(getRelativeClick(e))}
-        src={grid}
-        alt="Grid"
-      />
+      <div className="CircleContainer">
+        {value ? <div className="circle" style={{ top: value.y, left: value.x }} /> : null}
+      </div>
+      <img onClick={e => setValue(getRelativeClick(e))} src={grid} alt="Grid" />
     </div>
   );
 });
 
-
 GridQuestion.propTypes = gridQuestionType;
-
 
 export default GridQuestion;

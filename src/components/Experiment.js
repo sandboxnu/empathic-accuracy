@@ -5,11 +5,11 @@ import Beforeunload from 'react-beforeunload';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import VideoQuestions from './VideoQuestions';
 import Instructions from './Instructions';
+import ContinuousGrid from './ContinuousGridQuestions';
 
 const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 const INITIALSTATE = {
   restoredPos: 0,
-  paused: false,
   data: {},
   videoIndex: 0,
   stage: StageEnum.instructions,
@@ -18,9 +18,9 @@ const INITIALSTATE = {
   elapsedTotalTime: 0,
 };
 /**
-* Shuffles array in place.
-* @param {Array} a items An array containing the items.
-*/
+ * Shuffles array in place.
+ * @param {Array} a items An array containing the items.
+ */
 function shuffle(array) {
   let counter = array.length;
   const ret = array.slice();
@@ -45,10 +45,11 @@ function shuffle(array) {
 class Experiment extends React.Component {
   constructor(props) {
     super(props);
-    const { videoIds } = this.props;
+    const { videoIds, paradigm } = this.props;
     this.state = {
       shuffledVideos: shuffle(videoIds),
       ...INITIALSTATE,
+      paused: paradigm === 'continuous',
     };
   }
 
@@ -102,7 +103,6 @@ class Experiment extends React.Component {
     } else {
       this.setState({
         videoIndex: videoIndex + 1,
-        paused: false,
       });
     }
   }
@@ -160,11 +160,20 @@ class Experiment extends React.Component {
     );
   }
 
+  handleClick() {
+    this.setState({ paused: false });
+  }
+
   renderExperiment() {
-    const { questions } = this.props;
-    const { paused, videoIndex, shuffledVideos, isInstructionOpen } = this.state;
+    const {
+      paused,
+      videoIndex,
+      shuffledVideos,
+      isInstructionOpen,
+    } = this.state;
     const videoId = shuffledVideos[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
+
     return (
       <div className="Video">
         <div
@@ -190,7 +199,7 @@ class Experiment extends React.Component {
             this.setState({ isInstructionOpen: true, paused: true });
           }}
         >
-            Help
+          Help
         </div>
         <div className="videoContainer">
           <ReactPlayer
@@ -208,24 +217,61 @@ class Experiment extends React.Component {
           />
         </div>
         <div className="questionContainer">
-          {paused && this.player ? (
-            <VideoQuestions
-              onSubmit={n => this.onSubmit(n)}
-              questions={questions}
-              videoPos={this.player.getCurrentTime()}
-            />
-          ) : (
-            <div className="questionPlaceholder">
-              Pause the video and questions will appear here.
-            </div>
-          )}
+          {this.renderQuestions()}
         </div>
       </div>
     );
   }
 
+  renderQuestions() {
+    const { paused } = this.state;
+    const { paradigm, questions } = this.props;
+    if (paradigm === 'continuous') {
+      const {
+        videoIndex, data, shuffledVideos,
+      } = this.state;
+      const currentVideo = shuffledVideos[videoIndex];
+      return (
+        <div>
+          <ContinuousGrid
+            field="grid"
+            values={data[currentVideo]}
+            addValue={(value) => {
+              const videoData = data[currentVideo] || [];
+              this.setState({
+                data: { ...data, [currentVideo]: [...videoData, value] },
+              });
+            }}
+            videoPos={this.player ? this.player.getCurrentTime() : 0}
+            onGridExit={() => {
+              this.setState({ paused: true });
+            }}
+            paused={paused}
+            onPlay={() => {
+              this.onPlay();
+            }}
+          />
+        </div>
+      );
+    }
+    if (paused) {
+      return (
+        <VideoQuestions
+          onSubmit={n => this.onSubmit(n)}
+          questions={questions}
+          videoPos={this.player ? this.player.getCurrentTime() : 0}
+        />
+      );
+    }
+    return (
+      <div className="questionPlaceholder">
+        Pause the video and questions will appear here.
+      </div>
+    );
+  }
+
   renderDone() {
-    const { completionID, completionLink } = this.props;
+    const { completionID, completionLink, paradigm } = this.props;
     return (
       <div className="instructionsContainer">
         <p className="instructionsText">Thank you for participating.</p>
@@ -244,7 +290,10 @@ class Experiment extends React.Component {
           type="button"
           onClick={() => {
             reactLocalStorage.clear();
-            this.setState(INITIALSTATE);
+            this.setState({
+              ...INITIALSTATE,
+              paused: paradigm === 'continuous',
+            });
           }}
         >
           Start again
@@ -282,6 +331,7 @@ class Experiment extends React.Component {
 }
 
 Experiment.propTypes = {
+  paradigm: PropTypes.string.isRequired,
   videoIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
   sendData: PropTypes.func.isRequired,

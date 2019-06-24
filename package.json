@@ -13,6 +13,7 @@
     "react-burger-menu": "^2.6.5",
     "react-dom": "^16.6.0",
     "react-fetch-component": "^7.0.1",
+    "react-interval-timer": "^1.0.5",
     "react-jsonschema-form-bs4": "^1.0.6",
     "react-player": "^1.7.0",
     "react-router-dom": "^4.3.1",

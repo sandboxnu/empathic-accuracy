@@ -2,14 +2,14 @@
   "type": "object",
   "required": ["videoIds"],
   "properties": {
-    "videoIds": { 
-      "type": "array", 
-      "title": "Vimeo Video IDs", 
+    "videoIds": {
+      "type": "array",
+      "title": "Vimeo Video IDs",
       "items": {
         "type": "string",
         "title": ""
       },
-      "default": ["314909286/3623e43bae"] 
+      "default": ["314909286/3623e43bae"]
     },
     "instructionScreens": {
       "type": "array",
@@ -23,68 +23,93 @@
         "In this study, you will be shown a video and asked a set of questions about the video. You can answer these questions at any point. To be shown the questions, just pause the video. Click next to continue to the experiment."
       ]
     },
-    "questions": {
-      "type": "array",
-      "title": "Questions",
-      "items": {
-        "type": "object",
-        "title": "Question",
-        "properties": {
-          "type": {
-            "type": "string",
-            "title": "Type of Question",
-            "enum": ["mc", "scale", "grid", "open"],
-            "enumNames": ["Multiple Choice", "Rating Scale", "Affect Grid", "Open Response"],
-            "default": "mc"
-          },
-          "label": { "type": "string", "title": "Question Label" }
-        },
-        "dependencies": {
-          "type": {
-            "oneOf": [
-              {
+    "paradigm": {
+      "type": "string",
+      "title": "Data Collection Paradigm",
+      "enum": ["self", "continuous"],
+      "default": "self"
+    },
+    "completionLink": {
+      "type": "string",
+      "title": "Completion Link: ",
+      "default": "www.google.com"
+    }
+  },
+  "dependencies": {
+    "paradigm": {
+      "oneOf": [
+        {
+          "properties": {
+            "paradigm": {
+              "enum": ["self"]
+            },
+
+            "questions": {
+              "type": "array",
+              "title": "Questions",
+              "items": {
+                "type": "object",
+                "title": "Question",
                 "properties": {
                   "type": {
-                    "enum": [
-                      "mc"
-                    ]
+                    "type": "string",
+                    "title": "Type of Question",
+                    "enum": ["mc", "scale", "grid", "open"],
+                    "enumNames": [
+                      "Multiple Choice",
+                      "Rating Scale",
+                      "Affect Grid",
+                      "Open Response"
+                    ],
+                    "default": "mc"
                   },
-                  "choices": {
-                    "type": "array",
-                    "title": "Answer Choices",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                }
-              },
-              {
-                "properties": {
+                  "label": { "type": "string", "title": "Question Label" }
+                },
+                "dependencies": {
                   "type": {
-                    "enum": [
-                      "scale"
+                    "oneOf": [
+                      {
+                        "properties": {
+                          "type": {
+                            "enum": ["mc"]
+                          },
+                          "choices": {
+                            "type": "array",
+                            "title": "Answer Choices",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "properties": {
+                          "type": {
+                            "enum": ["scale"]
+                          },
+                          "choices": {
+                            "type": "array",
+                            "title": "Scale Label",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      {
+                        "properties": { "type": { "enum": ["open"] } }
+                      },
+                      {
+                        "properties": { "type": { "enum": ["grid"] } }
+                      }
                     ]
-                  },
-                  "choices": {
-                    "type": "array",
-                    "title": "Scale Label",
-                    "items": {
-                      "type": "string"
-                    }
                   }
                 }
-              },
-              {
-                "properties": { "type": { "enum": [ "open" ] } }
-              },
-              {
-                "properties": { "type": { "enum": [ "grid" ] } }
               }
-            ]
+            }
           }
         }
-      }
-  },
-  "completionLink": { "type": "string", "title": "Completion Link: ", "default": "www.google.com" }
+      ]
+    }
   }
 }
