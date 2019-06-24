@@ -45,9 +45,9 @@ function shuffle(array) {
 class Experiment extends React.Component {
   constructor(props) {
     super(props);
-    const { videoIds, paradigm } = this.props;
+    const { videoIds, paradigm, shuffleVideos } = this.props;
     this.state = {
-      shuffledVideos: shuffle(videoIds),
+      shuffledVideos: shuffleVideos ? shuffle(videoIds) : videoIds,
       ...INITIALSTATE,
       paused: paradigm === 'continuous',
     };

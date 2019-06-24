@@ -11,6 +11,11 @@
       },
       "default": ["314909286/3623e43bae"]
     },
+    "shuffleVideos": {
+      "type": "boolean",
+      "title": "Shuffle Order Videos Are shown",
+      "default": "true"
+    },
     "instructionScreens": {
       "type": "array",
       "title": "Instructions",
@@ -43,7 +48,6 @@
             "paradigm": {
               "enum": ["self"]
             },
-
             "questions": {
               "type": "array",
               "title": "Questions",
@@ -55,12 +59,7 @@
                     "type": "string",
                     "title": "Type of Question",
                     "enum": ["mc", "scale", "grid", "open"],
-                    "enumNames": [
-                      "Multiple Choice",
-                      "Rating Scale",
-                      "Affect Grid",
-                      "Open Response"
-                    ],
+                    "enumNames": ["Multiple Choice", "Rating Scale", "Affect Grid", "Open Response"],
                     "default": "mc"
                   },
                   "label": { "type": "string", "title": "Question Label" }
