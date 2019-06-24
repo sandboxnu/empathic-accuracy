@@ -1,5 +1,5 @@
 {
-  "paradigm": "continuous",
+  "paradigm": "self",
   "videoIds": ["314909286/3623e43bae", "318377318/cbb45794ea"],
   "shuffleVideos": true,
   "instructionScreens": [
@@ -8,9 +8,24 @@
   ],
   "questions": [
     {
+      "type": "mc",
+      "label": "Is this cool?",
+      "choices": ["No", "Yes", "Somewhat"]
+    },
+    {
+      "type": "scale",
+      "label": "How cool?",
+      "choices": ["Not at all cool", "A little cool", "Super cool", "vvvv cool", "yuck"]
+    },
+    {
+      "type": "open",
+      "label": "Other comments: "
+    },
+    {
       "type": "grid",
       "label": "Grid"
     }
   ],
+  "shuffleQuestions": true,
   "completionLink": "https://sandboxneu.com"
 }

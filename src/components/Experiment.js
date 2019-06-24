@@ -45,9 +45,10 @@ function shuffle(array) {
 class Experiment extends React.Component {
   constructor(props) {
     super(props);
-    const { videoIds, paradigm, shuffleVideos } = this.props;
+    const { videoIds, questions, paradigm, shuffleVideos, shuffleQuestions } = this.props;
     this.state = {
       shuffledVideos: shuffleVideos ? shuffle(videoIds) : videoIds,
+      shuffledQuestions: shuffleQuestions ? shuffle(questions) : questions,
       ...INITIALSTATE,
       paused: paradigm === 'continuous',
     };
@@ -226,8 +227,8 @@ class Experiment extends React.Component {
   }
 
   renderQuestions() {
-    const { paused } = this.state;
-    const { paradigm, questions } = this.props;
+    const { paused, shuffledQuestions } = this.state;
+    const { paradigm } = this.props;
     if (paradigm === 'continuous') {
       const { data } = this.state;
       const currentVideo = this.getCurrentVideoId();
@@ -258,7 +259,7 @@ class Experiment extends React.Component {
       return (
         <VideoQuestions
           onSubmit={n => this.onSubmit(n)}
-          questions={questions}
+          questions={shuffledQuestions}
           videoPos={this.player ? this.player.getCurrentTime() : 0}
         />
       );

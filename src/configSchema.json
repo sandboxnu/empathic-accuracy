@@ -13,8 +13,8 @@
     },
     "shuffleVideos": {
       "type": "boolean",
-      "title": "Shuffle Order Videos Are shown",
-      "default": "true"
+      "title": "Shuffle Order Videos Are Shown",
+      "default": true
     },
     "instructionScreens": {
       "type": "array",
@@ -47,6 +47,11 @@
           "properties": {
             "paradigm": {
               "enum": ["self"]
+            },
+            "shuffleQuestions": {
+              "type": "boolean",
+              "title": "Shuffle Order Questions Are Shown",
+              "default": true
             },
             "questions": {
               "type": "array",
