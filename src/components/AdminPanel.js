@@ -73,6 +73,7 @@ class AdminPanel extends Component {
         username: '',
         password,
       },
+      responseType: 'arraybuffer',
     }).then(data => fileDownload(data.data, 'data.zip'))
       .catch(error => console.log(error));
   }
