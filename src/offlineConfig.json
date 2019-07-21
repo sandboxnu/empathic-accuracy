@@ -1,6 +1,6 @@
 {
   "paradigm": "self",
-  "videoIds": ["314909286/3623e43bae", "318377318/cbb45794ea"],
+  "videos": [{ "id": "314909286/3623e43bae" }, { "id": "318377318/cbb45794ea" }],
   "shuffleVideos": true,
   "instructionScreens": [
     "Welcome to the empathy study, and thanks for participating! On the following screen, you will see more instructions on what you will be asked to do.",

@@ -12,6 +12,7 @@ const INITIALSTATE = {
   restoredPos: 0,
   data: {},
   videoIndex: 0,
+  nextTimepointIndex: 0,
   stage: StageEnum.instructions,
   showQuestionTime: 0,
   startTime: 0,
@@ -45,29 +46,23 @@ function shuffle(array) {
 class Experiment extends React.Component {
   constructor(props) {
     super(props);
-    const { videoIds, questions, paradigm, shuffleVideos, shuffleQuestions } = this.props;
+    const {
+      videos, questions, paradigm, shuffleVideos, shuffleQuestions,
+    } = this.props;
+    // Parse csv timepoints
+    const processedVids = paradigm === 'consensus' ? videos.map(v => ({ ...v, timepoints: v.timepoints.split(',').map(Number) })) : videos;
     this.state = {
-      shuffledVideos: shuffleVideos ? shuffle(videoIds) : videoIds,
+      shuffledVideos: shuffleVideos ? shuffle(processedVids) : processedVids,
       shuffledQuestions: shuffleQuestions ? shuffle(questions) : questions,
       ...INITIALSTATE,
       paused: paradigm === 'continuous',
     };
   }
 
-  componentDidMount() {
-    const restoredState = reactLocalStorage.getObject('var');
-    this.setState({
-      ...restoredState,
-      startTime: Date.now(),
-    });
-  }
-
   // Add the new data point from VideoQuestions and resume the video
   onSubmit(newValue) {
-    const {
-      data, showQuestionTime,
-    } = this.state;
-    const currentVideo = this.getCurrentVideoId();
+    const { data, showQuestionTime } = this.state;
+    const currentVideo = this.getCurrentVideo().id;
     const videoData = data[currentVideo] || [];
     const newerValue = {
       ...newValue,
@@ -108,6 +103,19 @@ class Experiment extends React.Component {
     }
   }
 
+  onProgress({ playedSeconds }) {
+    const { paradigm } = this.props;
+    if (paradigm === 'consensus') {
+      const { nextTimepointIndex } = this.state;
+      if (playedSeconds > this.getCurrentVideo().timepoints[nextTimepointIndex]) {
+        this.setState(s => ({
+          paused: true,
+          nextTimepointIndex: s.nextTimepointIndex + 1,
+        }));
+      }
+    }
+  }
+
   // The user has closed the tab - save data to localstorage.
   onClose() {
     const { elapsedTotalTime, startTime, stage } = this.state;
@@ -121,7 +129,7 @@ class Experiment extends React.Component {
     reactLocalStorage.setObject('var', save);
   }
 
-  getCurrentVideoId() {
+  getCurrentVideo() {
     const { shuffledVideos, videoIndex } = this.state;
     return shuffledVideos[videoIndex];
   }
@@ -136,14 +144,8 @@ class Experiment extends React.Component {
     const { sendData, completionID } = this.props;
     const dataWithBrowserInfo = {
       answers: data,
-      browserWidth: Math.max(
-        document.documentElement.clientWidth,
-        window.innerWidth || 0,
-      ),
-      browserHeight: Math.max(
-        document.documentElement.clientHeight,
-        window.innerHeight || 0,
-      ),
+      browserWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+      browserHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
       videoWidth: this.player.wrapper.clientWidth,
       videoHeight: this.player.wrapper.clientHeight,
       totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
@@ -171,19 +173,12 @@ class Experiment extends React.Component {
   }
 
   renderExperiment() {
-    const {
-      paused,
-      isInstructionOpen,
-    } = this.state;
-    const videoUrl = `https://vimeo.com/${this.getCurrentVideoId()}`;
+    const { paused, isInstructionOpen } = this.state;
+    const videoUrl = `https://vimeo.com/${this.getCurrentVideo().id}`;
 
     return (
       <div className="Video">
-        <div
-          id="myNav"
-          className="overlay"
-          style={{ width: isInstructionOpen ? '100%' : '0%' }}
-        >
+        <div id="myNav" className="overlay" style={{ width: isInstructionOpen ? '100%' : '0%' }}>
           <div
             className="closebtn"
             onClick={() => {
@@ -212,16 +207,21 @@ class Experiment extends React.Component {
             onReady={() => this.onReady()}
             onPause={() => this.onPause()}
             onPlay={() => this.onPlay()}
-            onSeek={() => this.onSeek()}
             onEnded={() => this.onVideoEnd()}
+            onProgress={e => this.onProgress(e)}
             playing={!paused}
             width="100%"
             height="100%"
+            config={{
+              vimeo: {
+                playerOptions: {
+                  controls: false,
+                },
+              },
+            }}
           />
         </div>
-        <div className="questionContainer">
-          {this.renderQuestions()}
-        </div>
+        <div className="questionContainer">{this.renderQuestions()}</div>
       </div>
     );
   }
@@ -231,7 +231,7 @@ class Experiment extends React.Component {
     const { paradigm } = this.props;
     if (paradigm === 'continuous') {
       const { data } = this.state;
-      const currentVideo = this.getCurrentVideoId();
+      const currentVideo = this.getCurrentVideo().id;
       return (
         <div>
           <ContinuousGrid
@@ -264,11 +264,19 @@ class Experiment extends React.Component {
         />
       );
     }
-    return (
-      <div className="questionPlaceholder">
-        Pause the video and questions will appear here.
-      </div>
-    );
+    if (paradigm === 'self') {
+      return (
+        <div className="questionPlaceholder">
+          Click pause and questions will appear here.
+          <button id="pauseButton" onClick={() => this.onPause()} type="button">Pause</button>
+        </div>
+      );
+    }
+    if (paradigm === 'consensus') {
+      return (
+        <div className="questionPlaceholder">The video will pause automatically and questions will appear here.</div>
+      );
+    }
   }
 
   renderDone() {
@@ -333,7 +341,7 @@ class Experiment extends React.Component {
 
 Experiment.propTypes = {
   paradigm: PropTypes.string.isRequired,
-  videoIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  videos: PropTypes.arrayOf(PropTypes.exact({ id: PropTypes.string.isRequired, timepoints: PropTypes.string })).isRequired,
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
