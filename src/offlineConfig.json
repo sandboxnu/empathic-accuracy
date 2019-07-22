@@ -6,6 +6,7 @@
     "Welcome to the empathy study, and thanks for participating! On the following screen, you will see more instructions on what you will be asked to do.",
     "In this study, you will be shown a video and asked a set of questions about the video. You can answer these questions at any point. To be shown the questions, just pause the video. Click next to continue to the experiment."
   ],
+  "instructionsOverlay": "these are the offline instructions",
   "questions": [
     {
       "type": "mc",

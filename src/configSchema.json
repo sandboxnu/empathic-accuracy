@@ -14,7 +14,7 @@
           }
         }
       },
-      "default": [{"id": "314909286/3623e43bae" }]
+      "default": [{ "id": "314909286/3623e43bae" }]
     },
     "shuffleVideos": {
       "type": "boolean",
@@ -32,6 +32,11 @@
         "Welcome to the empathy study, and thanks for participating! On the following screen, you will see more instructions on what you will be asked to do.",
         "In this study, you will be shown a video and asked a set of questions about the video. You can answer these questions at any point. To be shown the questions, just pause the video. Click next to continue to the experiment."
       ]
+    },
+    "instructionsOverlay": {
+      "type": "string",
+      "title": "Overlay Instructions",
+      "default": "insert instructions here"
     },
     "paradigm": {
       "type": "string",
@@ -56,7 +61,12 @@
             "type": "string",
             "title": "Type of Question",
             "enum": ["mc", "scale", "grid", "open"],
-            "enumNames": ["Multiple Choice", "Rating Scale", "Affect Grid", "Open Response"],
+            "enumNames": [
+              "Multiple Choice",
+              "Rating Scale",
+              "Affect Grid",
+              "Open Response"
+            ],
             "default": "mc"
           },
           "label": { "type": "string", "title": "Question Label" }

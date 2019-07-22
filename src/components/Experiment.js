@@ -16,7 +16,7 @@ const INITIALSTATE = {
   stage: StageEnum.instructions,
   showQuestionTime: 0,
   startTime: 0,
-  elapsedTotalTime: 0,
+  elapsedTotalTime: 0
 };
 /**
  * Shuffles array in place.
@@ -47,15 +47,25 @@ class Experiment extends React.Component {
   constructor(props) {
     super(props);
     const {
-      videos, questions, paradigm, shuffleVideos, shuffleQuestions,
+      videos,
+      questions,
+      paradigm,
+      shuffleVideos,
+      shuffleQuestions
     } = this.props;
     // Parse csv timepoints
-    const processedVids = paradigm === 'consensus' ? videos.map(v => ({ ...v, timepoints: v.timepoints.split(',').map(Number) })) : videos;
+    const processedVids =
+      paradigm === 'consensus'
+        ? videos.map(v => ({
+            ...v,
+            timepoints: v.timepoints.split(',').map(Number)
+          }))
+        : videos;
     this.state = {
       shuffledVideos: shuffleVideos ? shuffle(processedVids) : processedVids,
       shuffledQuestions: shuffleQuestions ? shuffle(questions) : questions,
       ...INITIALSTATE,
-      paused: paradigm === 'continuous',
+      paused: paradigm === 'continuous'
     };
   }
 
@@ -66,12 +76,12 @@ class Experiment extends React.Component {
     const videoData = data[currentVideo] || [];
     const newerValue = {
       ...newValue,
-      questionTime: (Date.now() - showQuestionTime) / 1000,
+      questionTime: (Date.now() - showQuestionTime) / 1000
     };
     const updatedData = { ...data, [currentVideo]: [...videoData, newerValue] };
     this.setState({
       data: updatedData,
-      paused: false,
+      paused: false
     });
   }
 
@@ -84,7 +94,7 @@ class Experiment extends React.Component {
   onPause() {
     this.setState({
       paused: true,
-      showQuestionTime: Date.now(),
+      showQuestionTime: Date.now()
     });
   }
 
@@ -98,7 +108,7 @@ class Experiment extends React.Component {
       this.sendData();
     } else {
       this.setState({
-        videoIndex: videoIndex + 1,
+        videoIndex: videoIndex + 1
       });
     }
   }
@@ -107,10 +117,12 @@ class Experiment extends React.Component {
     const { paradigm } = this.props;
     if (paradigm === 'consensus') {
       const { nextTimepointIndex } = this.state;
-      if (playedSeconds > this.getCurrentVideo().timepoints[nextTimepointIndex]) {
+      if (
+        playedSeconds > this.getCurrentVideo().timepoints[nextTimepointIndex]
+      ) {
         this.setState(s => ({
           paused: true,
-          nextTimepointIndex: s.nextTimepointIndex + 1,
+          nextTimepointIndex: s.nextTimepointIndex + 1
         }));
       }
     }
@@ -123,7 +135,7 @@ class Experiment extends React.Component {
     const save = {
       ...this.state,
       elapsedTotalTime: elapsedTotalTime + Date.now() - startTime,
-      restoredPos,
+      restoredPos
     };
 
     reactLocalStorage.setObject('var', save);
@@ -144,17 +156,23 @@ class Experiment extends React.Component {
     const { sendData, completionID } = this.props;
     const dataWithBrowserInfo = {
       answers: data,
-      browserWidth: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
-      browserHeight: Math.max(document.documentElement.clientHeight, window.innerHeight || 0),
+      browserWidth: Math.max(
+        document.documentElement.clientWidth,
+        window.innerWidth || 0
+      ),
+      browserHeight: Math.max(
+        document.documentElement.clientHeight,
+        window.innerHeight || 0
+      ),
       videoWidth: this.player.wrapper.clientWidth,
       videoHeight: this.player.wrapper.clientHeight,
       totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
-      completionID,
+      completionID
     };
     sendData(dataWithBrowserInfo);
 
     this.setState({
-      stage: StageEnum.done,
+      stage: StageEnum.done
     });
   }
 
@@ -168,17 +186,17 @@ class Experiment extends React.Component {
     );
   }
 
-  handleClick() {
-    this.setState({ paused: false });
-  }
-
-  renderExperiment() {
+  renderOverlayInstructions() {
+    const { instructionsOverlay } = this.props;
     const { paused, isInstructionOpen } = this.state;
-    const videoUrl = `https://vimeo.com/${this.getCurrentVideo().id}`;
 
     return (
-      <div className="Video">
-        <div id="myNav" className="overlay" style={{ width: isInstructionOpen ? '100%' : '0%' }}>
+      <>
+        <div
+          id="myNav"
+          className="overlay"
+          style={{ width: isInstructionOpen ? '100%' : '0%' }}
+        >
           <div
             className="closebtn"
             onClick={() => {
@@ -188,7 +206,7 @@ class Experiment extends React.Component {
             &times;
           </div>
           <div className="overlay-content">
-            <div>hello, instructions</div>
+            <div>{instructionsOverlay}</div>
           </div>
         </div>
         <div
@@ -199,6 +217,21 @@ class Experiment extends React.Component {
         >
           Help
         </div>
+      </>
+    );
+  }
+
+  handleClick() {
+    this.setState({ paused: false });
+  }
+
+  renderExperiment() {
+    const { paused } = this.state;
+    const videoUrl = `https://vimeo.com/${this.getCurrentVideo().id}`;
+
+    return (
+      <div className="Video">
+        <div>{this.renderOverlayInstructions()}</div>
         <div className="videoContainer">
           <ReactPlayer
             className="videoPlayer"
@@ -215,9 +248,9 @@ class Experiment extends React.Component {
             config={{
               vimeo: {
                 playerOptions: {
-                  controls: false,
-                },
-              },
+                  controls: false
+                }
+              }
             }}
           />
         </div>
@@ -237,10 +270,10 @@ class Experiment extends React.Component {
           <ContinuousGrid
             field="grid"
             values={data[currentVideo]}
-            addValue={(value) => {
+            addValue={value => {
               const videoData = data[currentVideo] || [];
               this.setState({
-                data: { ...data, [currentVideo]: [...videoData, value] },
+                data: { ...data, [currentVideo]: [...videoData, value] }
               });
             }}
             videoPos={this.player ? this.player.getCurrentTime() : 0}
@@ -268,13 +301,17 @@ class Experiment extends React.Component {
       return (
         <div className="questionPlaceholder">
           Click pause and questions will appear here.
-          <button id="pauseButton" onClick={() => this.onPause()} type="button">Pause</button>
+          <button id="pauseButton" onClick={() => this.onPause()} type="button">
+            Pause
+          </button>
         </div>
       );
     }
     if (paradigm === 'consensus') {
       return (
-        <div className="questionPlaceholder">The video will pause automatically and questions will appear here.</div>
+        <div className="questionPlaceholder">
+          The video will pause automatically and questions will appear here.
+        </div>
       );
     }
   }
@@ -285,13 +322,11 @@ class Experiment extends React.Component {
       <div className="instructionsContainer">
         <p className="instructionsText">Thank you for participating.</p>
         <p className="instructionsText">
-          Your completion ID is
-          {' '}
+          Your completion ID is{' '}
           <span className="completionID">{completionID}</span>
         </p>
         <p className="instructionsText">
-          Please take this survey at the following link:
-          {' '}
+          Please take this survey at the following link:{' '}
           <a href={completionLink}>{completionLink}</a>
         </p>
         <p className="instructionsText">You can close this browser tab.</p>
@@ -301,7 +336,7 @@ class Experiment extends React.Component {
             reactLocalStorage.clear();
             this.setState({
               ...INITIALSTATE,
-              paused: paradigm === 'continuous',
+              paused: paradigm === 'continuous'
             });
           }}
         >
@@ -341,12 +376,18 @@ class Experiment extends React.Component {
 
 Experiment.propTypes = {
   paradigm: PropTypes.string.isRequired,
-  videos: PropTypes.arrayOf(PropTypes.exact({ id: PropTypes.string.isRequired, timepoints: PropTypes.string })).isRequired,
+  videos: PropTypes.arrayOf(
+    PropTypes.exact({
+      id: PropTypes.string.isRequired,
+      timepoints: PropTypes.string
+    })
+  ).isRequired,
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
+  instructionsOverlay: PropTypes.string.isRequired,
   completionID: PropTypes.string.isRequired,
-  completionLink: PropTypes.string.isRequired,
+  completionLink: PropTypes.string.isRequired
 };
 
 export default Experiment;
