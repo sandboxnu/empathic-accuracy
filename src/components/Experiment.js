@@ -16,7 +16,7 @@ const INITIALSTATE = {
   stage: StageEnum.instructions,
   showQuestionTime: 0,
   startTime: 0,
-  elapsedTotalTime: 0,
+  elapsedTotalTime: 0
 };
 /**
  * Shuffles array in place.
@@ -49,7 +49,7 @@ class Experiment extends React.Component {
     const { videoIds } = this.props;
     this.state = {
       shuffledVideos: shuffle(videoIds),
-      ...INITIALSTATE,
+      ...INITIALSTATE
     };
   }
 
@@ -57,25 +57,23 @@ class Experiment extends React.Component {
     const restoredState = reactLocalStorage.getObject('var');
     this.setState({
       ...restoredState,
-      startTime: Date.now(),
+      startTime: Date.now()
     });
   }
 
   // Add the new data point from VideoQuestions and resume the video
   onSubmit(newValue) {
-    const {
-      videoIndex, data, showQuestionTime, shuffledVideos,
-    } = this.state;
+    const { videoIndex, data, showQuestionTime, shuffledVideos } = this.state;
     const currentVideo = shuffledVideos[videoIndex];
     const videoData = data[currentVideo] || [];
     const newerValue = {
       ...newValue,
-      questionTime: (Date.now() - showQuestionTime) / 1000,
+      questionTime: (Date.now() - showQuestionTime) / 1000
     };
     const updatedData = { ...data, [currentVideo]: [...videoData, newerValue] };
     this.setState({
       data: updatedData,
-      paused: false,
+      paused: false
     });
   }
 
@@ -88,7 +86,7 @@ class Experiment extends React.Component {
   onPause() {
     this.setState({
       paused: true,
-      showQuestionTime: Date.now(),
+      showQuestionTime: Date.now()
     });
   }
 
@@ -103,7 +101,7 @@ class Experiment extends React.Component {
     } else {
       this.setState({
         videoIndex: videoIndex + 1,
-        paused: false,
+        paused: false
       });
     }
   }
@@ -115,7 +113,7 @@ class Experiment extends React.Component {
     const save = {
       ...this.state,
       elapsedTotalTime: elapsedTotalTime + Date.now() - startTime,
-      restoredPos,
+      restoredPos
     };
 
     reactLocalStorage.setObject('var', save);
@@ -133,21 +131,21 @@ class Experiment extends React.Component {
       answers: data,
       browserWidth: Math.max(
         document.documentElement.clientWidth,
-        window.innerWidth || 0,
+        window.innerWidth || 0
       ),
       browserHeight: Math.max(
         document.documentElement.clientHeight,
-        window.innerHeight || 0,
+        window.innerHeight || 0
       ),
       videoWidth: this.player.wrapper.clientWidth,
       videoHeight: this.player.wrapper.clientHeight,
       totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
-      completionID,
+      completionID
     };
     sendData(dataWithBrowserInfo);
 
     this.setState({
-      stage: StageEnum.done,
+      stage: StageEnum.done
     });
   }
 
@@ -172,7 +170,7 @@ class Experiment extends React.Component {
       paused,
       videoIndex,
       shuffledVideos,
-      isInstructionOpen,
+      isInstructionOpen
     } = this.state;
     const videoId = shuffledVideos[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
@@ -204,6 +202,7 @@ class Experiment extends React.Component {
         >
           Help
         </div>
+        <div className="videoBlanket" />
         <div className="videoContainer">
           <ReactPlayer
             className="videoPlayer"
@@ -243,7 +242,7 @@ class Experiment extends React.Component {
       paused,
       videoIndex,
       shuffledVideos,
-      isInstructionOpen,
+      isInstructionOpen
     } = this.state;
     const videoId = shuffledVideos[videoIndex];
     const videoUrl = `https://vimeo.com/${videoId}`;
@@ -312,13 +311,11 @@ class Experiment extends React.Component {
       <div className="instructionsContainer">
         <p className="instructionsText">Thank you for participating.</p>
         <p className="instructionsText">
-          Your completion ID is
-          {' '}
+          Your completion ID is{' '}
           <span className="completionID">{completionID}</span>
         </p>
         <p className="instructionsText">
-          Please take this survey at the following link:
-          {' '}
+          Please take this survey at the following link:{' '}
           <a href={completionLink}>{completionLink}</a>
         </p>
         <p className="instructionsText">You can close this browser tab.</p>
@@ -369,7 +366,7 @@ Experiment.propTypes = {
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
   completionID: PropTypes.string.isRequired,
-  completionLink: PropTypes.string.isRequired,
+  completionLink: PropTypes.string.isRequired
 };
 
 export default Experiment;

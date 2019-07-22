@@ -8,7 +8,7 @@ import grid from './affect.png';
 const startTime = new Date().getTime();
 
 function getRelativeClick(e) {
-  console.log(e.clientX, e.clientY);
+  // console.log(e.clientX, e.clientY);
   // e = Mouse click event.
   const rect = e.currentTarget.getBoundingClientRect();
   const x = e.clientX - rect.left; // x position within the element.
@@ -27,9 +27,9 @@ function renderTrail(value) {
           style={{
             top: value[value.length - i].pos.y,
             left: value[value.length - i].pos.x,
-            background: `#${i}${i}${i}`,
+            background: `#${i}${i}${i}`
           }}
-        />,
+        />
       );
     }
   }
@@ -39,33 +39,29 @@ function renderTrail(value) {
 // Make GridQuestion play nice with the informed library
 // https://joepuzzo.github.io/informed/?selectedKind=CustomInputs&selectedStory=Creating Custom Inputs
 const ContinuousGrid = asField(({ fieldState, fieldApi, ...props }) => {
-  const {
-    videoPos, onGridExit, onPlay, paused,
-  } = props;
+  const { videoPos, onGridExit, onPlay, paused } = props;
   const { value = [] } = fieldState;
   const { setValue } = fieldApi;
   return (
     <div
       className="grid"
-      // ! why does it pause on enter instead of exit??
       onMouseLeave={onGridExit}
-      onMouseMoveCapture={(e) => {
+      onMouseMoveCapture={e => {
+        console.log(value.length);
         if (!paused) {
           setValue([...value, { pos: getRelativeClick(e), time: videoPos }]);
         }
       }}
     >
-      <div
-        className="CircleContainer"
-      >
+      <div className="CircleContainer">
         {paused ? (
           <div
-            className="circle"
+            className="circle pauseCircle"
             onClick={onPlay}
             style={{
               background: 'green',
               top: '180px',
-              left: '200px',
+              left: '200px'
             }}
           />
         ) : (
@@ -76,18 +72,14 @@ const ContinuousGrid = asField(({ fieldState, fieldApi, ...props }) => {
                 className="circle"
                 style={{
                   top: value[value.length - 1].pos.y,
-                  left: value[value.length - 1].pos.x,
+                  left: value[value.length - 1].pos.x
                 }}
               />
             ) : null}
           </div>
         )}
       </div>
-      <img
-        id="grid"
-        src={grid}
-        alt="Grid"
-      />
+      <img id="grid" src={grid} alt="Grid" />
     </div>
   );
 });

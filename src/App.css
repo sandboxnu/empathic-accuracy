@@ -112,11 +112,11 @@ form .OpenQuestion {
   justify-content: space-between;
 }
 
-.questionContainer form input[type="radio"] {
+.questionContainer form input[type='radio'] {
   margin-right: 10px;
 }
 
-.questionContainer form input[type="radio"]:hover {
+.questionContainer form input[type='radio']:hover {
   cursor: pointer;
 }
 
@@ -175,6 +175,10 @@ form .OpenQuestion {
   background: #000;
 }
 
+.pauseCircle:hover {
+  cursor: pointer;
+}
+
 form .likert {
   list-style: none;
   width: 100%;
@@ -192,7 +196,7 @@ form .likert li {
   flex-basis: 0;
   flex-grow: 1;
 }
-form .likert li input[type="radio"] {
+form .likert li input[type='radio'] {
   display: block;
   position: relative;
   top: 0;
@@ -237,9 +241,19 @@ form .likert li label {
   grid-column-gap: 5px;
 }
 
+.videoBlanket {
+  grid-row: 2/8;
+  opacity: 0;
+  background: pink;
+  grid-column: 1/3;
+  position: relative;
+  z-index: 1;
+}
+
 .videoContainer {
   position: relative;
   grid-row: 2/8;
+  grid-column: 1/3;
 }
 
 .videoPlayer {

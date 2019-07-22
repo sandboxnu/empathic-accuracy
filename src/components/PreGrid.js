@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import VideoQuestions from "./VideoQuestions";
+import React, { Component } from 'react';
+import VideoQuestions from './VideoQuestions';
 
 class PreGrid extends Component {
   state = {
@@ -19,7 +19,7 @@ class PreGrid extends Component {
             // videoPos={player.then(res => {res.getCurrentTime()}}
           />
         ) : (
-          <div className="questionPlaceholder" >
+          <div className="questionPlaceholder">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum
             iure sed doloribus! Odio perspiciatis quidem, nihil atque harum
             rerum officiis iste, maiores nostrum, facilis libero nobis.
