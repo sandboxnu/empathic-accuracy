@@ -5,12 +5,11 @@ import Beforeunload from 'react-beforeunload';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import VideoQuestions from './VideoQuestions';
 import Instructions from './Instructions';
-import PreGrid from './PreGrid';
+import ContinuousGrid from './ContinuousGridQuestions';
 
 const StageEnum = { instructions: 1, experiment: 2, done: 3 };
 const INITIALSTATE = {
   restoredPos: 0,
-  paused: true,
   data: {},
   videoIndex: 0,
   stage: StageEnum.instructions,
@@ -46,10 +45,11 @@ function shuffle(array) {
 class Experiment extends React.Component {
   constructor(props) {
     super(props);
-    const { videoIds } = this.props;
+    const { videoIds, paradigm } = this.props;
     this.state = {
       shuffledVideos: shuffle(videoIds),
-      ...INITIALSTATE
+      ...INITIALSTATE,
+      paused: paradigm === 'continuous',
     };
   }
 
@@ -101,7 +101,6 @@ class Experiment extends React.Component {
     } else {
       this.setState({
         videoIndex: videoIndex + 1,
-        paused: false
       });
     }
   }
@@ -163,9 +162,7 @@ class Experiment extends React.Component {
     this.setState({ paused: false });
   }
 
-  renderContinuousExperiment() {
-    const vidQ = 'waiting';
-    const { questions } = this.props;
+  renderExperiment() {
     const {
       paused,
       videoIndex,
@@ -219,9 +216,31 @@ class Experiment extends React.Component {
           />
         </div>
         <div className="questionContainer">
-          <VideoQuestions
-            onSubmit={n => this.onSubmit(n)}
-            questions={questions}
+          {this.renderQuestions()}
+        </div>
+      </div>
+    );
+  }
+
+  renderQuestions() {
+    const { paused } = this.state;
+    const { paradigm, questions } = this.props;
+    if (paradigm === 'continuous') {
+      const {
+        videoIndex, data, shuffledVideos,
+      } = this.state;
+      const currentVideo = shuffledVideos[videoIndex];
+      return (
+        <div>
+          <ContinuousGrid
+            field="grid"
+            values={data[currentVideo]}
+            addValue={(value) => {
+              const videoData = data[currentVideo] || [];
+              this.setState({
+                data: { ...data, [currentVideo]: [...videoData, value] },
+              });
+            }}
             videoPos={this.player ? this.player.getCurrentTime() : 0}
             onGridExit={() => {
               this.setState({ paused: true });
@@ -232,81 +251,26 @@ class Experiment extends React.Component {
             }}
           />
         </div>
-      </div>
-    );
-  }
-
-  renderExperiment() {
-    const { questions } = this.props;
-    const {
-      paused,
-      videoIndex,
-      shuffledVideos,
-      isInstructionOpen
-    } = this.state;
-    const videoId = shuffledVideos[videoIndex];
-    const videoUrl = `https://vimeo.com/${videoId}`;
+      );
+    }
+    if (paused) {
+      return (
+        <VideoQuestions
+          onSubmit={n => this.onSubmit(n)}
+          questions={questions}
+          videoPos={this.player ? this.player.getCurrentTime() : 0}
+        />
+      );
+    }
     return (
-      <div className="Video">
-        <div
-          id="myNav"
-          className="overlay"
-          style={{ width: isInstructionOpen ? '100%' : '0%' }}
-        >
-          <div
-            className="closebtn"
-            onClick={() => {
-              this.setState({ isInstructionOpen: false });
-            }}
-          >
-            &times;
-          </div>
-          <div className="overlay-content">
-            <div>hello, instructions</div>
-          </div>
-        </div>
-        <div
-          className="instructionsButton"
-          onClick={() => {
-            this.setState({ isInstructionOpen: true, paused: true });
-          }}
-        >
-          Help
-        </div>
-        <div className="videoContainer">
-          <ReactPlayer
-            className="videoPlayer"
-            ref={r => this.getPlayerRef(r)}
-            url={videoUrl}
-            onReady={() => this.onReady()}
-            onPause={() => this.onPause()}
-            onPlay={() => this.onPlay()}
-            onSeek={() => this.onSeek()}
-            onEnded={() => this.onVideoEnd()}
-            playing
-            width="100%"
-            height="100%"
-          />
-        </div>
-        <div className="questionContainer">
-          {true && this.player ? (
-            <VideoQuestions
-              onSubmit={n => this.onSubmit(n)}
-              questions={questions}
-              videoPos={this.player.getCurrentTime()}
-            />
-          ) : (
-            <div className="questionPlaceholder">
-              Pause the video and questions will appear here.
-            </div>
-          )}
-        </div>
+      <div className="questionPlaceholder">
+        Pause the video and questions will appear here.
       </div>
     );
   }
 
   renderDone() {
-    const { completionID, completionLink } = this.props;
+    const { completionID, completionLink, paradigm } = this.props;
     return (
       <div className="instructionsContainer">
         <p className="instructionsText">Thank you for participating.</p>
@@ -323,7 +287,10 @@ class Experiment extends React.Component {
           type="button"
           onClick={() => {
             reactLocalStorage.clear();
-            this.setState(INITIALSTATE);
+            this.setState({
+              ...INITIALSTATE,
+              paused: paradigm === 'continuous',
+            });
           }}
         >
           Start again
@@ -339,7 +306,7 @@ class Experiment extends React.Component {
       case StageEnum.instructions:
         return this.renderInstructions();
       case StageEnum.experiment:
-        return this.renderContinuousExperiment();
+        return this.renderExperiment();
       case StageEnum.done:
         return this.renderDone();
       default:
@@ -361,6 +328,7 @@ class Experiment extends React.Component {
 }
 
 Experiment.propTypes = {
+  paradigm: PropTypes.string.isRequired,
   videoIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
   sendData: PropTypes.func.isRequired,

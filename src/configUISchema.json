@@ -1,4 +1,8 @@
 {
+  "ui:order": [
+    "*",
+    "completionLink"
+  ],
   "videoIds": {
     "ui:options": {
       "orderable": false

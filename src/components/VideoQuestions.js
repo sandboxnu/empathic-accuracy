@@ -5,7 +5,6 @@ import React from 'react';
 import MultipleChoiceQuestion from './MultipleChoiceQuestion';
 import OpenQuestion from './OpenQuestion';
 import GridQuestion from './GridQuestion';
-import ContinuousGrid from './ContinuousGridQuestions';
 import ScaleQuestion from './ScaleQuestion';
 
 class VideoQuestions extends React.Component {
@@ -36,9 +35,7 @@ class VideoQuestions extends React.Component {
   // Render a list of questions
   renderQuestions() {
     const { activeQIndex } = this.state;
-    const {
-      questions, videoPos, onGridExit, paused, onPlay,
-    } = this.props;
+    const { questions } = this.props;
     const formQuestions = questions.map((question, idx) => {
       const { type } = question;
       const id = idx.toString();
@@ -56,17 +53,7 @@ class VideoQuestions extends React.Component {
               case 'open':
                 return <OpenQuestion key={id} id={id} {...question} />;
               case 'grid':
-                return (
-                  <ContinuousGrid
-                    key={id}
-                    field={id}
-                    {...question}
-                    videoPos={videoPos}
-                    onGridExit={onGridExit}
-                    paused={paused}
-                    onPlay={onPlay}
-                  />
-                );
+                return <GridQuestion key={id} field={id} {...question} />;
               default:
                 return null;
             }
