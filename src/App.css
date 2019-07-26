@@ -135,6 +135,10 @@ form .OpenQuestion {
   font-weight: lighter;
 }
 
+#pauseButton {
+  align-self: center;
+}
+
 .questionContainer form button,
 .questionPlaceholder button {
   align-self: end;

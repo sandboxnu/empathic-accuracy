@@ -2,14 +2,19 @@
   "type": "object",
   "required": ["videoIds"],
   "properties": {
-    "videoIds": {
+    "videos": {
       "type": "array",
       "title": "Vimeo Video IDs",
       "items": {
-        "type": "string",
-        "title": ""
+        "type": "object",
+        "title": "",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
       },
-      "default": ["314909286/3623e43bae"]
+      "default": [{ "id": "314909286/3623e43bae" }]
     },
     "shuffleVideos": {
       "type": "boolean",
@@ -28,16 +33,85 @@
         "In this study, you will be shown a video and asked a set of questions about the video. You can answer these questions at any point. To be shown the questions, just pause the video. Click next to continue to the experiment."
       ]
     },
+    "instructionsOverlay": {
+      "type": "string",
+      "title": "Overlay Instructions",
+      "default": "insert instructions here"
+    },
     "paradigm": {
       "type": "string",
       "title": "Data Collection Paradigm",
-      "enum": ["self", "continuous"],
+      "enum": ["self", "consensus", "continuous"],
       "default": "self"
     },
     "completionLink": {
       "type": "string",
       "title": "Completion Link: ",
       "default": "www.google.com"
+    }
+  },
+  "definitions": {
+    "questions": {
+      "type": "array",
+      "title": "Questions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type of Question",
+            "enum": ["mc", "scale", "grid", "open"],
+            "enumNames": [
+              "Multiple Choice",
+              "Rating Scale",
+              "Affect Grid",
+              "Open Response"
+            ],
+            "default": "mc"
+          },
+          "label": { "type": "string", "title": "Question Label" }
+        },
+        "dependencies": {
+          "type": {
+            "oneOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": ["mc"]
+                  },
+                  "choices": {
+                    "type": "array",
+                    "title": "Answer Choices",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "type": {
+                    "enum": ["scale"]
+                  },
+                  "choices": {
+                    "type": "array",
+                    "title": "Scale Label",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              {
+                "properties": { "type": { "enum": ["open"] } }
+              },
+              {
+                "properties": { "type": { "enum": ["grid"] } }
+              }
+            ]
+          }
+        }
+      }
     }
   },
   "dependencies": {
@@ -48,68 +122,40 @@
             "paradigm": {
               "enum": ["self"]
             },
+            "questions": {
+              "$ref": "#/definitions/questions"
+            },
             "shuffleQuestions": {
               "type": "boolean",
               "title": "Shuffle Order Questions Are Shown",
               "default": true
+            }
+          }
+        },
+        {
+          "properties": {
+            "paradigm": {
+              "enum": ["consensus"]
             },
-            "questions": {
+            "videos": {
               "type": "array",
-              "title": "Questions",
               "items": {
                 "type": "object",
-                "title": "Question",
                 "properties": {
-                  "type": {
+                  "timepoints": {
                     "type": "string",
-                    "title": "Type of Question",
-                    "enum": ["mc", "scale", "grid", "open"],
-                    "enumNames": ["Multiple Choice", "Rating Scale", "Affect Grid", "Open Response"],
-                    "default": "mc"
-                  },
-                  "label": { "type": "string", "title": "Question Label" }
-                },
-                "dependencies": {
-                  "type": {
-                    "oneOf": [
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["mc"]
-                          },
-                          "choices": {
-                            "type": "array",
-                            "title": "Answer Choices",
-                            "items": {
-                              "type": "string"
-                            }
-                          }
-                        }
-                      },
-                      {
-                        "properties": {
-                          "type": {
-                            "enum": ["scale"]
-                          },
-                          "choices": {
-                            "type": "array",
-                            "title": "Scale Label",
-                            "items": {
-                              "type": "string"
-                            }
-                          }
-                        }
-                      },
-                      {
-                        "properties": { "type": { "enum": ["open"] } }
-                      },
-                      {
-                        "properties": { "type": { "enum": ["grid"] } }
-                      }
-                    ]
+                    "title": "timepoints (comma separated seconds)"
                   }
                 }
               }
+            },
+            "questions": {
+              "$ref": "#/definitions/questions"
+            },
+            "shuffleQuestions": {
+              "type": "boolean",
+              "title": "Shuffle Order Questions Are Shown",
+              "default": true
             }
           }
         }

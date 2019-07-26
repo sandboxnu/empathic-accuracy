@@ -27,7 +27,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "react-scripts start",
-    "now-build": "npm run build && mv build dist",
+    "now-build": "npm run build && rm -rf dist && mv build dist",
     "lint": "eslint src/ --ext .js"
   },
   "eslintConfig": {
