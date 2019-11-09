@@ -4,7 +4,7 @@ import Axios from 'axios';
 import { func } from 'prop-types';
 import { Form, Text } from 'informed';
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://api.sandboxneu.com/production-empathic';
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://api.sandboxneu.com/production-empathic2';
 
 class Login extends Component {
   constructor(props) {
