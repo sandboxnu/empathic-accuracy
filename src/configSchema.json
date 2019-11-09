@@ -1,6 +1,6 @@
 {
   "type": "object",
-  "required": ["videoIds"],
+  "required": ["videos"],
   "properties": {
     "videos": {
       "type": "array",
