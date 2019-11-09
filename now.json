@@ -10,7 +10,6 @@
     ],
     "alias": "empathic.sandboxneu.com",
     "env": {
-        "NODE_ENV": "production",
-        "REACT_APP_SERVER_URL": "https://api.sandboxneu.com/production-empathic2"
+        "NODE_ENV": "production"
     }
 }
