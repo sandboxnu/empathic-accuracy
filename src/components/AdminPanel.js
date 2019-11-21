@@ -9,7 +9,7 @@ import schema from '../configSchema';
 import uiSchema from '../configUISchema';
 import Login from './Login';
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://api.sandboxneu.com/production-empathic';
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://api.sandboxneu.com/production-empathic4';
 
 class AdminPanel extends Component {
   constructor(props) {
