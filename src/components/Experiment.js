@@ -92,6 +92,7 @@ class Experiment extends React.Component {
   }
 
   onPause() {
+    console.log('onpause');
     this.setState({
       paused: true,
       showQuestionTime: Date.now()
@@ -122,6 +123,7 @@ class Experiment extends React.Component {
       ) {
         this.setState(s => ({
           paused: true,
+          showQuestionTime: Date.now(),
           nextTimepointIndex: s.nextTimepointIndex + 1
         }));
       }
@@ -238,7 +240,6 @@ class Experiment extends React.Component {
             ref={r => this.getPlayerRef(r)}
             url={videoUrl}
             onReady={() => this.onReady()}
-            onPause={() => this.onPause()}
             onPlay={() => this.onPlay()}
             onEnded={() => this.onVideoEnd()}
             onProgress={e => this.onProgress(e)}
