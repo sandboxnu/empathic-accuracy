@@ -1,11 +1,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React from 'react';
-import { asField } from 'informed';
-import { gridQuestionType } from '../types';
 import grid from './affect.png';
 
-const startTime = new Date().getTime();
+// const startTime = new Date().getTime();
 
 function getRelativeClick(e) {
   console.log(e.clientX, e.clientY);
@@ -16,6 +14,7 @@ function getRelativeClick(e) {
   return { x, y };
 }
 
+/*
 function renderTrail(value) {
   const trail = [];
 
@@ -35,6 +34,7 @@ function renderTrail(value) {
   }
   return trail;
 }
+*/
 
 const ContinuousGrid = ({
   values = [], addValue, videoPos, onGridExit, onPlay, paused,

@@ -192,7 +192,7 @@ class Experiment extends React.Component {
 
   renderOverlayInstructions() {
     const { instructionsOverlay } = this.props;
-    const { paused, isInstructionOpen } = this.state;
+    const { isInstructionOpen } = this.state;
 
     return (
       <>
