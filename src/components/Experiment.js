@@ -7,7 +7,9 @@ import VideoQuestions from './VideoQuestions';
 import Instructions from './Instructions';
 import ContinuousGrid from './ContinuousGridQuestions';
 
-const StageEnum = { instructions: 1, experiment: 2, done: 3 };
+const StageEnum = {
+  instructions: 1, experiment: 2, betweenVids: 2.1, done: 3,
+};
 const INITIALSTATE = {
   restoredPos: 0,
   data: {},
@@ -16,7 +18,7 @@ const INITIALSTATE = {
   stage: StageEnum.instructions,
   showQuestionTime: 0,
   startTime: 0,
-  elapsedTotalTime: 0
+  elapsedTotalTime: 0,
 };
 /**
  * Shuffles array in place.
@@ -51,21 +53,20 @@ class Experiment extends React.Component {
       questions,
       paradigm,
       shuffleVideos,
-      shuffleQuestions
+      shuffleQuestions,
     } = this.props;
     // Parse csv timepoints
-    const processedVids =
-      paradigm === 'consensus'
-        ? videos.map(v => ({
-            ...v,
-            timepoints: v.timepoints.split(',').map(Number)
-          }))
-        : videos;
+    const processedVids = paradigm === 'consensus'
+      ? videos.map(v => ({
+        ...v,
+        timepoints: v.timepoints.split(',').map(Number),
+      }))
+      : videos;
     this.state = {
       shuffledVideos: shuffleVideos ? shuffle(processedVids) : processedVids,
       shuffledQuestions: shuffleQuestions ? shuffle(questions) : questions,
       ...INITIALSTATE,
-      paused: paradigm === 'continuous'
+      paused: paradigm === 'continuous',
     };
   }
 
@@ -76,12 +77,12 @@ class Experiment extends React.Component {
     const videoData = data[currentVideo] || [];
     const newerValue = {
       ...newValue,
-      questionTime: (Date.now() - showQuestionTime) / 1000
+      questionTime: (Date.now() - showQuestionTime) / 1000,
     };
     const updatedData = { ...data, [currentVideo]: [...videoData, newerValue] };
     this.setState({
       data: updatedData,
-      paused: false
+      paused: false,
     });
   }
 
@@ -95,7 +96,7 @@ class Experiment extends React.Component {
     console.log('onpause');
     this.setState({
       paused: true,
-      showQuestionTime: Date.now()
+      showQuestionTime: Date.now(),
     });
   }
 
@@ -109,7 +110,8 @@ class Experiment extends React.Component {
       this.sendData();
     } else {
       this.setState({
-        videoIndex: videoIndex + 1
+        stage: StageEnum.betweenVids,
+        videoIndex: videoIndex + 1,
       });
     }
   }
@@ -124,7 +126,7 @@ class Experiment extends React.Component {
         this.setState(s => ({
           paused: true,
           showQuestionTime: Date.now(),
-          nextTimepointIndex: s.nextTimepointIndex + 1
+          nextTimepointIndex: s.nextTimepointIndex + 1,
         }));
       }
     }
@@ -137,7 +139,7 @@ class Experiment extends React.Component {
     const save = {
       ...this.state,
       elapsedTotalTime: elapsedTotalTime + Date.now() - startTime,
-      restoredPos
+      restoredPos,
     };
 
     reactLocalStorage.setObject('var', save);
@@ -160,21 +162,21 @@ class Experiment extends React.Component {
       answers: data,
       browserWidth: Math.max(
         document.documentElement.clientWidth,
-        window.innerWidth || 0
+        window.innerWidth || 0,
       ),
       browserHeight: Math.max(
         document.documentElement.clientHeight,
-        window.innerHeight || 0
+        window.innerHeight || 0,
       ),
       videoWidth: this.player.wrapper.clientWidth,
       videoHeight: this.player.wrapper.clientHeight,
       totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
-      completionID
+      completionID,
     };
     sendData(dataWithBrowserInfo);
 
     this.setState({
-      stage: StageEnum.done
+      stage: StageEnum.done,
     });
   }
 
@@ -249,9 +251,9 @@ class Experiment extends React.Component {
             config={{
               vimeo: {
                 playerOptions: {
-                  controls: false
-                }
-              }
+                  controls: false,
+                },
+              },
             }}
           />
         </div>
@@ -271,10 +273,10 @@ class Experiment extends React.Component {
           <ContinuousGrid
             field="grid"
             values={data[currentVideo]}
-            addValue={value => {
+            addValue={(value) => {
               const videoData = data[currentVideo] || [];
               this.setState({
-                data: { ...data, [currentVideo]: [...videoData, value] }
+                data: { ...data, [currentVideo]: [...videoData, value] },
               });
             }}
             videoPos={this.player ? this.player.getCurrentTime() : 0}
@@ -317,17 +319,28 @@ class Experiment extends React.Component {
     }
   }
 
+  renderBetweenVids() {
+    return (
+      <Instructions
+        onFinish={() => this.setState({ stage: StageEnum.experiment })}
+        instructionScreens={['Click next to watch the next video']}
+      />
+    );
+  }
+
   renderDone() {
     const { completionID, completionLink, paradigm } = this.props;
     return (
       <div className="instructionsContainer">
         <p className="instructionsText">Thank you for participating.</p>
         <p className="instructionsText">
-          Your completion ID is{' '}
+          Your completion ID is
+          {' '}
           <span className="completionID">{completionID}</span>
         </p>
         <p className="instructionsText">
-          Please take this survey at the following link:{' '}
+          Please take this survey at the following link:
+          {' '}
           <a href={completionLink}>{completionLink}</a>
         </p>
         <p className="instructionsText">You can close this browser tab.</p>
@@ -337,7 +350,7 @@ class Experiment extends React.Component {
             reactLocalStorage.clear();
             this.setState({
               ...INITIALSTATE,
-              paused: paradigm === 'continuous'
+              paused: paradigm === 'continuous',
             });
           }}
         >
@@ -355,6 +368,8 @@ class Experiment extends React.Component {
         return this.renderInstructions();
       case StageEnum.experiment:
         return this.renderExperiment();
+      case StageEnum.betweenVids:
+        return this.renderBetweenVids();
       case StageEnum.done:
         return this.renderDone();
       default:
@@ -380,15 +395,15 @@ Experiment.propTypes = {
   videos: PropTypes.arrayOf(
     PropTypes.exact({
       id: PropTypes.string.isRequired,
-      timepoints: PropTypes.string
-    })
+      timepoints: PropTypes.string,
+    }),
   ).isRequired,
   questions: PropTypes.arrayOf(PropTypes.object).isRequired,
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
   instructionsOverlay: PropTypes.string.isRequired,
   completionID: PropTypes.string.isRequired,
-  completionLink: PropTypes.string.isRequired
+  completionLink: PropTypes.string.isRequired,
 };
 
 export default Experiment;
