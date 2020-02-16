@@ -73,7 +73,7 @@ class VideoQuestions extends React.Component {
         {this.renderQuestions()}
         {isLast ? (
           <button onClick={() => this.handleSubmit()} type="submit">
-            Save
+            Resume
           </button>
         ) : (
           <button onClick={() => this.handleSubmit()} type="submit">
