@@ -8,17 +8,18 @@ import Instructions from './Instructions';
 import ContinuousGrid from './ContinuousGridQuestions';
 
 const StageEnum = {
-  instructions: 1, experiment: 2, betweenVids: 2.1, done: 3,
+  enterSubjectID: 0, instructions: 1, experiment: 2, betweenVids: 2.1, done: 3,
 };
 const INITIALSTATE = {
   restoredPos: 0,
   data: {},
   videoIndex: 0,
   nextTimepointIndex: 0,
-  stage: StageEnum.instructions,
+  stage: StageEnum.enterSubjectID,
   showQuestionTime: 0,
   startTime: 0,
   elapsedTotalTime: 0,
+  subjectID: '',
 };
 /**
  * Shuffles array in place.
@@ -156,8 +157,10 @@ class Experiment extends React.Component {
 
   // Send data up to server
   sendData() {
-    const { data, startTime, elapsedTotalTime } = this.state;
-    const { sendData, completionID } = this.props;
+    const {
+      data, startTime, elapsedTotalTime, subjectID,
+    } = this.state;
+    const { sendData } = this.props;
     const dataWithBrowserInfo = {
       answers: data,
       browserWidth: Math.max(
@@ -171,7 +174,7 @@ class Experiment extends React.Component {
       videoWidth: this.player.wrapper.clientWidth,
       videoHeight: this.player.wrapper.clientHeight,
       totalDuration: (elapsedTotalTime + (Date.now() - startTime)) / 1000,
-      completionID,
+      subjectID,
     };
     sendData(dataWithBrowserInfo);
 
@@ -329,33 +332,10 @@ class Experiment extends React.Component {
   }
 
   renderDone() {
-    const { completionID, completionLink, paradigm } = this.props;
     return (
       <div className="instructionsContainer">
         <p className="instructionsText">Thank you for participating.</p>
-        <p className="instructionsText">
-          Your completion ID is
-          {' '}
-          <span className="completionID">{completionID}</span>
-        </p>
-        <p className="instructionsText">
-          Please take this survey at the following link:
-          {' '}
-          <a href={completionLink}>{completionLink}</a>
-        </p>
         <p className="instructionsText">You can close this browser tab.</p>
-        <button
-          type="button"
-          onClick={() => {
-            reactLocalStorage.clear();
-            this.setState({
-              ...INITIALSTATE,
-              paused: paradigm === 'continuous',
-            });
-          }}
-        >
-          Start again
-        </button>
       </div>
     );
   }
@@ -364,6 +344,8 @@ class Experiment extends React.Component {
     const { stage } = this.state;
 
     switch (stage) {
+      case StageEnum.enterSubjectID:
+        return this.renderEnterSubjectID();
       case StageEnum.instructions:
         return this.renderInstructions();
       case StageEnum.experiment:
@@ -375,6 +357,21 @@ class Experiment extends React.Component {
       default:
         return null;
     }
+  }
+
+  renderEnterSubjectID() {
+    return (
+      <div className="instructionsContainer">
+        <div>
+        Please enter your subject ID:
+          <input
+            onChange={e => this.setState({ subjectID: e.target.value })}
+            value={this.state.subjectID}
+          />
+          <button type="button" onClick={() => this.setState({ stage: StageEnum.instructions })}> Next &#8250;</button>
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -402,8 +399,6 @@ Experiment.propTypes = {
   sendData: PropTypes.func.isRequired,
   instructionScreens: PropTypes.arrayOf(PropTypes.string).isRequired,
   instructionsOverlay: PropTypes.string.isRequired,
-  completionID: PropTypes.string.isRequired,
-  completionLink: PropTypes.string.isRequired,
 };
 
 export default Experiment;

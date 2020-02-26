@@ -21,13 +21,6 @@ function sendData(collected) {
     })
     .catch(error => console.log(error));
 }
-
-function generateID() {
-  const completionID = reactLocalStorage.get('completionID', Math.random().toString(36).substring(2, 12).toUpperCase());
-  reactLocalStorage.set('completionID', completionID);
-  return completionID;
-}
-
 /* In charge of talking to server */
 function ExperimentOnline() {
   return (
@@ -36,7 +29,7 @@ function ExperimentOnline() {
         <React.Fragment>
           {loading && <span>Loading...</span> }
           {data
-              && <Experiment {...data} completionID={generateID()} sendData={sendData} />}
+              && <Experiment {...data} sendData={sendData} />}
           {error && <span>Server error</span>}
         </React.Fragment>
       )}
