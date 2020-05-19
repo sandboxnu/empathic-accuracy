@@ -4,7 +4,7 @@ import Axios from 'axios';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import Experiment from './Experiment';
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://api.sandboxneu.com/empathic-accuracy';
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://api.sandboxneu.com/production-empathic4';
 
 function sendData(collected) {
   const time = Math.floor(new Date().getTime() / 1000);

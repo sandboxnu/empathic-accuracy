@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import React from 'react';
-import grid from './affect.png';
 
 // const startTime = new Date().getTime();
 
@@ -74,7 +73,7 @@ const ContinuousGrid = ({
         </div>
       )}
     </div>
-    <img id="grid" src={grid} alt="Grid" />
+    <img id="grid" src="/affect.png" alt="Grid" />
   </div>
 );
 

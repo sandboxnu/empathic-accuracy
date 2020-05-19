@@ -3,7 +3,6 @@
 import React from 'react';
 import { asField } from 'informed';
 import { gridQuestionType } from '../types';
-import grid from './affect.png';
 
 function getRelativeClick(e) {
   // e = Mouse click event.
@@ -23,7 +22,7 @@ const GridQuestion = asField(({ fieldState, fieldApi, ...props }) => {
       <div className="CircleContainer">
         {value ? <div className="circle" style={{ top: value.y, left: value.x }} /> : null}
       </div>
-      <img onClick={e => setValue(getRelativeClick(e))} src={grid} alt="Grid" />
+      <img onClick={e => setValue(getRelativeClick(e))} src="/affect.png" alt="Grid" />
     </div>
   );
 });

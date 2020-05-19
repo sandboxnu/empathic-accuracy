@@ -5,11 +5,11 @@ import Fetch from 'react-fetch-component';
 import Axios from 'axios';
 import Beforeunload from 'react-beforeunload';
 import fileDownload from 'js-file-download';
-import schema from '../configSchema';
-import uiSchema from '../configUISchema';
+import schema from './configSchema';
+import uiSchema from './configUISchema';
 import Login from './Login';
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://api.sandboxneu.com/empathic-accuracy';
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'https://api.sandboxneu.com/production-empathic4';
 
 class AdminPanel extends Component {
   constructor(props) {
