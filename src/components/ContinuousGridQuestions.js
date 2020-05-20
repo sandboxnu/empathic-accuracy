@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React from 'react';
+import React from "react";
 
 // const startTime = new Date().getTime();
 
@@ -36,7 +36,12 @@ function renderTrail(value) {
 */
 
 const ContinuousGrid = ({
-  values = [], addValue, videoPos, onGridExit, onPlay, paused,
+  values = [],
+  addValue,
+  videoPos,
+  onGridExit,
+  onPlay,
+  paused,
 }) => (
   <div
     className="grid"
@@ -54,9 +59,9 @@ const ContinuousGrid = ({
           className="circle"
           onClick={onPlay}
           style={{
-            background: 'green',
-            top: '180px',
-            left: '200px',
+            background: "green",
+            top: "180px",
+            left: "200px",
           }}
         />
       ) : (

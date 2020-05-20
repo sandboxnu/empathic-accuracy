@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-import React from 'react';
-import { asField } from 'informed';
-import { gridQuestionType } from '../types';
+import React from "react";
+import { asField } from "informed";
+import { gridQuestionType } from "../types";
 
 function getRelativeClick(e) {
   // e = Mouse click event.
@@ -20,9 +20,15 @@ const GridQuestion = asField(({ fieldState, fieldApi, ...props }) => {
   return (
     <div className="grid">
       <div className="CircleContainer">
-        {value ? <div className="circle" style={{ top: value.y, left: value.x }} /> : null}
+        {value ? (
+          <div className="circle" style={{ top: value.y, left: value.x }} />
+        ) : null}
       </div>
-      <img onClick={e => setValue(getRelativeClick(e))} src="/affect.png" alt="Grid" />
+      <img
+        onClick={(e) => setValue(getRelativeClick(e))}
+        src="/affect.png"
+        alt="Grid"
+      />
     </div>
   );
 });

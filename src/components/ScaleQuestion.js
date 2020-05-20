@@ -1,7 +1,6 @@
-import React from 'react';
-import { RadioGroup, Radio } from 'informed';
-import { scaleQuestionType } from '../types';
-
+import React from "react";
+import { RadioGroup, Radio } from "informed";
+import { scaleQuestionType } from "../types";
 
 class ScaleQuestion extends React.Component {
   renderChoices() {
@@ -13,7 +12,7 @@ class ScaleQuestion extends React.Component {
         <li>
           <Radio id={choiceId} name="likert" value={choice} />
           <label htmlFor={choiceId}>{choice}</label>
-        </li>,
+        </li>
       );
       return acc;
     }, []);
@@ -24,11 +23,11 @@ class ScaleQuestion extends React.Component {
     const { id, label } = this.props;
     return (
       <div>
-        <label className="questionTitle" htmlFor={id}>{label}</label>
+        <label className="questionTitle" htmlFor={id}>
+          {label}
+        </label>
         <RadioGroup id={id} field={id}>
-        <ul className='likert' >
-          {this.renderChoices()}
-        </ul>
+          <ul className="likert">{this.renderChoices()}</ul>
         </RadioGroup>
       </div>
     );
@@ -36,6 +35,5 @@ class ScaleQuestion extends React.Component {
 }
 
 ScaleQuestion.propTypes = scaleQuestionType;
-
 
 export default ScaleQuestion;

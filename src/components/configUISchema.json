@@ -1,9 +1,5 @@
 {
-  "ui:order": [
-    "paradigm",
-    "*",
-    "completionLink"
-  ],
+  "ui:order": ["paradigm", "*", "completionLink"],
   "videoIds": {
     "ui:options": {
       "orderable": false

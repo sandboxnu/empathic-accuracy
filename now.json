@@ -1,7 +1,7 @@
 {
-    "version": 2,
-    "alias": "empathic.sandboxneu.com",
-    "env": {
-        "NODE_ENV": "production"
-    }
+  "version": 2,
+  "alias": "empathic.sandboxneu.com",
+  "env": {
+    "NODE_ENV": "production"
+  }
 }

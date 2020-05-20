@@ -1,7 +1,6 @@
-import React from 'react';
-import { RadioGroup, Radio } from 'informed';
-import { mcQuestionType } from '../types';
-
+import React from "react";
+import { RadioGroup, Radio } from "informed";
+import { mcQuestionType } from "../types";
 
 class MultipleChoiceQuestion extends React.Component {
   renderChoices() {
@@ -11,7 +10,11 @@ class MultipleChoiceQuestion extends React.Component {
       // the key property is required by React to identify list elements.
       acc.push(<br />);
       acc.push(<Radio key={choiceId} value={choice} id={choiceId} />);
-      acc.push(<label key={`label${choiceId}`} htmlFor={choiceId}>{choice}</label>);
+      acc.push(
+        <label key={`label${choiceId}`} htmlFor={choiceId}>
+          {choice}
+        </label>
+      );
       return acc;
     }, []);
     return radios;
@@ -21,7 +24,9 @@ class MultipleChoiceQuestion extends React.Component {
     const { id, label } = this.props;
     return (
       <div>
-        <label className="questionTitle" htmlFor={id}>{label}</label>
+        <label className="questionTitle" htmlFor={id}>
+          {label}
+        </label>
         <RadioGroup id={id} field={id}>
           {this.renderChoices()}
         </RadioGroup>
@@ -31,6 +36,5 @@ class MultipleChoiceQuestion extends React.Component {
 }
 
 MultipleChoiceQuestion.propTypes = mcQuestionType;
-
 
 export default MultipleChoiceQuestion;
