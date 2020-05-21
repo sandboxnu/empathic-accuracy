@@ -7,7 +7,6 @@ import Beforeunload from "react-beforeunload";
 import fileDownload from "js-file-download";
 import schema from "./configSchema";
 import uiSchema from "./configUISchema";
-import Login from "./Login";
 
 const SERVER_URL =
   process.env.REACT_APP_SERVER_URL ||
@@ -19,7 +18,6 @@ class AdminPanel extends Component {
     this.state = {
       configOnServer: {},
       formData: {},
-      authenticated: false,
       password: null,
     };
   }
@@ -60,13 +58,6 @@ class AdminPanel extends Component {
       return "You have unsaved changes";
     }
     return null;
-  }
-
-  onPassword(password) {
-    this.setState({
-      authenticated: true,
-      password,
-    });
   }
 
   downloadData() {
@@ -110,10 +101,6 @@ class AdminPanel extends Component {
   }
 
   render() {
-    const { authenticated } = this.state;
-    if (!authenticated) {
-      return <Login onPassword={(p) => this.onPassword(p)} />;
-    }
     return (
       <Beforeunload onBeforeunload={(e) => this.onClose(e)}>
         <Fetch
