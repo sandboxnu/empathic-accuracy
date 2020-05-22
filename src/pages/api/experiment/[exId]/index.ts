@@ -1,12 +1,9 @@
 import { withIronSession } from "next-iron-session";
 import { NextApiResponse } from "next";
-import { safe } from "../../../../lib/errors";
-import {
-  NextApiRequestWithSess,
-  ExperimentConfig,
-} from "../../../../lib/types";
-import { IRON_SESSION_CONFIG } from "../../../../lib/ironSession";
-import { getConfig, setConfig } from "../../../../lib/db";
+import { safe } from "lib/errors";
+import { NextApiRequestWithSess, ExperimentConfig } from "lib/types";
+import { IRON_SESSION_CONFIG } from "lib/ironSession";
+import { getConfig, setConfig } from "lib/db";
 
 async function set(req: NextApiRequestWithSess, res: NextApiResponse) {
   const newConfig = req.body as ExperimentConfig;

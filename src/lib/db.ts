@@ -1,5 +1,5 @@
 import AWS, { DynamoDB } from "aws-sdk";
-import { ExperimentConfig } from "./types";
+import { ExperimentConfig, ExperimentData, ExperimentDataEntry } from "./types";
 AWS.config.update({
   accessKeyId: process.env.ACCESS_KEY_ID,
   secretAccessKey: process.env.SECRET_KEY,
@@ -50,6 +50,34 @@ export async function setConfig(
       UpdateExpression: `SET config=:config`,
       ExpressionAttributeValues: {
         ":config": config,
+      },
+    })
+    .promise();
+}
+
+export async function getAllData(
+  experimentId: number
+): Promise<ExperimentData> {
+  const data = await docClient
+    .get({ TableName: table, Key: { id: `DATA-${experimentId}` } })
+    .promise();
+  return data.Item?.subjectData as ExperimentData;
+}
+
+export async function putDataEntry(
+  experimentId: number,
+  dataEntry: ExperimentDataEntry
+) {
+  await docClient
+    .update({
+      TableName: table,
+      Key: {
+        id: `DATA-${experimentId}`,
+      },
+      UpdateExpression: `SET subjectData=list_append(if_not_exists(subjectData, :empty_list), :data_entry)`,
+      ExpressionAttributeValues: {
+        ":data_entry": [dataEntry],
+        ":empty_list": [],
       },
     })
     .promise();
