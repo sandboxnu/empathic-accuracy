@@ -1,11 +1,11 @@
-import AdminPanel from "../components/AdminPanel";
 import { withIronSession } from "next-iron-session";
 import { IRON_SESSION_CONFIG } from "../lib/ironSession";
+import ExperimentConfigurator from "../components/admin/ExperimentConfigurator";
 
 export default function Admin() {
   return (
     <div className="App">
-      <AdminPanel />
+      <ExperimentConfigurator experimentId={1} />
     </div>
   );
 }

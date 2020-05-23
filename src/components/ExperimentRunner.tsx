@@ -50,7 +50,7 @@ function shuffle(array) {
   return ret;
 }
 
-class Experiment extends React.Component {
+class ExperimentRunner extends React.Component {
   constructor(props) {
     super(props);
     const {
@@ -396,7 +396,7 @@ class Experiment extends React.Component {
   }
 }
 
-Experiment.propTypes = {
+ExperimentRunner.propTypes = {
   paradigm: PropTypes.string.isRequired,
   videos: PropTypes.arrayOf(
     PropTypes.exact({
@@ -410,4 +410,4 @@ Experiment.propTypes = {
   instructionsOverlay: PropTypes.string.isRequired,
 };
 
-export default Experiment;
+export default ExperimentRunner;

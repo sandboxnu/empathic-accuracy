@@ -23,9 +23,9 @@ async function get(
   const exId = parseInt(req.query.exId as string);
   const config = await getAllData(exId);
   if (config !== undefined) {
-    res.status(200).send(config);
+    res.status(200).json(config);
   } else {
-    res.status(404).end();
+    res.status(200).json([]);
   }
 }
 
