@@ -127,7 +127,7 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
     if (config.paradigm === "consensus") {
       if (playedSeconds > currentVideo.timepoints[nextTimepointIndex]) {
         onPause();
-        setNextTimepointIndex(nextTimepointIndex+1);
+        setNextTimepointIndex(nextTimepointIndex + 1);
       }
     }
   }
