@@ -24,7 +24,7 @@ export default function ExperimentPage() {
 
   return (
     <div className="App">
-      {config && <ExperimentRunner {...config} sendData={sendData} />}
+      {config && <ExperimentRunner config={config} sendData={sendData} />}
     </div>
   );
 }

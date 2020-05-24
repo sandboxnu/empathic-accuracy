@@ -1,8 +1,8 @@
 {
   "paradigm": "self",
   "videos": [
-    { "id": "314909286/3623e43bae" },
-    { "id": "318377318/cbb45794ea" }
+    { "id": "314909286/3623e43bae", "timepoints": [] },
+    { "id": "318377318/cbb45794ea", "timepoints": [] }
   ],
   "shuffleVideos": true,
   "instructionScreens": [

@@ -6,7 +6,7 @@ AWS.config.update({
   region: "us-east-1",
 });
 
-const DYNAMO_ENDPOINT = "http://localhost:8000";
+const DYNAMO_ENDPOINT = process.env.DYNAMO_ENDPOINT;
 
 const dynamodb = new AWS.DynamoDB({ endpoint: DYNAMO_ENDPOINT });
 const docClient = new AWS.DynamoDB.DocumentClient({

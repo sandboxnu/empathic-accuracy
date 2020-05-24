@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src/",
-    "dev:db:up": "docker run -p 8000:8000 amazon/dynamodb-local"
+    "dev:db:up": "docker run -p 8000:8000 -d amazon/dynamodb-local && DYNAMO_ENDPOINT=http://localhost:8000 ts-node -P tsconfig.standalone.json src/lib/setupdb-cli.ts"
   },
   "dependencies": {
     "@zeit/next-css": "^1.0.1",

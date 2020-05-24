@@ -2,9 +2,9 @@ import { useEffect, useCallback } from "react";
 import Axios from "axios";
 
 // Fetch data with axios and enforce ordered delivery via cancellation
-export function useAxios<T>(
+export function useAxios(
   url: string,
-  onSuccess: (data: T) => void,
+  onSuccess: (data: any) => void,
   deps: unknown[]
 ) {
   // eslint-disable-next-line react-hooks/exhaustive-deps

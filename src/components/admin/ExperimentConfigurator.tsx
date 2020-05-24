@@ -13,26 +13,44 @@ import { useAxios } from "lib/useAxios";
 interface ExperimentConfiguratorProps {
   experimentId: number;
 }
+
+// rawconfig is used by formschema and must be transformed before upload
+// difference timepoints are comma separated string
+interface RawConfig extends Omit<ExperimentConfig, "videos"> {
+  videos: { id: string; timepoints?: string }[];
+}
 export default function ExperimentConfigurator({
   experimentId,
 }: ExperimentConfiguratorProps) {
   const experimentURL = `api/experiment/${experimentId}`;
-  const [config, setConfig] = useState<ExperimentConfig>();
-  const [configOnServer, setConfigOnServer] = useState<ExperimentConfig>(
-    config
-  ); // For warning user closing tab
+  const [config, setConfig] = useState<RawConfig>();
+  const [configOnServer, setConfigOnServer] = useState<RawConfig>(); // For warning user closing tab
 
   useAxios(
     experimentURL,
-    (data) => {
-      setConfig(data);
-      setConfigOnServer(data);
+    (data: ExperimentConfig) => {
+      const raw: RawConfig = {
+        ...data,
+        videos: data.videos.map((v) => ({
+          ...v,
+          timepoints: v.timepoints.join(","),
+        })),
+      };
+      setConfig(raw);
+      setConfigOnServer(raw);
     },
     [setConfig, setConfigOnServer]
   );
 
-  function submitNewConfig(newConf: ExperimentConfig) {
-    Axios.post(experimentURL, newConf)
+  function submitNewConfig(newConf: RawConfig) {
+    const exConf: ExperimentConfig = {
+      ...newConf,
+      videos: newConf.videos.map((v) => ({
+        ...v,
+        timepoints: v.timepoints ? v.timepoints.split(",").map(Number) : [],
+      })),
+    };
+    Axios.post(experimentURL, exConf)
       .then(() => setConfigOnServer(newConf))
       .catch((error) => console.log(error));
   }
