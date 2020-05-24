@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import {
   TrialBlockConfig,
-  ExperimentDataEntry,
   AnswerSetWithMetadata,
   AnswerSet,
   VideoToAnswerSet,
@@ -72,10 +71,10 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
   const [stage, setStage] = useState(StageEnum.showingVid);
   const [vidIndex, setVidIndex] = useState(0);
   const videos = useState(
-    config.shuffleVideos ? config.videos : config.videos
+    config.shuffleVideos ? shuffle(config.videos) : config.videos
   )[0];
   const questions = useState(
-    config.shuffleQuestions ? config.questions : config.questions
+    config.shuffleQuestions ? shuffle(config.questions) : config.questions
   )[0];
   console.log(config);
 
@@ -189,7 +188,7 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
       <div className="Video">
         <div>
           <OverlayInstruction
-            instructionsOverlay={config.instructionOverlay}
+            instructionsOverlay={config.instructionsOverlay}
             onOpen={() => setPaused(true)}
           />
         </div>

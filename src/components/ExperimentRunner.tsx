@@ -1,11 +1,6 @@
 import React from "react";
-import ReactPlayer from "react-player";
-import PropTypes from "prop-types";
 import Beforeunload from "react-beforeunload";
-import { reactLocalStorage } from "reactjs-localstorage";
-import VideoQuestions from "./VideoQuestions";
 import Instructions from "./Instructions";
-import ContinuousGrid from "./ContinuousGridQuestions";
 import { ExperimentDataEntry, ExperimentConfig } from "lib/types";
 import TrialBlock from "./TrialBlock";
 
