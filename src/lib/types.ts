@@ -1,8 +1,10 @@
 import { NextApiRequest } from "next";
 import { Session } from "next-iron-session";
+import GridQuestion from "components/GridQuestion";
 
 export type NextApiRequestWithSess = NextApiRequest & { session: Session };
 
+// ================ Experiment Config ======================
 export type ExperimentMetadata = {
   id: string;
   nickname: string;
@@ -20,6 +22,29 @@ export interface TrialBlockConfig {
   videos: { id: string; timepoints: number[] }[];
   completionLink: string;
 }
+
+export type Question = MCQuestion | ScaleQuestion | OpenQuestion | GridQuestion;
+
+interface BaseQuestion {
+  id: string;
+  label: string;
+}
+export interface MCQuestion extends BaseQuestion {
+  type: "mc";
+  choices: string[];
+}
+export interface ScaleQuestion extends BaseQuestion {
+  type: "scale";
+  choices: string[];
+}
+export interface OpenQuestion extends BaseQuestion {
+  type: "open";
+}
+export interface GridQuestion extends BaseQuestion {
+  type: "grid";
+}
+
+// ================ Experiment Collected Data ======================
 
 export type ExperimentData = ExperimentDataEntry[];
 export interface ExperimentDataEntry {
@@ -43,4 +68,5 @@ export interface AnswerSet {
   [questionId: number]: Answer;
 }
 
-export type Answer = { x: number; y: number } | string;
+export type Answer = GridAnswer | string;
+export type GridAnswer = { x: number; y: number };

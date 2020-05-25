@@ -90,7 +90,7 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
 
   const currentVideo = videos[vidIndex];
 
-  const playerRef = useRef<ReactPlayer>();
+  const playerRef = useRef<ReactPlayer | undefined>();
 
   function onVideoEnd() {
     if (vidIndex === videos.length - 1) {
@@ -157,11 +157,7 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
     }
     if (paused) {
       return (
-        <VideoQuestions
-          onSubmit={(n) => onSubmit(n)}
-          questions={questions}
-          videoPos={playerRef.current ? playerRef.current.getCurrentTime() : 0}
-        />
+        <VideoQuestions onSubmit={(n) => onSubmit(n)} questions={questions} />
       );
     }
     if (config.paradigm === "self") {

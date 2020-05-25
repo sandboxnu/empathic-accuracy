@@ -1,34 +1,30 @@
 import { Form } from "informed";
-import PropTypes from "prop-types";
 import React from "react";
 import MultipleChoiceQuestion from "./MultipleChoiceQuestion";
 import OpenQuestion from "./OpenQuestion";
 import GridQuestion from "./GridQuestion";
 import ScaleQuestion from "./ScaleQuestion";
+import { Question, AnswerSet } from "lib/types";
+import { Button } from "react-bootstrap";
 
-class VideoQuestions extends React.Component {
-  constructor(props) {
+interface VideoQuestionsProps {
+  onSubmit: (a: AnswerSet) => void;
+  questions: Question[];
+}
+export default class VideoQuestions extends React.Component<
+  VideoQuestionsProps,
+  { activeQIndex: number }
+> {
+  constructor(props: VideoQuestionsProps) {
     super(props);
     this.state = { activeQIndex: 0 };
   }
 
   // Get the Informed form api to extract form values
-  setFormApi(formApi) {
-    this.formApi = formApi;
-  }
-
   // Pass the form values up
-  handleSubmit() {
-    const { onSubmit, videoPos, questions } = this.props;
-    const { activeQIndex } = this.state;
-    const answers = this.formApi.getState().values;
-    // add the actual time stamp user is at here:
-    answers.timestamp = videoPos;
-    if (activeQIndex === questions.length - 1) {
-      onSubmit(answers);
-    } else {
-      this.setState({ activeQIndex: activeQIndex + 1 });
-    }
+  handleSubmit(answers: AnswerSet) {
+    const { onSubmit } = this.props;
+    onSubmit(answers);
   }
 
   // Render a list of questions
@@ -36,13 +32,12 @@ class VideoQuestions extends React.Component {
     const { activeQIndex } = this.state;
     const { questions } = this.props;
     const formQuestions = questions.map((question, idx) => {
-      const { type } = question;
       const id = idx.toString();
       const isActive = activeQIndex === idx;
       return (
         <div key={id} className={isActive ? "activeQuestion" : ""}>
           {(() => {
-            switch (type) {
+            switch (question.type) {
               case "mc":
                 return <MultipleChoiceQuestion id={id} {...question} />;
               case "scale":
@@ -66,34 +61,35 @@ class VideoQuestions extends React.Component {
     const { questions } = this.props;
     const isLast = activeQIndex === questions.length - 1;
     return (
-      <Form getApi={(formApi) => this.setFormApi(formApi)}>
-        {this.renderQuestions()}
-        {isLast ? (
-          <button
-            className="btn btn-primary"
-            onClick={() => this.handleSubmit()}
-            type="submit"
-          >
-            Resume
-          </button>
-        ) : (
-          <button
-            className="btn btn-primary"
-            onClick={() => this.handleSubmit()}
-            type="submit"
-          >
-            Next
-          </button>
-        )}
+      <Form<AnswerSet>>
+        {({ formState }) => {
+          const isAnswerPresent = formState.values[activeQIndex];
+          return (
+            <>
+              {this.renderQuestions()}
+              {isLast ? (
+                <Button
+                  disabled={!isAnswerPresent}
+                  onClick={() => this.handleSubmit(formState.values)}
+                  type="submit"
+                >
+                  Resume
+                </Button>
+              ) : (
+                <Button
+                  disabled={!isAnswerPresent}
+                  onClick={() =>
+                    this.setState({ activeQIndex: activeQIndex + 1 })
+                  }
+                  type="submit"
+                >
+                  Next
+                </Button>
+              )}
+            </>
+          );
+        }}
       </Form>
     );
   }
 }
-
-VideoQuestions.propTypes = {
-  questions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  videoPos: PropTypes.number.isRequired,
-};
-
-export default VideoQuestions;

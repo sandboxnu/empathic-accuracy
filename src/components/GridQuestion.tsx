@@ -1,24 +1,30 @@
 import React from "react";
-import { asField } from "informed";
+import { useField } from "informed";
 import { gridQuestionType } from "../types";
+import { GridQuestion as GridQuestionType, GridAnswer } from "lib/types";
 
-function getRelativeClick(e) {
+function getRelativeClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
   // e = Mouse click event.
-  const rect = e.target.getBoundingClientRect();
+  const rect = e.currentTarget.getBoundingClientRect();
   const x = e.clientX - rect.left; // x position within the element.
   const y = e.clientY - rect.top; // y position within the element.
   return { x, y };
 }
 
+interface GridQuestionProps extends GridQuestionType {
+  field: string;
+}
+
 // Make GridQuestion play nice with the informed library
 // https://joepuzzo.github.io/informed/?selectedKind=CustomInputs&selectedStory=Creating Custom Inputs
-const GridQuestion = asField(({ fieldState, fieldApi, ...props }) => {
-  const { value = {} } = fieldState;
+const GridQuestion = (props: GridQuestionProps) => {
+  const { fieldState, fieldApi } = useField<GridAnswer | undefined>(props);
+  const { value } = fieldState;
   const { setValue } = fieldApi;
   return (
     <div className="grid">
       <div className="CircleContainer">
-        {value ? (
+        {value !== undefined ? (
           <div className="circle" style={{ top: value.y, left: value.x }} />
         ) : null}
       </div>
@@ -29,7 +35,7 @@ const GridQuestion = asField(({ fieldState, fieldApi, ...props }) => {
       />
     </div>
   );
-});
+};
 
 GridQuestion.propTypes = gridQuestionType;
 
