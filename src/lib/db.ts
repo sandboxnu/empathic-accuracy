@@ -1,5 +1,7 @@
 import AWS, { DynamoDB } from "aws-sdk";
+import { v4 as uuidv4 } from "uuid";
 import { ExperimentConfig, ExperimentData, ExperimentDataEntry } from "./types";
+import sampleConfig from "./sampleConfig";
 AWS.config.update({
   accessKeyId: process.env.ACCESS_KEY_ID,
   secretAccessKey: process.env.SECRET_KEY,
@@ -14,6 +16,12 @@ const docClient = new AWS.DynamoDB.DocumentClient({
 });
 const table = "empathic-accuracy";
 
+type DBConfig = { id: string; nickname: string; config: ExperimentConfig };
+type DBData = {
+  id: string;
+  subjectData: ExperimentData;
+};
+
 export async function setupTable() {
   await dynamodb
     .createTable({
@@ -25,20 +33,57 @@ export async function setupTable() {
     .promise();
 }
 
-export async function getConfig(
-  experimentId: number
-): Promise<ExperimentConfig | undefined> {
-  const data = await docClient
-    .get({
+export async function createExperiment(): Promise<string> {
+  const exId = uuidv4();
+  const exp: DBConfig = {
+    id: `CONFIG-${exId}`,
+    nickname: "Blank Experiment",
+    config: sampleConfig as ExperimentConfig,
+  };
+  await docClient
+    .put({
       TableName: table,
-      Key: { id: `CONFIG-${experimentId}` },
+      Item: exp,
     })
     .promise();
-  return data.Item?.config as ExperimentConfig;
+  return exId;
 }
 
-export async function setConfig(
-  experimentId: number,
+export async function getExperiments(): Promise<DBConfig[]> {
+  const items = (
+    await docClient
+      .scan({
+        TableName: table,
+        FilterExpression: "attribute_exists(config)",
+      })
+      .promise()
+  ).Items as DBConfig[];
+  for (const item of items) {
+    item.id = item.id.slice("CONFIG-".length);
+  }
+  return items || [];
+}
+
+export async function getExperiment(
+  experimentId: string
+): Promise<DBConfig | undefined> {
+  const item = (
+    await docClient
+      .get({
+        TableName: table,
+        Key: { id: `CONFIG-${experimentId}` },
+      })
+      .promise()
+  ).Item as DBConfig | undefined;
+  if (item !== undefined) {
+    item.id = item.id.slice("CONFIG-".length);
+  }
+  return item as DBConfig;
+}
+
+export async function setExperiment(
+  experimentId: string,
+  nickname: string,
   config: ExperimentConfig
 ) {
   await docClient
@@ -47,9 +92,10 @@ export async function setConfig(
       Key: {
         id: `CONFIG-${experimentId}`,
       },
-      UpdateExpression: `SET config=:config`,
+      UpdateExpression: `SET config=:config, nickname=:nickname`,
       ExpressionAttributeValues: {
         ":config": config,
+        ":nickname": nickname,
       },
     })
     .promise();
@@ -57,11 +103,13 @@ export async function setConfig(
 
 export async function getAllData(
   experimentId: number
-): Promise<ExperimentData> {
-  const data = await docClient
-    .get({ TableName: table, Key: { id: `DATA-${experimentId}` } })
-    .promise();
-  return data.Item?.subjectData as ExperimentData;
+): Promise<ExperimentData | undefined> {
+  const item = (
+    await docClient
+      .get({ TableName: table, Key: { id: `DATA-${experimentId}` } })
+      .promise()
+  ).Item as DBData;
+  return item?.subjectData as ExperimentData;
 }
 
 export async function putDataEntry(

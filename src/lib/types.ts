@@ -3,6 +3,11 @@ import { Session } from "next-iron-session";
 
 export type NextApiRequestWithSess = NextApiRequest & { session: Session };
 
+export type ExperimentMetadata = {
+  id: string;
+  nickname: string;
+};
+
 export type ExperimentConfig = TrialBlockConfig;
 
 export interface TrialBlockConfig {
@@ -13,6 +18,7 @@ export interface TrialBlockConfig {
   instructionsOverlay: string;
   paradigm: "consensus" | "self" | "continuous";
   videos: { id: string; timepoints: number[] }[];
+  completionLink: string;
 }
 
 export type ExperimentData = ExperimentDataEntry[];

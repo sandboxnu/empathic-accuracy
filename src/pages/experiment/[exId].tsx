@@ -3,7 +3,8 @@ import Axios from "axios";
 import { useAxios } from "lib/useAxios";
 import { useRouter } from "next/router";
 import ExperimentRunner from "components/ExperimentRunner";
-import { ExperimentConfig } from "lib/types";
+import { ExperimentConfig, ExperimentDataEntry } from "lib/types";
+import { GetExperimentResponse } from "pages/api/experiment/[exId]";
 
 export default function ExperimentPage() {
   const router = useRouter();
@@ -12,9 +13,11 @@ export default function ExperimentPage() {
 
   const [config, setConfig] = useState<ExperimentConfig>();
 
-  useAxios(experimentURL, (data) => setConfig(data), [setConfig]);
+  useAxios(experimentURL, (a: GetExperimentResponse) => setConfig(a.config), [
+    setConfig,
+  ]);
 
-  function sendData(collected) {
+  function sendData(collected: ExperimentDataEntry) {
     Axios.post(`${experimentURL}/data`, collected)
       .then((response) => {
         console.log(response);

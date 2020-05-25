@@ -18,6 +18,8 @@ export function useAxios(
         }
       })
       .catch((e) => console.log(e));
-    return () => (canceled = true);
+    return () => {
+      canceled = true;
+    };
   }, [memo, url]);
 }

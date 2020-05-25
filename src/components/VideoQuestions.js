@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import { Form } from "informed";
 import PropTypes from "prop-types";
 import React from "react";
@@ -41,19 +40,17 @@ class VideoQuestions extends React.Component {
       const id = idx.toString();
       const isActive = activeQIndex === idx;
       return (
-        <div className={isActive ? "activeQuestion" : ""}>
+        <div key={id} className={isActive ? "activeQuestion" : ""}>
           {(() => {
             switch (type) {
               case "mc":
-                return (
-                  <MultipleChoiceQuestion key={id} id={id} {...question} />
-                );
+                return <MultipleChoiceQuestion id={id} {...question} />;
               case "scale":
-                return <ScaleQuestion key={id} id={id} {...question} />;
+                return <ScaleQuestion id={id} {...question} />;
               case "open":
-                return <OpenQuestion key={id} id={id} {...question} />;
+                return <OpenQuestion id={id} {...question} />;
               case "grid":
-                return <GridQuestion key={id} field={id} {...question} />;
+                return <GridQuestion field={id} {...question} />;
               default:
                 return null;
             }
@@ -72,11 +69,19 @@ class VideoQuestions extends React.Component {
       <Form getApi={(formApi) => this.setFormApi(formApi)}>
         {this.renderQuestions()}
         {isLast ? (
-          <button onClick={() => this.handleSubmit()} type="submit">
+          <button
+            className="btn btn-primary"
+            onClick={() => this.handleSubmit()}
+            type="submit"
+          >
             Resume
           </button>
         ) : (
-          <button onClick={() => this.handleSubmit()} type="submit">
+          <button
+            className="btn btn-primary"
+            onClick={() => this.handleSubmit()}
+            type="submit"
+          >
             Next
           </button>
         )}

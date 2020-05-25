@@ -118,10 +118,10 @@ class ExperimentRunner extends React.Component<
             value={this.state.subjectID}
           />
           <button
+            className="btn btn-primary"
             type="button"
             onClick={() => this.setState({ stage: StageEnum.instructions })}
           >
-            {" "}
             Next &#8250;
           </button>
         </div>

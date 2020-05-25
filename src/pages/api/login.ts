@@ -25,4 +25,4 @@ async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   }
 }
 
-export default withIronSession(safe(handler), IRON_SESSION_CONFIG);
+export default safe(withIronSession(handler, IRON_SESSION_CONFIG));

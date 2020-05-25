@@ -3,18 +3,29 @@ import { NextApiResponse } from "next";
 import { safe } from "lib/errors";
 import { NextApiRequestWithSess, ExperimentConfig } from "lib/types";
 import { IRON_SESSION_CONFIG } from "lib/ironSession";
-import { getConfig, setConfig } from "lib/db";
+import { getExperiment, setExperiment } from "lib/db";
 
+export interface SetExperimentParams {
+  nickname: string;
+  config: ExperimentConfig;
+}
+// Overwrite the config for an experiment
 async function set(req: NextApiRequestWithSess, res: NextApiResponse) {
-  const newConfig = req.body as ExperimentConfig;
-  const exId = parseInt(req.query.exId as string);
-  await setConfig(exId, newConfig);
+  const newExp = req.body as SetExperimentParams;
+  const exId = req.query.exId as string;
+  await setExperiment(exId, newExp.nickname, newExp.config);
   res.status(201).end();
 }
 
+export interface GetExperimentResponse {
+  id: string;
+  nickname: string;
+  config: ExperimentConfig;
+}
+// Get the config for an experiment
 async function get(req: NextApiRequestWithSess, res: NextApiResponse) {
-  const exId = parseInt(req.query.exId as string);
-  const config = await getConfig(exId);
+  const exId = req.query.exId as string;
+  const config: GetExperimentResponse | undefined = await getExperiment(exId);
   if (config !== undefined) {
     res.status(200).send(config);
   } else {
@@ -35,4 +46,4 @@ async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   }
 }
 
-export default withIronSession(safe(handler), IRON_SESSION_CONFIG);
+export default safe(withIronSession(handler, IRON_SESSION_CONFIG));

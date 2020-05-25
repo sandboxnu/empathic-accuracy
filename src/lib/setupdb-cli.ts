@@ -1,12 +1,10 @@
-import { setupTable, setConfig } from "./db";
-import sampleConfig from "./sampleConfig.json";
-import { ExperimentConfig } from "./types";
+import { setupTable, createExperiment } from "./db";
 
 if (require.main === module) {
   (async () => {
     await setupTable();
     console.log("created table");
-    await setConfig(1, sampleConfig as ExperimentConfig);
+    await createExperiment();
     console.log("setup experiment 1 with sample data");
   })().catch(console.error);
 }

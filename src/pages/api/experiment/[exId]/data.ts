@@ -9,13 +9,15 @@ import {
 import { IRON_SESSION_CONFIG } from "lib/ironSession";
 import { putDataEntry, getAllData } from "lib/db";
 
-async function put(req: NextApiRequestWithSess, res: NextApiResponse) {
+// Submit a new data entry for a participant
+async function post(req: NextApiRequestWithSess, res: NextApiResponse) {
   const newConfig = req.body as ExperimentDataEntry;
   const exId = parseInt(req.query.exId as string);
   await putDataEntry(exId, newConfig);
   res.status(201).end();
 }
 
+// Get all the data from an experiment
 async function get(
   req: NextApiRequestWithSess,
   res: NextApiResponse<ExperimentData>
@@ -31,7 +33,7 @@ async function get(
 
 async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   if (req.method === "POST") {
-    await put(req, res);
+    await post(req, res);
   } else if (req.method === "GET") {
     const user = req.session.get("user");
     if (user && user.admin) {
@@ -42,4 +44,4 @@ async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   }
 }
 
-export default withIronSession(safe(handler), IRON_SESSION_CONFIG);
+export default safe(withIronSession(handler, IRON_SESSION_CONFIG));

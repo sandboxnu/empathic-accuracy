@@ -168,7 +168,12 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
       return (
         <div className="questionPlaceholder">
           Click pause and questions will appear here.
-          <button id="pauseButton" onClick={() => onPause()} type="button">
+          <button
+            className="btn btn-primary"
+            id="pauseButton"
+            onClick={() => onPause()}
+            type="button"
+          >
             Pause
           </button>
         </div>

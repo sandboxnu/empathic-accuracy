@@ -37,11 +37,19 @@ class Instructions extends React.Component {
           {section === 0 ? (
             <div />
           ) : (
-            <button type="button" onClick={() => this.navigateBackward()}>
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={() => this.navigateBackward()}
+            >
               &#8249; Previous{" "}
             </button>
           )}
-          <button type="button" onClick={() => this.navigateForward()}>
+          <button
+            className="btn btn-primary"
+            type="button"
+            onClick={() => this.navigateForward()}
+          >
             {" "}
             Next &#8250;
           </button>
