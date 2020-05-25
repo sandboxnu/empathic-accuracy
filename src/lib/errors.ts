@@ -19,10 +19,5 @@ export function safe(route: NextApiHandler): NextApiHandler {
       const msg = `Something broke on our end. Please reach out to us immediately.`;
       res.status(500).send(msg);
     }
-    // This probably shouldn't happen but make sure we don't ever leave requests hanging
-    if (!res.finished) {
-      rollbar.error("Handler did not send response and had to fallback", req);
-      res.status(500).send("");
-    }
   };
 }

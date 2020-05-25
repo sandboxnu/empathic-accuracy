@@ -1,31 +1,36 @@
 import { withIronSession } from "next-iron-session";
 import Link from "next/link";
 import { IRON_SESSION_CONFIG } from "lib/ironSession";
-import ExperimentConfigurator from "components/admin/ExperimentConfigurator";
-import {
-  Container,
-  Toast,
-  ListGroup,
-  Row,
-  Col,
-  Button,
-  Table,
-} from "react-bootstrap";
+import { Container, Toast, Button, Table } from "react-bootstrap";
 import { useState } from "react";
 import { ExperimentMetadata } from "lib/types";
 import { useAxios } from "lib/useAxios";
-import { useRouter } from "next/router";
 import { downloadExperimentData } from "lib/downloadData";
+import Axios from "axios";
+import { useRouter } from "next/router";
 
 export default function Admin() {
   const [showSaved, setShowSaved] = useState(false);
   const [experiments, setExperiments] = useState<ExperimentMetadata[]>([]);
 
   useAxios("/api/experiment", setExperiments, [setExperiments]);
+  const router = useRouter();
 
   return (
     <>
       <Container className="mt-3">
+        <Button
+          className="mb-3"
+          variant="success"
+          onClick={async () => {
+            const res = await Axios.post("/api/experiment");
+            const id = res.data;
+            router.push("/admin/experiment/[exId]", `/admin/experiment/${id}`);
+          }}
+        >
+          <i className="fas fa-plus mr-2" />
+          New Experiment
+        </Button>
         <Table striped bordered hover>
           <thead>
             <tr>
