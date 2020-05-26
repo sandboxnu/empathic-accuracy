@@ -8,7 +8,7 @@ interface GatedButtonProps extends ButtonProps {
   tooltip: string; // tooltip message when disabled
   id?: string;
   children: React.ReactNode;
-  onClick: (e: MouseEvent) => void;
+  onClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 export default function GatedButton(props: GatedButtonProps) {
