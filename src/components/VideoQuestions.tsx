@@ -5,7 +5,7 @@ import OpenQuestion from "./OpenQuestion";
 import GridQuestion from "./GridQuestion";
 import ScaleQuestion from "./ScaleQuestion";
 import { Question, AnswerSet } from "lib/types";
-import { Button } from "react-bootstrap";
+import GatedButton from "./GatedButton";
 
 interface VideoQuestionsProps {
   onSubmit: (a: AnswerSet) => void;
@@ -68,23 +68,25 @@ export default class VideoQuestions extends React.Component<
             <>
               {this.renderQuestions()}
               {isLast ? (
-                <Button
+                <GatedButton
                   disabled={!isAnswerPresent}
+                  tooltip="Answer the question to continue"
                   onClick={() => this.handleSubmit(formState.values)}
                   type="submit"
                 >
                   Resume
-                </Button>
+                </GatedButton>
               ) : (
-                <Button
+                <GatedButton
                   disabled={!isAnswerPresent}
+                  tooltip="Answer the question to continue"
                   onClick={() =>
                     this.setState({ activeQIndex: activeQIndex + 1 })
                   }
                   type="submit"
                 >
                   Next
-                </Button>
+                </GatedButton>
               )}
             </>
           );

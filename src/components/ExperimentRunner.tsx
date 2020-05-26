@@ -3,6 +3,8 @@ import Beforeunload from "react-beforeunload";
 import Instructions from "./Instructions";
 import { ExperimentDataEntry, ExperimentConfig } from "lib/types";
 import TrialBlock from "./TrialBlock";
+import { Button } from "react-bootstrap";
+import GatedButton from "./GatedButton";
 
 interface ExperimentRunnerProps {
   config: ExperimentConfig;
@@ -117,13 +119,14 @@ class ExperimentRunner extends React.Component<
             onChange={(e) => this.setState({ subjectID: e.target.value })}
             value={this.state.subjectID}
           />
-          <button
-            className="btn btn-primary"
+          <GatedButton
+            disabled={!this.state.subjectID}
+            tooltip="Enter your subject ID to continue"
             type="button"
             onClick={() => this.setState({ stage: StageEnum.instructions })}
           >
             Next &#8250;
-          </button>
+          </GatedButton>
         </div>
       </div>
     );
