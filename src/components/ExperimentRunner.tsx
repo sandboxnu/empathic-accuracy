@@ -1,9 +1,8 @@
 import React from "react";
-import Beforeunload from "react-beforeunload";
+import { Beforeunload } from "react-beforeunload";
 import Instructions from "./Instructions";
 import { ExperimentDataEntry, ExperimentConfig } from "lib/types";
 import TrialBlock from "./TrialBlock";
-import { Button } from "react-bootstrap";
 import GatedButton from "./GatedButton";
 
 interface ExperimentRunnerProps {
@@ -40,7 +39,7 @@ class ExperimentRunner extends React.Component<
   }
 
   // The user has closed the tab - save data to localstorage.
-  onClose(e) {
+  onClose(e: Event) {
     if (this.state.stage !== StageEnum.done) {
       e.preventDefault();
       return "You are in the middle of the experiment!";
@@ -135,7 +134,7 @@ class ExperimentRunner extends React.Component<
   render() {
     return (
       <Beforeunload
-        onBeforeunload={(e) => {
+        onBeforeunload={(e: Event) => {
           this.onClose(e);
         }}
       >

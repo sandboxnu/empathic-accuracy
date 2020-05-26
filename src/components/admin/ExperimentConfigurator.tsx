@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
-import React, { useState, SyntheticEvent } from "react";
+import React, { useState } from "react";
 import SchemaForm from "react-jsonschema-form-bs4";
 import Axios from "axios";
 import { isEqual } from "lodash";
-import Beforeunload from "react-beforeunload";
+import { Beforeunload, useBeforeunload } from "react-beforeunload";
 import schema from "./configSchema";
 import uiSchema from "./configUISchema";
 import { ExperimentConfig } from "lib/types";
@@ -67,16 +67,16 @@ export default function ExperimentConfigurator({
       .catch((error) => console.log(error));
   }
 
-  function onClose(e: SyntheticEvent) {
+  useBeforeunload((e) => {
     if (!isEqual(configOnServer, config)) {
       e.preventDefault();
       return "You have unsaved changes";
     }
     return null;
-  }
+  });
 
   return (
-    <Beforeunload onBeforeunload={onClose}>
+    <div className="panel container">
       <Navbar sticky="top" bg="light" className="shadow-sm">
         <Link href="/admin">
           <a>
@@ -85,7 +85,7 @@ export default function ExperimentConfigurator({
         </Link>
         <Form
           inline
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={(e: React.FormEvent) => e.preventDefault()}
           className="flex-grow-1"
         >
           <span className="mr-2">Nickname:</span>
@@ -97,7 +97,7 @@ export default function ExperimentConfigurator({
           />
           <Button
             variant="secondary"
-            onClick={() => downloadExperimentData(e.id)}
+            onClick={() => downloadExperimentData(experimentId)}
             className="ml-auto"
           >
             <span className="mr-2">Download Data</span>
@@ -105,21 +105,19 @@ export default function ExperimentConfigurator({
           </Button>
         </Form>
       </Navbar>
-      <div className="panel container">
-        <h2>Configure Experiment</h2>
-        {config ? (
-          <SchemaForm
-            className="configForm"
-            schema={schema}
-            uiSchema={uiSchema}
-            formData={config}
-            onChange={({ formData }) => setConfig(formData)}
-            onSubmit={({ formData }) => submitNewConfig(formData)}
-          />
-        ) : (
-          <Spinner role="status" animation="border" />
-        )}
-      </div>
-    </Beforeunload>
+      <h2>Configure Experiment</h2>
+      {config ? (
+        <SchemaForm
+          className="configForm"
+          schema={schema}
+          uiSchema={uiSchema}
+          formData={config}
+          onChange={({ formData }) => setConfig(formData)}
+          onSubmit={({ formData }) => submitNewConfig(formData)}
+        />
+      ) : (
+        <Spinner role="status" animation="border" />
+      )}
+    </div>
   );
 }

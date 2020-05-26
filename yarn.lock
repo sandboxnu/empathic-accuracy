@@ -1433,6 +1433,13 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
   integrity sha512-1HcDas8SEj4z1Wc696tH56G8OlRaH/sqZOynNNB+HF0WOeXPaxTtbYzJY2oEfiUxjSKjhCKr+MvR7dCHcEelug==
 
+"@types/react-beforeunload@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@types/react-beforeunload/-/react-beforeunload-2.1.0.tgz#023db4bf117a23a8a5f8b28d276cf00324b8ec98"
+  integrity sha512-N/j7wOFQjrmYuIvemMOsI/NNjwErZGjF/4I1NG9VrF1bLqi11BMD/nqBBedIze2FbtddKHgWfQCue3yzCsQJdg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-bootstrap@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/react-bootstrap/-/react-bootstrap-1.0.1.tgz#3badd512fc37913b5e72f1ed94e3aacbd1452d97"
@@ -10079,10 +10086,10 @@ react-app-polyfill@^0.2.2:
     raf "3.4.1"
     whatwg-fetch "3.0.0"
 
-react-beforeunload@^1.0.4:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/react-beforeunload/-/react-beforeunload-1.1.1.tgz#a89a8274d6f3556069a1bdae0c6600e1a9c94d82"
-  integrity sha512-yY6rSaqGi/NEC0ZVALZIy8g31lfTgO3gMXgx/X0KVLFW2hUROl5t8lV4YCkSxgHR+wyBJ5Ysrti5lCBInEPIvg==
+react-beforeunload@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/react-beforeunload/-/react-beforeunload-2.2.1.tgz#b30778a7110a6469ad6d449fa9d387c54ddec72e"
+  integrity sha512-qydpYQuGUaB1C5EP2EFN0YjPo9kgV10Z4suIZ79GIhp0DWNJxHyuR8BiTViOBltTIn9PwlpSqX4fE3uprsdqKA==
   dependencies:
     prop-types "^15.7.2"
 
