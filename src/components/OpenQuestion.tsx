@@ -12,8 +12,6 @@ export default function OpenQuestion({ id, label }: OpenQuestionProps) {
       <TextArea
         id={id}
         field={id}
-        cols="30"
-        rows="5"
         className="OpenQuestion"
         placeholder="Add your response here."
       />

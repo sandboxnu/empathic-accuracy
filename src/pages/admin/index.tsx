@@ -46,7 +46,7 @@ export default function Admin() {
                 <td>{e.nickname}</td>
                 <td>
                   <Link href="/experiment/[exId]" as={`/experiment/${e.id}`}>
-                    <a>Copy This Link Location</a>
+                    <a>Link to experiment</a>
                   </Link>
                 </td>
                 <td>

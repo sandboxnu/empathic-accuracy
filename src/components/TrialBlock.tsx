@@ -76,7 +76,6 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
   const questions = useState(
     config.shuffleQuestions ? shuffle(config.questions) : config.questions
   )[0];
-  console.log(config);
 
   const [paused, setPaused] = useState(config.paradigm === "continuous");
   const [showQuestionTime, setShowQuestionTime] = useState(Date.now());
@@ -90,16 +89,19 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
 
   const currentVideo = videos[vidIndex];
 
-  const playerRef = useRef<ReactPlayer | undefined>();
+  const playerRef = useRef<ReactPlayer | null>();
 
   function onVideoEnd() {
     if (vidIndex === videos.length - 1) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const width = (playerRef.current as any)?.wrapper.clientWidth;
       onFinish({
         answers: data.current,
-        videoWidth: playerRef.current?.wrapper.clientWidth,
-        videoHeight: playerRef.current?.wrapper.clientHeight,
+        videoWidth: width,
+        videoHeight: (width / 16) * 9,
       });
     } else {
+      setPaused(config.paradigm === "continuous");
       setStage(StageEnum.betweenVids);
       setVidIndex((i) => i + 1);
       setNextTimepointIndex(0);
@@ -122,7 +124,7 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
     setShowQuestionTime(Date.now());
   }
 
-  function onProgress({ playedSeconds }) {
+  function onProgress({ playedSeconds }: { playedSeconds: number }) {
     if (config.paradigm === "consensus") {
       if (playedSeconds > currentVideo.timepoints[nextTimepointIndex]) {
         onPause();
@@ -136,12 +138,10 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
       return (
         <div>
           <ContinuousGrid
-            field="grid"
-            values={data.current[currentVideo.id]}
-            addValue={(value: AnswerSet) => {
+            onValue={(value: AnswerSetWithMetadata) => {
               data.current[currentVideo.id].push(value);
             }}
-            videoPos={
+            getVideoPos={() =>
               playerRef.current ? playerRef.current.getCurrentTime() : 0
             }
             onGridExit={() => {
