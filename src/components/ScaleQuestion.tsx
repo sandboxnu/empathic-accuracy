@@ -1,12 +1,15 @@
 import React from "react";
 import { RadioGroup, Radio } from "informed";
-import { ScaleQuestion as ScaleQuestionProps } from "lib/types";
+import {
+  ScaleQuestion as ScaleQuestionProps,
+  QuestionBaseProp,
+} from "lib/types";
 
 export default function ScaleQuestion({
   id,
   label,
   choices,
-}: ScaleQuestionProps) {
+}: ScaleQuestionProps & QuestionBaseProp) {
   return (
     <div>
       <label className="questionTitle" htmlFor={id}>

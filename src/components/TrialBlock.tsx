@@ -89,7 +89,7 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
 
   const currentVideo = videos[vidIndex];
 
-  const playerRef = useRef<ReactPlayer | null>();
+  const playerRef = useRef<ReactPlayer>(null);
 
   function onVideoEnd() {
     if (vidIndex === videos.length - 1) {

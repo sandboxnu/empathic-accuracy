@@ -11,8 +11,9 @@ function getRelativeClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
   return { x, y };
 }
 
-interface GridQuestionProps extends GridQuestionType {
+interface GridQuestionProps {
   field: string;
+  id: string;
 }
 
 // Make GridQuestion play nice with the informed library

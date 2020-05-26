@@ -14,7 +14,7 @@ const dynamodb = new AWS.DynamoDB({ endpoint: DYNAMO_ENDPOINT });
 const docClient = new AWS.DynamoDB.DocumentClient({
   endpoint: DYNAMO_ENDPOINT,
 });
-const table = "empathic-accuracy";
+const table = process.env.DYNAMO_TABLE;
 
 type DBConfig = { id: string; nickname: string; config: ExperimentConfig };
 type DBData = {

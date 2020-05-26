@@ -5,6 +5,9 @@ import { safe } from "../../lib/errors";
 import { NextApiRequestWithSess } from "../../lib/types";
 import { IRON_SESSION_CONFIG } from "../../lib/ironSession";
 
+if (process.env.ADMIN_PASS_HASH === undefined) {
+  console.error("ENV: ADMIN_PASS_HASH is not defined");
+}
 async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   if (req.method === "POST") {
     const match = await bcrypt.compare(

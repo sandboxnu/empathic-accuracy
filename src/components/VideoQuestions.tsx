@@ -45,7 +45,7 @@ export default class VideoQuestions extends React.Component<
               case "open":
                 return <OpenQuestion id={id} {...question} />;
               case "grid":
-                return <GridQuestion field={id} {...question} />;
+                return <GridQuestion id={id} field={id} {...question} />;
               default:
                 return null;
             }

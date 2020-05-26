@@ -2,14 +2,14 @@ import { useRef, useState } from "react";
 import Router from "next/router";
 
 export default function Login() {
-  const passRef = useRef(null);
+  const passRef = useRef<HTMLInputElement>(null);
   const [invalid, setInvalid] = useState(false);
   return (
     <div className="container">
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          const password = passRef.current.value;
+          const password = passRef.current?.value;
           fetch("/api/login", {
             method: "post",
             headers: {

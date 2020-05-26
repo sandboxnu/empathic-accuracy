@@ -1,12 +1,12 @@
 import React from "react";
 import { RadioGroup, Radio } from "informed";
-import { MCQuestion } from "lib/types";
+import { MCQuestion, QuestionBaseProp } from "lib/types";
 
 export default function MultipleChoiceQuestion({
   id,
   label,
   choices,
-}: MCQuestion) {
+}: MCQuestion & QuestionBaseProp) {
   return (
     <div>
       <label className="questionTitle" htmlFor={id}>

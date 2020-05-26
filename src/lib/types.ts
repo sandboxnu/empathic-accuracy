@@ -26,7 +26,6 @@ export interface TrialBlockConfig {
 export type Question = MCQuestion | ScaleQuestion | OpenQuestion | GridQuestion;
 
 interface BaseQuestion {
-  id: string;
   label: string;
 }
 export interface MCQuestion extends BaseQuestion {
@@ -70,3 +69,8 @@ export interface AnswerSet {
 
 export type Answer = GridAnswer | string;
 export type GridAnswer = { x: number; y: number };
+
+//================== Frontend Only ====================
+export interface QuestionBaseProp {
+  id: string;
+}
