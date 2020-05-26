@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import SchemaForm from "react-jsonschema-form-bs4";
 import Axios from "axios";
 import { isEqual } from "lodash";
-import { Beforeunload, useBeforeunload } from "react-beforeunload";
+import { useBeforeunload } from "react-beforeunload";
 import schema from "./configSchema";
 import uiSchema from "./configUISchema";
 import { ExperimentConfig } from "lib/types";

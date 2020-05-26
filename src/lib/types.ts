@@ -13,7 +13,7 @@ export type ExperimentMetadata = {
 export type ExperimentConfig = TrialBlockConfig;
 
 export interface TrialBlockConfig {
-  questions: any[];
+  questions: Question[];
   shuffleVideos: boolean;
   shuffleQuestions: boolean;
   instructionScreens: string[];

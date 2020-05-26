@@ -1,4 +1,4 @@
-import AWS, { DynamoDB } from "aws-sdk";
+import AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import { ExperimentConfig, ExperimentData, ExperimentDataEntry } from "./types";
 import sampleConfig from "./sampleConfig";

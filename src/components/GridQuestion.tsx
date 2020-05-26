@@ -1,7 +1,7 @@
 import React from "react";
 import { useField } from "informed";
 import { gridQuestionType } from "../types";
-import { GridQuestion as GridQuestionType, GridAnswer } from "lib/types";
+import { GridAnswer } from "lib/types";
 
 function getRelativeClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
   // e = Mouse click event.
