@@ -1,59 +1,72 @@
 {
-  "name": "empathic-research",
+  "name": "empathic-accuracy",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src/",
+    "dev:db:up": "docker run -p 8000:8000 --name ea-db -d amazon/dynamodb-local && DYNAMO_ENDPOINT=http://localhost:8000 ts-node -P tsconfig.standalone.json src/lib/setupdb-cli.ts",
+    "dev:db:down": "docker rm --force ea-db"
+  },
   "dependencies": {
-    "@json-editor/json-editor": "^1.3.2",
+    "@zeit/next-css": "^1.0.1",
+    "aws-sdk": "^2.682.0",
     "axios": "^0.18.1",
-    "informed": "^1.10.12",
+    "bcrypt": "^4.0.1",
+    "bootstrap": "^4.5.0",
+    "informed": "^3.8.1",
     "js-file-download": "^0.4.4",
+    "lodash": "^4.17.15",
+    "next": "9.4.1",
+    "next-iron-session": "^4.1.2",
     "prop-types": "^15.6.2",
-    "react": "^16.6.0",
-    "react-beforeunload": "^1.0.4",
-    "react-burger-menu": "^2.6.5",
-    "react-dom": "^16.6.0",
+    "react": "16.13.1",
+    "react-beforeunload": "^2.2.1",
+    "react-bootstrap": "^1.0.1",
+    "react-dom": "16.13.1",
     "react-fetch-component": "^7.0.1",
     "react-interval-timer": "^1.0.5",
     "react-jsonschema-form-bs4": "^1.0.6",
-    "react-player": "^1.7.0",
-    "react-router-dom": "^4.3.1",
+    "react-player": "^2.1.0",
     "react-scripts": "^2.1.3",
     "reactjs-localstorage": "0.0.7",
+    "rollbar": "^2.16.2",
+    "uuid": "^8.1.0",
     "whatwg-fetch": "^3.0.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "dev": "react-scripts start",
-    "now-build": "npm run build",
-    "lint": "eslint src/ --ext .js"
+  "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/dotenv": "^8.2.0",
+    "@types/json-schema": "^7.0.4",
+    "@types/lodash": "^4.14.152",
+    "@types/node": "^14.0.1",
+    "@types/react": "^16.9.35",
+    "@types/react-beforeunload": "^2.1.0",
+    "@types/react-bootstrap": "^1.0.1",
+    "@types/uuid": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.4",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.2"
   },
-  "eslintConfig": {
-    "extends": "airbnb",
-    "rules": {
-      "jsx-a11y/label-has-for": "off",
-      "react/jsx-filename-extension": [
-        1,
-        {
-          "extensions": [
-            ".js",
-            ".jsx"
-          ]
-        }
-      ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
     }
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "devDependencies": {
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2"
+  "lint-staged": {
+    "*.js": [
+      "./node_modules/.bin/eslint --fix",
+      "git add"
+    ]
   }
 }

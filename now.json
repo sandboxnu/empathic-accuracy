@@ -1,19 +1,7 @@
 {
-    "version": 2,
-    "name": "empathic",
-    "builds": [
-        { 
-            "src": "package.json", 
-            "use": "@now/static-build",
-            "config": { "distDir": "build" }
-         }
-    ],
-    "routes": [
-      {"src": "^/static/(.*)", "dest": "/static/$1"},
-      {"src": "/.*", "dest": "/index.html"}
-    ],
-    "alias": "empathic.sandboxneu.com",
-    "env": {
-        "NODE_ENV": "production"
-    }
+  "version": 2,
+  "alias": "empathic.sandboxneu.com",
+  "env": {
+    "NODE_ENV": "production"
+  }
 }

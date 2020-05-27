@@ -1,6 +1,5 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
+import React from "react";
+import PropTypes from "prop-types";
 
 // Show a series of instructions in page/slideshow format.
 class Instructions extends React.Component {
@@ -33,18 +32,32 @@ class Instructions extends React.Component {
 
     return (
       <div className="instructionsContainer">
-        <div className="instructionsText">
-          {instructionText}
-        </div>
+        <div className="instructionsText">{instructionText}</div>
         <div className="buttonContainer">
-          {(section === 0) ? <div /> : <button type="button" onClick={() => this.navigateBackward()}>&#8249; Previous </button> }
-          <button type="button" onClick={() => this.navigateForward()}> Next &#8250;</button>
+          {section === 0 ? (
+            <div />
+          ) : (
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={() => this.navigateBackward()}
+            >
+              &#8249; Previous{" "}
+            </button>
+          )}
+          <button
+            className="btn btn-primary"
+            type="button"
+            onClick={() => this.navigateForward()}
+          >
+            {" "}
+            Next &#8250;
+          </button>
         </div>
       </div>
     );
   }
 }
-
 
 Instructions.propTypes = {
   onFinish: PropTypes.func.isRequired,
