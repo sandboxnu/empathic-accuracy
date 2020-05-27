@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import ReactPlayer from "react-player";
-import { config } from "process";
+import ReactMarkdown from "react-markdown";
 import { AnswerSetWithMetadata, AnswerSet } from "lib/types";
 
 interface VideoTaskViewProps {
@@ -111,7 +111,7 @@ export function OverlayInstruction({
           &times;
         </div>
         <div className="overlay-content">
-          <div>{instructionsOverlay}</div>
+          <ReactMarkdown source={instructionsOverlay} />
         </div>
       </div>
       <div

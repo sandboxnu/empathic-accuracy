@@ -2,6 +2,7 @@ import { useState } from "react";
 import VideoTaskView from "./VideoTaskView";
 import VideoQuestions from "components/questions/VideoQuestions";
 import { AnswerSetWithMetadata, Question, TrialInstructions } from "lib/types";
+import ReactMarkdown from "react-markdown";
 
 interface ConsensusVideoTaskProps {
   videoId: string;
@@ -42,7 +43,7 @@ export default function ConsensusVideoTask({
       renderQuestions={(onSubmit) =>
         playing ? (
           <div className="questionPlaceholder">
-            {instructions.pauseInstructions}
+            <ReactMarkdown source={instructions.pauseInstructions} />
           </div>
         ) : (
           <VideoQuestions

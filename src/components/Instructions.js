@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import ReactMarkdown from "react-markdown";
 
 // Show a series of instructions in page/slideshow format.
 class Instructions extends React.Component {
@@ -32,7 +33,9 @@ class Instructions extends React.Component {
 
     return (
       <div className="instructionsContainer">
-        <div className="instructionsText">{instructionText}</div>
+        <div className="instructionsText">
+          <ReactMarkdown source={instructionText} />
+        </div>
         <div className="buttonContainer">
           {section === 0 ? (
             <div />

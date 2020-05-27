@@ -2,6 +2,7 @@ import VideoTaskView from "./VideoTaskView";
 import VideoQuestions from "components/questions/VideoQuestions";
 import { Question, AnswerSetWithMetadata, TrialInstructions } from "lib/types";
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 interface SelfVideoTaskProps {
   videoId: string;
@@ -35,7 +36,7 @@ export default function SelfVideoTask({
       renderQuestions={(onSubmit) =>
         playing ? (
           <div className="questionPlaceholder">
-            {instructions.pauseInstructions}
+            <ReactMarkdown source={instructions.pauseInstructions} />
             <button
               className="btn btn-primary"
               id="pauseButton"

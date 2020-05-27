@@ -1,14 +1,17 @@
 import { UiSchema } from "react-jsonschema-form-bs4";
 
 const configUISchema: UiSchema = {
-  "ui:order": ["paradigm", "*", "completionLink"],
-  videoIds: {
-    "ui:options": {
-      orderable: false,
+  "ui:order": ["paradigm", "*"],
+  instructions: {
+    instructionScreens: {
+      items: {
+        "ui:widget": "textarea",
+      },
     },
-  },
-  instructionScreens: {
-    items: {
+    instructionsOverlay: {
+      "ui:widget": "textarea",
+    },
+    pauseInstructions: {
       "ui:widget": "textarea",
     },
   },

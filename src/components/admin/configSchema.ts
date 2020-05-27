@@ -25,6 +25,7 @@ const configSchema: JSONSchema6 = {
     instructions: {
       type: "object",
       title: "Customize Instructions",
+      description: "Markdown: *italics*, **bold**",
       properties: {
         instructionScreens: {
           type: "array",
