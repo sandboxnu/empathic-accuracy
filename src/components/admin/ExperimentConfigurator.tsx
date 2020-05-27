@@ -9,12 +9,22 @@ import uiSchema from "./configUISchema";
 import { ExperimentConfig } from "lib/types";
 import { useAxios } from "lib/useAxios";
 import { downloadExperimentData } from "lib/downloadData";
-import { Spinner, Navbar, FormControl, Form, Button } from "react-bootstrap";
+import {
+  Spinner,
+  Navbar,
+  FormControl,
+  Form,
+  Button,
+  Container,
+  Toast,
+  Modal,
+} from "react-bootstrap";
 import {
   SetExperimentParams,
   GetExperimentResponse,
 } from "pages/api/experiment/[exId]";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface ExperimentConfiguratorProps {
   experimentId: string;
@@ -31,7 +41,11 @@ export default function ExperimentConfigurator({
   const experimentURL = `/api/experiment/${experimentId}`;
   const [nickname, setNickname] = useState("");
   const [config, setConfig] = useState<RawConfig>();
-  const [configOnServer, setConfigOnServer] = useState<RawConfig>(); // For warning user closing tab
+  const [isUnsaved, setIsUnsaved] = useState(false);
+
+  const [showSaved, setShowSaved] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
 
   useAxios(
     experimentURL,
@@ -44,13 +58,13 @@ export default function ExperimentConfigurator({
         })),
       };
       setConfig(raw);
-      setConfigOnServer(raw);
       setNickname(data.nickname);
+      setIsUnsaved(false);
     },
-    [setConfig, setConfigOnServer]
+    [setConfig, setNickname]
   );
 
-  function submitNewConfig(newConf: RawConfig) {
+  function save(newConf: RawConfig, newNickname: string) {
     const exConf: ExperimentConfig = {
       ...newConf,
       videos: newConf.videos.map((v) => ({
@@ -59,16 +73,20 @@ export default function ExperimentConfigurator({
       })),
     };
     const newExp: SetExperimentParams = {
-      nickname: nickname,
+      nickname: newNickname,
       config: exConf,
     };
+    setIsUnsaved(false);
     Axios.post(experimentURL, newExp)
-      .then(() => setConfigOnServer(newConf))
-      .catch((error) => console.log(error));
+      .then(() => setShowSaved(true))
+      .catch((error) => {
+        setIsUnsaved(true);
+        console.log(error);
+      });
   }
 
   useBeforeunload((e) => {
-    if (!isEqual(configOnServer, config)) {
+    if (isUnsaved) {
       e.preventDefault();
       return "You have unsaved changes";
     }
@@ -76,10 +94,17 @@ export default function ExperimentConfigurator({
   });
 
   return (
-    <div className="panel container">
+    <>
       <Navbar sticky="top" bg="light" className="shadow-sm">
         <Link href="/admin">
-          <a>
+          <a
+            onClick={(e) => {
+              if (isUnsaved) {
+                e.preventDefault();
+                setShowModal(true);
+              }
+            }}
+          >
             <i className="fas fa-arrow-left mr-4" />
           </a>
         </Link>
@@ -91,9 +116,11 @@ export default function ExperimentConfigurator({
           <span className="mr-2">Nickname:</span>
           <FormControl
             type="text"
-            placeholder="nickname"
             value={nickname}
-            onChange={(e) => setNickname(e.currentTarget.value)}
+            onChange={(e) => {
+              setIsUnsaved(true);
+              setNickname(e.currentTarget.value);
+            }}
           />
           <Button
             variant="secondary"
@@ -105,19 +132,67 @@ export default function ExperimentConfigurator({
           </Button>
         </Form>
       </Navbar>
-      <h2>Configure Experiment</h2>
-      {config ? (
-        <SchemaForm
-          className="configForm"
-          schema={schema}
-          uiSchema={uiSchema}
-          formData={config}
-          onChange={({ formData }) => setConfig(formData)}
-          onSubmit={({ formData }) => submitNewConfig(formData)}
-        />
-      ) : (
-        <Spinner role="status" animation="border" />
-      )}
-    </div>
+      <Container className="mt-3">
+        <h2>Configure Experiment</h2>
+        {config ? (
+          <SchemaForm
+            className="configForm"
+            schema={schema}
+            uiSchema={uiSchema}
+            formData={config}
+            onChange={({ formData }) => {
+              setIsUnsaved(true);
+              setConfig(formData);
+            }}
+            onSubmit={({ formData }) => save(formData, nickname)}
+          />
+        ) : (
+          <Spinner role="status" animation="border" />
+        )}
+      </Container>
+      <Toast
+        autohide
+        delay={3000}
+        onClose={() => setShowSaved(false)}
+        show={showSaved}
+        style={{ position: "fixed", right: 20, bottom: 20 }}
+      >
+        <Toast.Body>
+          <i className="fas fa-save mr-2" />
+          Saved experiment configuration!
+        </Toast.Body>
+      </Toast>
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Do you want to save changes?</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>{"Your changes will be lost if you don't save them"}</p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button
+            className="mr-auto"
+            variant="secondary"
+            onClick={() => router.back()}
+          >
+            {"Don't Save"}
+          </Button>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="primary"
+            onClick={() => {
+              save(config as RawConfig, nickname);
+              router.back();
+            }}
+          >
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }
