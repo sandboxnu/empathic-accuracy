@@ -1,8 +1,6 @@
-/* eslint-disable no-undef */
 import React, { useState } from "react";
 import SchemaForm from "react-jsonschema-form-bs4";
 import Axios from "axios";
-import { isEqual } from "lodash";
 import { useBeforeunload } from "react-beforeunload";
 import schema from "./configSchema";
 import uiSchema from "./configUISchema";
@@ -30,11 +28,15 @@ interface ExperimentConfiguratorProps {
   experimentId: string;
 }
 
+type DistributiveOmit<T, K extends keyof T> = T extends unknown
+  ? Omit<T, K>
+  : never;
+
 // rawconfig is used by formschema and must be transformed before upload
 // difference timepoints are comma separated string
-interface RawConfig extends Omit<ExperimentConfig, "videos"> {
+type RawConfig = DistributiveOmit<ExperimentConfig, "videos"> & {
   videos: { id: string; timepoints?: string }[];
-}
+};
 export default function ExperimentConfigurator({
   experimentId,
 }: ExperimentConfiguratorProps) {

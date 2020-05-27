@@ -32,8 +32,7 @@ function renderTrail(value) {
 }
 */
 export interface ContinuousGridProps {
-  onValue: (a: AnswerSetWithMetadata) => void;
-  getVideoPos: () => number;
+  onValue: (a: GridAnswer) => void;
   onGridExit: () => void;
   onPlay: () => void;
   paused: boolean;
@@ -41,7 +40,6 @@ export interface ContinuousGridProps {
 
 const ContinuousGrid = ({
   onValue,
-  getVideoPos,
   onGridExit,
   onPlay,
   paused,
@@ -56,7 +54,7 @@ const ContinuousGrid = ({
         const pos = getRelativeClick(e);
         setLastPos(pos);
         if (!paused) {
-          onValue({ 0: pos, timestamp: getVideoPos() });
+          onValue(pos);
         }
       }}
     >

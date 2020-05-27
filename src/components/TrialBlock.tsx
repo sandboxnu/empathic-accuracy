@@ -2,15 +2,13 @@ import { useState, useRef } from "react";
 import {
   TrialBlockConfig,
   AnswerSetWithMetadata,
-  AnswerSet,
   VideoToAnswerSet,
 } from "lib/types";
-import ReactPlayer from "react-player";
-import ContinuousGrid from "./questions/ContinuousGridQuestions";
-import VideoQuestions from "./questions/VideoQuestions";
 import Instructions from "./Instructions";
 import { zipObject, shuffle } from "lodash";
-import VideoTask from "./VideoTask";
+import ConsensusVideoTask from "./videoTask/ConsensusVideoTask";
+import ContinuousVideoTask from "./videoTask/ContinuousVideoTask";
+import SelfVideoTask from "./videoTask/SelfVideoTask";
 
 enum StageEnum {
   showingVid,
@@ -25,16 +23,18 @@ interface TrialResult {
 
 interface TrialBlockProps {
   config: TrialBlockConfig;
-  onFinish: (data: TrialResult) => void;
+  onDone: (data: TrialResult) => void;
 }
-export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
+export default function TrialBlock({ config, onDone }: TrialBlockProps) {
   const [stage, setStage] = useState(StageEnum.showingVid);
   const [vidIndex, setVidIndex] = useState(0);
   const videos = useState(
     config.shuffleVideos ? shuffle(config.videos) : config.videos
   )[0];
   const questions = useState(
-    config.shuffleQuestions ? shuffle(config.questions) : config.questions
+    config?.shuffleQuestions
+      ? shuffle(config.questions)
+      : config?.questions || []
   )[0];
   const data = useRef<VideoToAnswerSet>(
     zipObject(
@@ -45,26 +45,54 @@ export default function TrialBlock({ config, onFinish }: TrialBlockProps) {
 
   const currentVideo = videos[vidIndex];
 
-  function onVideoEnd() {
+  function onVideoEnd(
+    a: AnswerSetWithMetadata[],
+    d: { videoWidth: number; videoHeight: number }
+  ) {
     if (vidIndex === videos.length - 1) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const width = (playerRef.current as any)?.wrapper.clientWidth;
-      onFinish({
+      onDone({
         answers: data.current,
-        videoWidth: width,
-        videoHeight: (width / 16) * 9,
+        videoWidth: d.videoWidth,
+        videoHeight: d.videoHeight,
       });
     } else {
-      setPaused(config.paradigm === "continuous");
+      data.current[currentVideo.id] = a;
       setStage(StageEnum.betweenVids);
       setVidIndex((i) => i + 1);
-      setNextTimepointIndex(0);
     }
   }
 
-
   if (stage === StageEnum.showingVid) {
-    return <VideoTask />;
+    switch (config.paradigm) {
+      case "continuous":
+        return (
+          <ContinuousVideoTask
+            videoId={currentVideo.id}
+            instructions={config.instructions}
+            onDone={onVideoEnd}
+          />
+        );
+      case "consensus":
+        return (
+          <ConsensusVideoTask
+            videoId={currentVideo.id}
+            timepoints={currentVideo.timepoints}
+            instructions={config.instructions}
+            questions={questions}
+            onDone={onVideoEnd}
+          />
+        );
+      case "self":
+        return (
+          <SelfVideoTask
+            videoId={currentVideo.id}
+            instructions={config.instructions}
+            questions={questions}
+            onDone={onVideoEnd}
+          />
+        );
+    }
   } else {
     return (
       <Instructions
