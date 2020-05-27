@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 // Show a series of instructions in page/slideshow format.
 class Instructions extends React.Component {

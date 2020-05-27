@@ -5,7 +5,7 @@ import OpenQuestion from "./OpenQuestion";
 import GridQuestion from "./GridQuestion";
 import ScaleQuestion from "./ScaleQuestion";
 import { Question, AnswerSet } from "lib/types";
-import GatedButton from "./GatedButton";
+import GatedButton from "../GatedButton";
 
 interface VideoQuestionsProps {
   onSubmit: (a: AnswerSet) => void;
