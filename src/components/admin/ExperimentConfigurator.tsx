@@ -23,6 +23,7 @@ import {
 } from "pages/api/experiment/[exId]";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import GatedButton from "components/GatedButton";
 
 interface ExperimentConfiguratorProps {
   experimentId: string;
@@ -134,7 +135,7 @@ export default function ExperimentConfigurator({
           </Button>
         </Form>
       </Navbar>
-      <Container className="mt-3">
+      <Container className="mt-3 pb-5">
         <h2>Configure Experiment</h2>
         {config ? (
           <SchemaForm
@@ -147,7 +148,15 @@ export default function ExperimentConfigurator({
               setConfig(formData);
             }}
             onSubmit={({ formData }) => save(formData, nickname)}
-          />
+          >
+            <GatedButton
+              type="submit"
+              tooltip="All changes saved!"
+              disabled={!isUnsaved}
+            >
+              Save
+            </GatedButton>
+          </SchemaForm>
         ) : (
           <Spinner role="status" animation="border" />
         )}
