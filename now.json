@@ -1,7 +1,14 @@
 {
   "version": 2,
-  "alias": "empathic.sandboxneu.com",
-  "env": {
-    "NODE_ENV": "production"
-  }
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "status": 404,
+      "dest": "/404.html"
+    }
+  ],
+  "alias": "empathic.sandboxneu.com"
 }
