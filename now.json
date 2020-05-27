@@ -2,13 +2,11 @@
   "version": 2,
   "routes": [
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
+      "src": "/",
       "status": 404,
       "dest": "/404.html"
     }
   ],
+  "regions": ["iad1"],
   "alias": "empathic.sandboxneu.com"
 }

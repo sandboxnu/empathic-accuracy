@@ -151,11 +151,10 @@ const configSchema: JSONSchema6 = {
               type: "object",
               title: "Instruction Configurations",
               properties: {
-                pauseInstruction: {
+                pauseInstructions: {
                   type: "string",
                   title: "Instruction text shown between timepoints",
-                  default:
-                    "The video will pause automatically and questions will appear here.",
+                  default: "Pause the video at emotional events",
                 },
               },
             },
@@ -189,7 +188,7 @@ const configSchema: JSONSchema6 = {
             instructions: {
               type: "object",
               properties: {
-                pauseInstruction: {
+                pauseInstructions: {
                   type: "string",
                   title: "Instruction text shown between timepoints",
                   default:

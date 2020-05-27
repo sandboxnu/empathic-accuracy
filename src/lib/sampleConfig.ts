@@ -6,6 +6,7 @@ const sampleConfig: ExperimentConfig = {
   instructions: {
     instructionScreens: ["In this task, you will be shown a few videos."],
     instructionsOverlay: "",
+    pauseInstructions: "Pause the video at emotional events",
   },
   paradigm: "self",
   questions: [
