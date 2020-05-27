@@ -1,6 +1,5 @@
 import React from "react";
 import { useField } from "informed";
-import { gridQuestionType } from "../types";
 import { GridAnswer } from "lib/types";
 
 function getRelativeClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
@@ -37,7 +36,5 @@ const GridQuestion = (props: GridQuestionProps) => {
     </div>
   );
 };
-
-GridQuestion.propTypes = gridQuestionType;
 
 export default GridQuestion;

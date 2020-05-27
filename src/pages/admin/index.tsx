@@ -1,7 +1,7 @@
 import { withIronSession } from "next-iron-session";
 import Link from "next/link";
 import { IRON_SESSION_CONFIG } from "lib/ironSession";
-import { Container, Toast, Button, Table } from "react-bootstrap";
+import { Container, Button, Table } from "react-bootstrap";
 import { useState } from "react";
 import { ExperimentMetadata } from "lib/types";
 import { useAxios } from "lib/useAxios";
@@ -10,7 +10,6 @@ import Axios from "axios";
 import { useRouter } from "next/router";
 
 export default function Admin() {
-  const [showSaved, setShowSaved] = useState(false);
   const [experiments, setExperiments] = useState<ExperimentMetadata[]>([]);
 
   useAxios("/api/experiment", setExperiments, [setExperiments]);
@@ -72,15 +71,7 @@ export default function Admin() {
           </tbody>
         </Table>
       </Container>
-      <Toast
-        autohide
-        delay={1500}
-        onClose={() => setShowSaved(false)}
-        show={showSaved}
-        style={{ position: "fixed", right: 20, bottom: 20 }}
-      >
-        <Toast.Body>Saved experiment configuration!</Toast.Body>
-      </Toast>
+      
     </>
   );
 }

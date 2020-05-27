@@ -1,6 +1,5 @@
 import { NextApiRequest } from "next";
 import { Session } from "next-iron-session";
-import GridQuestion from "components/GridQuestion";
 
 export type NextApiRequestWithSess = NextApiRequest & { session: Session };
 
@@ -12,15 +11,42 @@ export type ExperimentMetadata = {
 
 export type ExperimentConfig = TrialBlockConfig;
 
-export interface TrialBlockConfig {
-  questions: Question[];
+export type TrialBlockConfig =
+  | SelfParadigmTrialBlockConfig
+  | ConsensusParadigmTrialBlockConfig
+  | ContinuousParadigmTrialBlockConfig;
+
+interface BaseTrialBlockConfig {
   shuffleVideos: boolean;
-  shuffleQuestions: boolean;
-  instructionScreens: string[];
-  instructionsOverlay: string;
   paradigm: "consensus" | "self" | "continuous";
   videos: { id: string; timepoints: number[] }[];
-  completionLink: string;
+  questions?: Question[];
+  shuffleQuestions?: boolean;
+  instructions: TrialInstructions;
+}
+
+export interface TrialInstructions {
+  instructionScreens: string[];
+  instructionsOverlay: string;
+  pauseInstructions?: string;
+}
+
+export interface SelfParadigmTrialBlockConfig extends BaseTrialBlockConfig {
+  paradigm: "self";
+  questions: Question[];
+  shuffleQuestions: boolean;
+}
+
+export interface ConsensusParadigmTrialBlockConfig
+  extends BaseTrialBlockConfig {
+  paradigm: "consensus";
+  questions: Question[];
+  shuffleQuestions: boolean;
+}
+
+export interface ContinuousParadigmTrialBlockConfig
+  extends BaseTrialBlockConfig {
+  paradigm: "continuous";
 }
 
 export type Question = MCQuestion | ScaleQuestion | OpenQuestion | GridQuestion;

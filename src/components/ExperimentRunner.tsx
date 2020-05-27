@@ -48,7 +48,7 @@ class ExperimentRunner extends React.Component<
   }
 
   renderInstructions() {
-    const { instructionScreens } = this.props.config;
+    const { instructionScreens } = this.props.config.instructions;
     return (
       <Instructions
         onFinish={() => this.setState({ stage: StageEnum.experiment })}
@@ -61,7 +61,7 @@ class ExperimentRunner extends React.Component<
     return (
       <TrialBlock
         config={this.props.config}
-        onFinish={(result) => {
+        onDone={(result) => {
           this.props.sendData({
             answers: result.answers,
             videoHeight: result.videoHeight,

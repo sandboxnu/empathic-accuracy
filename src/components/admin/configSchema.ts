@@ -22,33 +22,34 @@ const configSchema: JSONSchema6 = {
       title: "Shuffle Order Videos Are Shown",
       default: true,
     },
-    instructionScreens: {
-      type: "array",
-      title: "Instructions",
-      items: {
-        type: "string",
-        title: "",
+    instructions: {
+      type: "object",
+      title: "Customize Instructions",
+      properties: {
+        instructionScreens: {
+          type: "array",
+          title: "Instruction screens",
+          items: {
+            type: "string",
+            title: "",
+          },
+          default: [
+            "Welcome to the empathy study, and thanks for participating! On the following screen, you will see more instructions on what you will be asked to do.",
+            "In this study, you will be shown a video and asked a set of questions about the video. You can answer these questions at any point. To be shown the questions, just pause the video. Click next to continue to the experiment.",
+          ],
+        },
+        instructionsOverlay: {
+          type: "string",
+          title: "Overlay help instructions during experiment",
+          default: "insert instructions here",
+        },
       },
-      default: [
-        "Welcome to the empathy study, and thanks for participating! On the following screen, you will see more instructions on what you will be asked to do.",
-        "In this study, you will be shown a video and asked a set of questions about the video. You can answer these questions at any point. To be shown the questions, just pause the video. Click next to continue to the experiment.",
-      ],
-    },
-    instructionsOverlay: {
-      type: "string",
-      title: "Overlay Instructions",
-      default: "insert instructions here",
     },
     paradigm: {
       type: "string",
       title: "Data Collection Paradigm",
       enum: ["self", "consensus", "continuous"],
       default: "self",
-    },
-    completionLink: {
-      type: "string",
-      title: "Completion Link: ",
-      default: "www.google.com",
     },
   },
   definitions: {
@@ -146,6 +147,17 @@ const configSchema: JSONSchema6 = {
               title: "Shuffle Order Questions Are Shown",
               default: true,
             },
+            instructions: {
+              type: "object",
+              title: "Instruction Configurations",
+              properties: {
+                pauseInstructions: {
+                  type: "string",
+                  title: "Instruction text shown between timepoints",
+                  default: "Pause the video at emotional events",
+                },
+              },
+            },
           },
         },
         {
@@ -172,6 +184,17 @@ const configSchema: JSONSchema6 = {
               type: "boolean",
               title: "Shuffle Order Questions Are Shown",
               default: true,
+            },
+            instructions: {
+              type: "object",
+              properties: {
+                pauseInstructions: {
+                  type: "string",
+                  title: "Instruction text shown between timepoints",
+                  default:
+                    "The video will pause automatically and questions will appear here.",
+                },
+              },
             },
           },
         },

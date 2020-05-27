@@ -16,9 +16,8 @@ Pushing to GitHub deploys the app to [Zeit Now](https://zeit.co/now). The master
 
 # Code notes
 
-## Prop Types
-
-We use the `prop-types` package to validate props coming into React components. Custom types are declared in `types.js` - see `VideoQuestion.js` for an example of the types in use.
-
+- Experiment 
+  - TrialBlock
+    - Video Task
 
 Empathic Accuracy is a [Sandbox](https://sandboxneu.com) project.
