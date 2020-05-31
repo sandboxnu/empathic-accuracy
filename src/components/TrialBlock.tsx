@@ -49,6 +49,7 @@ export default function TrialBlock({ config, onDone }: TrialBlockProps) {
     a: AnswerSetWithMetadata[],
     d: { videoWidth: number; videoHeight: number }
   ) {
+    data.current[currentVideo.id] = a;
     if (vidIndex === videos.length - 1) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       onDone({
@@ -57,7 +58,6 @@ export default function TrialBlock({ config, onDone }: TrialBlockProps) {
         videoHeight: d.videoHeight,
       });
     } else {
-      data.current[currentVideo.id] = a;
       setStage(StageEnum.betweenVids);
       setVidIndex((i) => i + 1);
     }

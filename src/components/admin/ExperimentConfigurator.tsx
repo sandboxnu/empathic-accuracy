@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import SchemaForm from "react-jsonschema-form-bs4";
 import Axios from "axios";
 import { useBeforeunload } from "react-beforeunload";
-import schema from "./configSchema";
-import uiSchema from "./configUISchema";
-import { ExperimentConfig } from "lib/types";
+import schema from "lib/config/configSchema";
+import uiSchema from "lib/config/configUISchema";
+import { ExperimentConfig, TrialBlockConfig } from "lib/types";
 import { useAxios } from "lib/useAxios";
 import { downloadExperimentData } from "lib/downloadData";
 import {
@@ -24,6 +24,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import GatedButton from "components/GatedButton";
+import { merge } from "lodash";
 
 interface ExperimentConfiguratorProps {
   experimentId: string;
@@ -35,9 +36,14 @@ type DistributiveOmit<T, K extends keyof T> = T extends unknown
 
 // rawconfig is used by formschema and must be transformed before upload
 // difference timepoints are comma separated string
-type RawConfig = DistributiveOmit<ExperimentConfig, "videos"> & {
+type RawTrialBlockConfig = DistributiveOmit<TrialBlockConfig, "videos"> & {
   videos: { id: string; timepoints?: string }[];
 };
+
+type RawConfig = Omit<ExperimentConfig, "trialBlocks"> & {
+  trialBlocks: RawTrialBlockConfig[];
+};
+
 export default function ExperimentConfigurator({
   experimentId,
 }: ExperimentConfiguratorProps) {
@@ -55,9 +61,12 @@ export default function ExperimentConfigurator({
     (data: GetExperimentResponse) => {
       const raw: RawConfig = {
         ...data.config,
-        videos: data.config.videos.map((v) => ({
-          ...v,
-          timepoints: v.timepoints.join(","),
+        trialBlocks: data.config.trialBlocks.map((t) => ({
+          ...t,
+          videos: t.videos.map((v) => ({
+            ...v,
+            timepoints: v.timepoints.join(","),
+          })),
         })),
       };
       setConfig(raw);
@@ -70,9 +79,12 @@ export default function ExperimentConfigurator({
   function save(newConf: RawConfig, newNickname: string) {
     const exConf: ExperimentConfig = {
       ...newConf,
-      videos: newConf.videos.map((v) => ({
-        ...v,
-        timepoints: v.timepoints ? v.timepoints.split(",").map(Number) : [],
+      trialBlocks: newConf.trialBlocks.map((t) => ({
+        ...t,
+        videos: t.videos.map((v) => ({
+          ...v,
+          timepoints: v.timepoints ? v.timepoints.split(",").map(Number) : [],
+        })),
       })),
     };
     const newExp: SetExperimentParams = {

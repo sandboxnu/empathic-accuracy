@@ -138,6 +138,13 @@ form .OpenQuestion {
   min-width: 400px;
 }
 
+.configForm #root_trialBlocks > .array-item-list > .array-item:after{
+  content: "";
+  border-bottom: 2px solid black;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
 .grid .CircleContainer {
   position: relative;
   width: 100%;

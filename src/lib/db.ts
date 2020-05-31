@@ -1,20 +1,19 @@
 import AWS from "aws-sdk";
 import { v4 as uuidv4 } from "uuid";
 import { ExperimentConfig, ExperimentData, ExperimentDataEntry } from "./types";
-import sampleConfig from "./sampleConfig";
-AWS.config.update({
+import sampleConfig from "./config/sampleConfig";
+import { ServiceConfigurationOptions } from "aws-sdk/lib/service";
+
+const CONFIG: ServiceConfigurationOptions = {
   accessKeyId: process.env.ACCESS_KEY_ID,
   secretAccessKey: process.env.SECRET_KEY,
   region: "us-east-1",
-});
+  endpoint: process.env.DYNAMO_ENDPOINT,
+};
 
-const DYNAMO_ENDPOINT = process.env.DYNAMO_ENDPOINT;
-
-const dynamodb = new AWS.DynamoDB({ endpoint: DYNAMO_ENDPOINT });
-const docClient = new AWS.DynamoDB.DocumentClient({
-  endpoint: DYNAMO_ENDPOINT,
-});
-const table = process.env.DYNAMO_TABLE;
+const dynamodb = new AWS.DynamoDB(CONFIG);
+const docClient = new AWS.DynamoDB.DocumentClient(CONFIG);
+const table = process.env.DYNAMO_TABLE || "empathic-accuracy";
 
 type DBConfig = { id: string; nickname: string; config: ExperimentConfig };
 type DBData = {

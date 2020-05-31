@@ -1,5 +1,5 @@
 import { JSONSchema6 } from "json-schema";
-const configSchema: JSONSchema6 = {
+const trialBlock: JSONSchema6 = {
   type: "object",
   required: [],
   properties: {
@@ -51,6 +51,97 @@ const configSchema: JSONSchema6 = {
       title: "Data Collection Paradigm",
       enum: ["self", "consensus", "continuous"],
       default: "self",
+    },
+  },
+  dependencies: {
+    paradigm: {
+      oneOf: [
+        {
+          properties: {
+            paradigm: {
+              enum: ["continuous"],
+            },
+          },
+        },
+        {
+          properties: {
+            paradigm: {
+              enum: ["self"],
+            },
+            questions: {
+              $ref: "#/definitions/questions",
+            },
+            shuffleQuestions: {
+              type: "boolean",
+              title: "Shuffle Order Questions Are Shown",
+              default: true,
+            },
+            instructions: {
+              type: "object",
+              title: "Instruction Configurations",
+              properties: {
+                pauseInstructions: {
+                  type: "string",
+                  title: "Instruction text shown between timepoints",
+                  default: "Pause the video at emotional events",
+                },
+              },
+            },
+          },
+        },
+        {
+          properties: {
+            paradigm: {
+              enum: ["consensus"],
+            },
+            videos: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  timepoints: {
+                    type: "string",
+                    title: "timepoints (comma separated seconds)",
+                  },
+                },
+              },
+            },
+            questions: {
+              $ref: "#/definitions/questions",
+            },
+            shuffleQuestions: {
+              type: "boolean",
+              title: "Shuffle Order Questions Are Shown",
+              default: true,
+            },
+            instructions: {
+              type: "object",
+              properties: {
+                pauseInstructions: {
+                  type: "string",
+                  title: "Instruction text shown between timepoints",
+                  default:
+                    "The video will pause automatically and questions will appear here.",
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
+  },
+};
+const configSchema: JSONSchema6 = {
+  type: "object",
+  properties: {
+    trialBlocks: {
+      type: "array",
+      title: "Trial Blocks",
+      items: trialBlock,
+    },
+    shuffleTrialBlocks: {
+      type: "boolean",
+      title: "Shuffle Order Trial Blocks Are Shown",
     },
   },
   definitions: {
@@ -130,76 +221,6 @@ const configSchema: JSONSchema6 = {
           },
         },
       },
-    },
-  },
-  dependencies: {
-    paradigm: {
-      oneOf: [
-        {
-          properties: {
-            paradigm: {
-              enum: ["self"],
-            },
-            questions: {
-              $ref: "#/definitions/questions",
-            },
-            shuffleQuestions: {
-              type: "boolean",
-              title: "Shuffle Order Questions Are Shown",
-              default: true,
-            },
-            instructions: {
-              type: "object",
-              title: "Instruction Configurations",
-              properties: {
-                pauseInstructions: {
-                  type: "string",
-                  title: "Instruction text shown between timepoints",
-                  default: "Pause the video at emotional events",
-                },
-              },
-            },
-          },
-        },
-        {
-          properties: {
-            paradigm: {
-              enum: ["consensus"],
-            },
-            videos: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  timepoints: {
-                    type: "string",
-                    title: "timepoints (comma separated seconds)",
-                  },
-                },
-              },
-            },
-            questions: {
-              $ref: "#/definitions/questions",
-            },
-            shuffleQuestions: {
-              type: "boolean",
-              title: "Shuffle Order Questions Are Shown",
-              default: true,
-            },
-            instructions: {
-              type: "object",
-              properties: {
-                pauseInstructions: {
-                  type: "string",
-                  title: "Instruction text shown between timepoints",
-                  default:
-                    "The video will pause automatically and questions will appear here.",
-                },
-              },
-            },
-          },
-        },
-      ],
     },
   },
 };

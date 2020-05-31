@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src/",
-    "dev:db:up": "docker run -p 8000:8000 --name ea-db -d amazon/dynamodb-local && DYNAMO_ENDPOINT=http://localhost:8000 ts-node -P tsconfig.standalone.json src/lib/setupdb-cli.ts",
+    "dev:db:up": "docker run -p 8000:8000 --name ea-db -d amazon/dynamodb-local && yarn dev:db:seed",
+    "dev:db:seed": "dotenv -e .env.development -- ts-node -P tsconfig.standalone.json src/lib/setupdb-cli.ts",
     "dev:db:down": "docker rm --force ea-db"
   },
   "dependencies": {
@@ -49,6 +50,7 @@
     "@types/uuid": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
+    "dotenv-cli": "^3.1.0",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.3",
@@ -57,6 +59,7 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.2.4",
     "prettier": "^2.0.5",
+    "ts-node": "^8.10.2",
     "typescript": "^3.9.2"
   },
   "husky": {

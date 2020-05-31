@@ -9,16 +9,20 @@ export type ExperimentMetadata = {
   nickname: string;
 };
 
-export type ExperimentConfig = TrialBlockConfig;
+export type ExperimentConfig = {
+  trialBlocks: TrialBlockConfig[];
+  shuffleTrialBlocks: boolean;
+};
 
 export type TrialBlockConfig =
   | SelfParadigmTrialBlockConfig
   | ConsensusParadigmTrialBlockConfig
   | ContinuousParadigmTrialBlockConfig;
 
+export type Paradigm = "consensus" | "self" | "continuous";
 interface BaseTrialBlockConfig {
   shuffleVideos: boolean;
-  paradigm: "consensus" | "self" | "continuous";
+  paradigm: Paradigm;
   videos: { id: string; timepoints: number[] }[];
   questions?: Question[];
   shuffleQuestions?: boolean;
@@ -79,7 +83,12 @@ export interface ExperimentDataEntry {
   browserHeight: number;
   totalDuration: number;
   subjectID: string;
+  trialBlocks: ExperimentDataTrialBlock[];
+}
+
+export interface ExperimentDataTrialBlock {
   answers: VideoToAnswerSet;
+  paradigm: Paradigm;
 }
 export interface VideoToAnswerSet {
   [vidId: string]: AnswerSetWithMetadata[];

@@ -1,7 +1,11 @@
 import React from "react";
 import { Beforeunload } from "react-beforeunload";
 import Instructions from "./Instructions";
-import { ExperimentDataEntry, ExperimentConfig } from "lib/types";
+import {
+  ExperimentDataEntry,
+  ExperimentConfig,
+  ExperimentDataTrialBlock,
+} from "lib/types";
 import TrialBlock from "./TrialBlock";
 import GatedButton from "./GatedButton";
 
@@ -14,6 +18,8 @@ interface ExperimentRunnerState {
   stage: StageEnum;
   startTime: number;
   subjectID: string;
+  data: ExperimentDataTrialBlock[];
+  trialBlockIndex: number;
 }
 
 enum StageEnum {
@@ -26,6 +32,8 @@ const INITIALSTATE: ExperimentRunnerState = {
   stage: StageEnum.enterSubjectID,
   startTime: 0,
   subjectID: "",
+  data: [],
+  trialBlockIndex: 0,
 };
 
 class ExperimentRunner extends React.Component<
@@ -48,7 +56,9 @@ class ExperimentRunner extends React.Component<
   }
 
   renderInstructions() {
-    const { instructionScreens } = this.props.config.instructions;
+    const { instructionScreens } = this.props.config.trialBlocks[
+      this.state.trialBlockIndex
+    ].instructions;
     return (
       <Instructions
         onFinish={() => this.setState({ stage: StageEnum.experiment })}
@@ -58,26 +68,44 @@ class ExperimentRunner extends React.Component<
   }
 
   renderExperiment() {
+    const { trialBlockIndex } = this.state;
+    const config = this.props.config.trialBlocks[trialBlockIndex];
     return (
       <TrialBlock
-        config={this.props.config}
+        key={trialBlockIndex}
+        config={config}
         onDone={(result) => {
-          this.props.sendData({
-            answers: result.answers,
-            videoHeight: result.videoHeight,
-            videoWidth: result.videoWidth,
-            browserWidth: Math.max(
-              document.documentElement.clientWidth,
-              window.innerWidth || 0
-            ),
-            browserHeight: Math.max(
-              document.documentElement.clientHeight,
-              window.innerHeight || 0
-            ),
-            subjectID: this.state.subjectID,
-            totalDuration: (Date.now() - this.state.startTime) / 1000,
-          });
-          this.setState({ stage: StageEnum.done });
+          const newData = [
+            ...this.state.data,
+            {
+              answers: result.answers,
+              paradigm: config.paradigm,
+            },
+          ];
+          if (trialBlockIndex === this.props.config.trialBlocks.length - 1) {
+            this.props.sendData({
+              trialBlocks: newData,
+              videoHeight: result.videoHeight,
+              videoWidth: result.videoWidth,
+              browserWidth: Math.max(
+                document.documentElement.clientWidth,
+                window.innerWidth || 0
+              ),
+              browserHeight: Math.max(
+                document.documentElement.clientHeight,
+                window.innerHeight || 0
+              ),
+              subjectID: this.state.subjectID,
+              totalDuration: (Date.now() - this.state.startTime) / 1000,
+            });
+            this.setState({ stage: StageEnum.done });
+          } else {
+            this.setState({
+              data: newData,
+              stage: StageEnum.instructions,
+              trialBlockIndex: trialBlockIndex + 1,
+            });
+          }
         }}
       />
     );
