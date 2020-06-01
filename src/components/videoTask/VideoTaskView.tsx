@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import ReactMarkdown from "react-markdown";
-import { AnswerSetWithMetadata } from "lib/types";
+import { AnswerSetWithMetadata, AnswerSet } from "lib/types";
 
 interface VideoTaskViewProps {
   videoId: string;
@@ -16,7 +16,7 @@ interface VideoTaskViewProps {
   setPlaying: (p: boolean) => void;
   playing: boolean;
   renderQuestions: (
-    onSubmit: (a: AnswerSetWithMetadata) => void
+    onSubmit: (a: Omit<AnswerSetWithMetadata, "timestamp">) => void
   ) => React.ReactNode;
 }
 
@@ -33,7 +33,7 @@ export default function VideoTaskView({
   const data = useRef<AnswerSetWithMetadata[]>([]);
 
   // Add the new data point from VideoQuestions and resume the video
-  function onSubmit(newValue: AnswerSetWithMetadata) {
+  function onSubmit(newValue: AnswerSet) {
     const withMetadata: AnswerSetWithMetadata = {
       ...newValue,
       timestamp: playerRef.current?.getCurrentTime() || 0,

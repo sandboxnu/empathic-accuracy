@@ -24,7 +24,7 @@ const sampleConfig: ExperimentConfig = {
         enabled: true,
         maxTries: 2,
         minSegments: 2,
-        tryAgainMessage: 'please try again',
+        tryAgainMessage: "please try again",
         failMessage:
           "You did not segment the video enough and are not eligible to continue",
       },
