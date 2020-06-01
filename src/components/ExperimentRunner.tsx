@@ -6,8 +6,10 @@ import {
   ExperimentConfig,
   ExperimentDataTrialBlock,
 } from "lib/types";
-import TrialBlock from "./TrialBlock";
+import TrialBlock, { TrialResult } from "./TrialBlock";
 import GatedButton from "./GatedButton";
+import TestTrialBlock from "./TestTrialBlock";
+import ReactMarkdown from "react-markdown";
 
 interface ExperimentRunnerProps {
   config: ExperimentConfig;
@@ -24,9 +26,9 @@ interface ExperimentRunnerState {
 
 enum StageEnum {
   enterSubjectID,
-  instructions,
   experiment,
   done,
+  fail,
 }
 const INITIALSTATE: ExperimentRunnerState = {
   stage: StageEnum.enterSubjectID,
@@ -48,29 +50,53 @@ class ExperimentRunner extends React.Component<
 
   // The user has closed the tab - save data to localstorage.
   onClose(e: Event) {
-    if (this.state.stage !== StageEnum.done) {
+    if (![StageEnum.done, StageEnum.fail].includes(this.state.stage)) {
       e.preventDefault();
       return "You are in the middle of the experiment!";
     }
     return null;
   }
 
-  renderInstructions() {
-    const { instructionScreens } = this.props.config.trialBlocks[
-      this.state.trialBlockIndex
-    ].instructions;
-    return (
-      <Instructions
-        onFinish={() => this.setState({ stage: StageEnum.experiment })}
-        instructionScreens={instructionScreens}
-      />
-    );
-  }
-
   renderExperiment() {
-    const { trialBlockIndex } = this.state;
+    const { trialBlockIndex, data } = this.state;
     const config = this.props.config.trialBlocks[trialBlockIndex];
-    return (
+    const buildData = (
+      data: ExperimentDataTrialBlock[],
+      result: TrialResult
+    ) => ({
+      trialBlocks: data,
+      videoHeight: result.videoHeight,
+      videoWidth: result.videoWidth,
+      browserWidth: Math.max(
+        document.documentElement.clientWidth,
+        window.innerWidth || 0
+      ),
+      browserHeight: Math.max(
+        document.documentElement.clientHeight,
+        window.innerHeight || 0
+      ),
+      subjectID: this.state.subjectID,
+      totalDuration: (Date.now() - this.state.startTime) / 1000,
+    });
+    return config.testTrial.enabled ? (
+      <TestTrialBlock
+        config={config}
+        onFail={() => {
+          this.setState({ stage: StageEnum.fail });
+        }}
+        onProceed={(result) => {
+          if (trialBlockIndex === this.props.config.trialBlocks.length - 1) {
+            this.props.sendData(buildData(data, result));
+            this.setState({ stage: StageEnum.done });
+          } else {
+            this.setState({
+              data: data,
+              trialBlockIndex: trialBlockIndex + 1,
+            });
+          }
+        }}
+      />
+    ) : (
       <TrialBlock
         key={trialBlockIndex}
         config={config}
@@ -83,26 +109,11 @@ class ExperimentRunner extends React.Component<
             },
           ];
           if (trialBlockIndex === this.props.config.trialBlocks.length - 1) {
-            this.props.sendData({
-              trialBlocks: newData,
-              videoHeight: result.videoHeight,
-              videoWidth: result.videoWidth,
-              browserWidth: Math.max(
-                document.documentElement.clientWidth,
-                window.innerWidth || 0
-              ),
-              browserHeight: Math.max(
-                document.documentElement.clientHeight,
-                window.innerHeight || 0
-              ),
-              subjectID: this.state.subjectID,
-              totalDuration: (Date.now() - this.state.startTime) / 1000,
-            });
+            this.props.sendData(buildData(newData, result));
             this.setState({ stage: StageEnum.done });
           } else {
             this.setState({
               data: newData,
-              stage: StageEnum.instructions,
               trialBlockIndex: trialBlockIndex + 1,
             });
           }
@@ -126,14 +137,31 @@ class ExperimentRunner extends React.Component<
     switch (stage) {
       case StageEnum.enterSubjectID:
         return this.renderEnterSubjectID();
-      case StageEnum.instructions:
-        return this.renderInstructions();
       case StageEnum.experiment:
         return this.renderExperiment();
       case StageEnum.done:
         return this.renderDone();
+      case StageEnum.fail:
+        return this.renderFail();
       default:
         return null;
+    }
+  }
+
+  renderFail() {
+    const { testTrial } = this.props.config.trialBlocks[
+      this.state.trialBlockIndex
+    ];
+    if (testTrial.enabled) {
+      return (
+        <div className="instructionsContainer">
+          <p className="instructionsText">
+            <ReactMarkdown source={testTrial.failMessage} />
+          </p>
+        </div>
+      );
+    } else {
+      return <div>error state</div>;
     }
   }
 
@@ -150,7 +178,7 @@ class ExperimentRunner extends React.Component<
             disabled={!this.state.subjectID}
             tooltip="Enter your subject ID to continue"
             type="button"
-            onClick={() => this.setState({ stage: StageEnum.instructions })}
+            onClick={() => this.setState({ stage: StageEnum.experiment })}
           >
             Next &#8250;
           </GatedButton>

@@ -11,11 +11,12 @@ import ContinuousVideoTask from "./videoTask/ContinuousVideoTask";
 import SelfVideoTask from "./videoTask/SelfVideoTask";
 
 enum StageEnum {
+  instructions,
   showingVid,
   betweenVids,
 }
 
-interface TrialResult {
+export interface TrialResult {
   answers: VideoToAnswerSet;
   videoWidth: number;
   videoHeight: number;
@@ -26,7 +27,7 @@ interface TrialBlockProps {
   onDone: (data: TrialResult) => void;
 }
 export default function TrialBlock({ config, onDone }: TrialBlockProps) {
-  const [stage, setStage] = useState(StageEnum.showingVid);
+  const [stage, setStage] = useState(StageEnum.instructions);
   const [vidIndex, setVidIndex] = useState(0);
   const videos = useState(
     config.shuffleVideos ? shuffle(config.videos) : config.videos
@@ -39,7 +40,7 @@ export default function TrialBlock({ config, onDone }: TrialBlockProps) {
   const data = useRef<VideoToAnswerSet>(
     zipObject(
       videos.map((v) => v.id),
-      videos.map((v) => [])
+      videos.map(() => [])
     )
   );
 
@@ -62,8 +63,14 @@ export default function TrialBlock({ config, onDone }: TrialBlockProps) {
       setVidIndex((i) => i + 1);
     }
   }
-
-  if (stage === StageEnum.showingVid) {
+  if (stage === StageEnum.instructions) {
+    return (
+      <Instructions
+        onFinish={() => setStage(StageEnum.showingVid)}
+        instructionScreens={config.instructions.instructionScreens}
+      />
+    );
+  } else if (stage === StageEnum.showingVid) {
     switch (config.paradigm) {
       case "continuous":
         return (

@@ -3,24 +3,18 @@ const trialBlock: JSONSchema6 = {
   type: "object",
   required: [],
   properties: {
-    videos: {
-      type: "array",
-      title: "Vimeo Video IDs",
-      items: {
-        type: "object",
-        title: "",
-        properties: {
-          id: {
-            type: "string",
-          },
+    testTrial: {
+      type: "object",
+      title: "Test Trial Config",
+      properties: {
+        enabled: {
+          type: "boolean",
+          title: "Run as test trial",
+          description:
+            "When selected, this trial will run as a TEST TRIAL and no data will be recorded.",
+          default: false,
         },
       },
-      default: [{ id: "314909286/3623e43bae" }],
-    },
-    shuffleVideos: {
-      type: "boolean",
-      title: "Shuffle Order Videos Are Shown",
-      default: true,
     },
     instructions: {
       type: "object",
@@ -46,6 +40,25 @@ const trialBlock: JSONSchema6 = {
         },
       },
     },
+    videos: {
+      type: "array",
+      title: "Vimeo Video IDs",
+      items: {
+        type: "object",
+        title: "",
+        properties: {
+          id: {
+            type: "string",
+          },
+        },
+      },
+      default: [{ id: "314909286/3623e43bae" }],
+    },
+    shuffleVideos: {
+      type: "boolean",
+      title: "Shuffle Order Videos Are Shown",
+      default: true,
+    },
     paradigm: {
       type: "string",
       title: "Data Collection Paradigm",
@@ -60,6 +73,39 @@ const trialBlock: JSONSchema6 = {
           properties: {
             paradigm: {
               enum: ["continuous"],
+            },
+            testTrial: {
+              dependencies: {
+                enabled: {
+                  oneOf: [
+                    {
+                      properties: {
+                        enabled: { enum: [false] },
+                      },
+                    },
+                    {
+                      properties: {
+                        enabled: { enum: [true] },
+                        maxSeconds: {
+                          type: "number",
+                          title: "Maximum seconds between mouse movements",
+                          default: 30,
+                        },
+                        maxTries: {
+                          type: "number",
+                          title: "Number of test trials allowed",
+                          default: 2,
+                        },
+                        failMessage: {
+                          type: "string",
+                          title:
+                            "message to show when test trial is failed too many times",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
             },
           },
         },
@@ -84,6 +130,39 @@ const trialBlock: JSONSchema6 = {
                   type: "string",
                   title: "Instruction text shown between timepoints",
                   default: "Pause the video at emotional events",
+                },
+              },
+            },
+            testTrial: {
+              dependencies: {
+                enabled: {
+                  oneOf: [
+                    {
+                      properties: {
+                        enabled: { enum: [false] },
+                      },
+                    },
+                    {
+                      properties: {
+                        enabled: { enum: [true] },
+                        minSegments: {
+                          type: "number",
+                          title:
+                            "Minimum number of segments needed to pass test trial",
+                        },
+                        maxTries: {
+                          type: "number",
+                          title: "Number of test trials allowed",
+                          default: 3,
+                        },
+                        failMessage: {
+                          type: "string",
+                          title:
+                            "message to show when test trial is failed too many times",
+                        },
+                      },
+                    },
+                  ],
                 },
               },
             },

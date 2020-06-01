@@ -20,6 +20,13 @@ const sampleConfig: ExperimentConfig = {
         },
       ],
       shuffleQuestions: true,
+      testTrial: {
+        enabled: true,
+        maxTries: 2,
+        minSegments: 2,
+        failMessage:
+          "You did not segment the video enough and are not eligible to continue",
+      },
     },
   ],
 };

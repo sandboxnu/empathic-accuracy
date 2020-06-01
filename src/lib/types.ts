@@ -27,6 +27,10 @@ interface BaseTrialBlockConfig {
   questions?: Question[];
   shuffleQuestions?: boolean;
   instructions: TrialInstructions;
+  testTrial: {
+    enabled: boolean;
+    failMessage?: string;
+  };
 }
 
 export interface TrialInstructions {
@@ -39,6 +43,16 @@ export interface SelfParadigmTrialBlockConfig extends BaseTrialBlockConfig {
   paradigm: "self";
   questions: Question[];
   shuffleQuestions: boolean;
+  testTrial:
+    | {
+        enabled: false;
+      }
+    | {
+        enabled: true;
+        failMessage: string;
+        minSegments: number;
+        maxTries: number;
+      };
 }
 
 export interface ConsensusParadigmTrialBlockConfig
@@ -51,6 +65,16 @@ export interface ConsensusParadigmTrialBlockConfig
 export interface ContinuousParadigmTrialBlockConfig
   extends BaseTrialBlockConfig {
   paradigm: "continuous";
+  testTrial:
+    | {
+        enabled: false;
+      }
+    | {
+        enabled: true;
+        failMessage: string;
+        maxSeconds: number;
+        maxTries: number;
+      };
 }
 
 export type Question = MCQuestion | ScaleQuestion | OpenQuestion | GridQuestion;
@@ -95,7 +119,7 @@ export interface VideoToAnswerSet {
 }
 export interface AnswerSetWithMetadata extends AnswerSet {
   questionTime?: number;
-  timestamp?: number;
+  timestamp: number;
 }
 
 export interface AnswerSet {

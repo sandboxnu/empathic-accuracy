@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AnswerSetWithMetadata, GridAnswer } from "lib/types";
+import { GridAnswer } from "lib/types";
 
 function getRelativeClick(e: React.MouseEvent) {
   console.log(e.clientX, e.clientY);
