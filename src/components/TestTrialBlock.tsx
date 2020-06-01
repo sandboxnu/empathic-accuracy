@@ -3,6 +3,7 @@ import TrialBlock, { TrialResult } from "./TrialBlock";
 import { useState } from "react";
 import { sumBy, range } from "lodash";
 import ReactMarkdown from "react-markdown";
+import Instructions from "./Instructions";
 
 interface TestTrialBlockProps {
   config: TrialBlockConfig;
@@ -50,6 +51,7 @@ export default function TestTrialBlock({
             if (proceed) {
               onProceed(d);
             } else if (tryCount + 1 < config.testTrial.maxTries) {
+              setStage(StageEnum.tryagainmessage);
               setTryCount(tryCount + 1);
             } else {
               onFail(d);
@@ -62,11 +64,10 @@ export default function TestTrialBlock({
   } else {
     if (config.testTrial.enabled) {
       return (
-        <div className="instructionsContainer">
-          <p className="instructionsText">
-            <ReactMarkdown source={config.testTrial.tryAgainMessage} />
-          </p>
-        </div>
+        <Instructions
+          instructionScreens={[config.testTrial.tryAgainMessage]}
+          onFinish={() => setStage(StageEnum.test)}
+        />
       );
     } else {
       return <div>error state</div>;
