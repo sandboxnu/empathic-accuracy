@@ -96,6 +96,11 @@ const trialBlock: JSONSchema6 = {
                           title: "Number of test trials allowed",
                           default: 2,
                         },
+                        tryAgainMessage: {
+                          type: "string",
+                          title:
+                            "message to show when test trial is failed and they must try again",
+                        },
                         failMessage: {
                           type: "string",
                           title:
@@ -154,6 +159,11 @@ const trialBlock: JSONSchema6 = {
                           type: "number",
                           title: "Number of test trials allowed",
                           default: 3,
+                        },
+                        tryAgainMessage: {
+                          type: "string",
+                          title:
+                            "message to show when test trial is failed and they must try again",
                         },
                         failMessage: {
                           type: "string",

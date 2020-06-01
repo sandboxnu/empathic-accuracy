@@ -30,6 +30,7 @@ interface BaseTrialBlockConfig {
   testTrial: {
     enabled: boolean;
     failMessage?: string;
+    tryAgainMessage?: string;
   };
 }
 
@@ -49,6 +50,7 @@ export interface SelfParadigmTrialBlockConfig extends BaseTrialBlockConfig {
       }
     | {
         enabled: true;
+        tryAgainMessage: string;
         failMessage: string;
         minSegments: number;
         maxTries: number;
@@ -71,6 +73,7 @@ export interface ContinuousParadigmTrialBlockConfig
       }
     | {
         enabled: true;
+        tryAgainMessage: string;
         failMessage: string;
         maxSeconds: number;
         maxTries: number;
