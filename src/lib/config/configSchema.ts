@@ -9,9 +9,9 @@ const trialBlock: JSONSchema6 = {
       properties: {
         enabled: {
           type: "boolean",
-          title: "Run as test trial",
+          title: "Run test trial",
           description:
-            "When selected, this trial will run as a TEST TRIAL and no data will be recorded.",
+            "When selected, this trial will be preceded by a test trial that will not be recorded.",
           default: false,
         },
       },
@@ -86,6 +86,16 @@ const trialBlock: JSONSchema6 = {
                     {
                       properties: {
                         enabled: { enum: [true] },
+                        video: {
+                          type: "object",
+                          title: "",
+                          properties: {
+                            id: {
+                              type: "string",
+                              title: "test trial video id",
+                            },
+                          },
+                        },
                         maxSeconds: {
                           type: "number",
                           title: "Maximum seconds between mouse movements",
@@ -95,6 +105,10 @@ const trialBlock: JSONSchema6 = {
                           type: "number",
                           title: "Number of test trials allowed",
                           default: 2,
+                        },
+                        successMessage: {
+                          type: "string",
+                          title: "message to show when test trial succeeds",
                         },
                         tryAgainMessage: {
                           type: "string",
@@ -150,6 +164,16 @@ const trialBlock: JSONSchema6 = {
                     {
                       properties: {
                         enabled: { enum: [true] },
+                        video: {
+                          type: "object",
+                          title: "",
+                          properties: {
+                            id: {
+                              type: "string",
+                              title: "test trial video id",
+                            },
+                          },
+                        },
                         minSegments: {
                           type: "number",
                           title:
@@ -159,6 +183,10 @@ const trialBlock: JSONSchema6 = {
                           type: "number",
                           title: "Number of test trials allowed",
                           default: 3,
+                        },
+                        successMessage: {
+                          type: "string",
+                          title: "message to show when test trial succeeds",
                         },
                         tryAgainMessage: {
                           type: "string",
@@ -211,6 +239,41 @@ const trialBlock: JSONSchema6 = {
                   title: "Instruction text shown between timepoints",
                   default:
                     "The video will pause automatically and questions will appear here.",
+                },
+              },
+            },
+            testTrial: {
+              dependencies: {
+                enabled: {
+                  oneOf: [
+                    {
+                      properties: {
+                        enabled: { enum: [false] },
+                      },
+                    },
+                    {
+                      properties: {
+                        enabled: { enum: [true] },
+                        successMessage: {
+                          type: "string",
+                          title: "message to show when test trial succeeds",
+                        },
+                        video: {
+                          type: "object",
+                          properties: {
+                            id: {
+                              type: "string",
+                              title: "test trial video id",
+                            },
+                            timepoints: {
+                              type: "string",
+                              title: "timepoints (comma separated seconds)",
+                            },
+                          },
+                        },
+                      },
+                    },
+                  ],
                 },
               },
             },

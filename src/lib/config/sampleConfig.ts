@@ -22,8 +22,10 @@ const sampleConfig: ExperimentConfig = {
       shuffleQuestions: true,
       testTrial: {
         enabled: true,
+        video: { id: "318377318/cbb45794ea", timepoints: [] },
         maxTries: 2,
         minSegments: 2,
+        successMessage: "passed the test trial",
         tryAgainMessage: "please try again",
         failMessage:
           "You did not segment the video enough and are not eligible to continue",

@@ -25,9 +25,16 @@ export interface TrialResult {
 interface TrialBlockProps {
   config: TrialBlockConfig;
   onDone: (data: TrialResult) => void;
+  skipInstructions?: boolean;
 }
-export default function TrialBlock({ config, onDone }: TrialBlockProps) {
-  const [stage, setStage] = useState(StageEnum.instructions);
+export default function TrialBlock({
+  config,
+  onDone,
+  skipInstructions = false,
+}: TrialBlockProps) {
+  const [stage, setStage] = useState(
+    skipInstructions ? StageEnum.showingVid : StageEnum.instructions
+  );
   const [vidIndex, setVidIndex] = useState(0);
   const videos = useState(
     config.shuffleVideos ? shuffle(config.videos) : config.videos

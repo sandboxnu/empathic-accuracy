@@ -2,17 +2,19 @@ import { UiSchema } from "react-jsonschema-form-bs4";
 
 const configUISchema: UiSchema = {
   "ui:order": ["paradigm", "*"],
-  instructions: {
-    instructionScreens: {
-      items: {
+  trialBlocks: {
+    instructions: {
+      instructionScreens: {
+        items: {
+          "ui:widget": "textarea",
+        },
+      },
+      instructionsOverlay: {
         "ui:widget": "textarea",
       },
-    },
-    instructionsOverlay: {
-      "ui:widget": "textarea",
-    },
-    pauseInstructions: {
-      "ui:widget": "textarea",
+      pauseInstructions: {
+        "ui:widget": "textarea",
+      },
     },
   },
 };

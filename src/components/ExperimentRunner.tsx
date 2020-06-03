@@ -1,15 +1,14 @@
 import React from "react";
 import { Beforeunload } from "react-beforeunload";
-import Instructions from "./Instructions";
 import {
   ExperimentDataEntry,
   ExperimentConfig,
   ExperimentDataTrialBlock,
 } from "lib/types";
-import TrialBlock, { TrialResult } from "./TrialBlock";
+import { TrialResult } from "./TrialBlock";
 import GatedButton from "./GatedButton";
-import TestTrialBlock from "./TestTrialBlock";
 import ReactMarkdown from "react-markdown";
+import TrialBlockWrapper from "./TrialBlockWrapper";
 
 interface ExperimentRunnerProps {
   config: ExperimentConfig;
@@ -58,7 +57,7 @@ class ExperimentRunner extends React.Component<
   }
 
   renderExperiment() {
-    const { trialBlockIndex, data } = this.state;
+    const { trialBlockIndex } = this.state;
     const config = this.props.config.trialBlocks[trialBlockIndex];
     const buildData = (
       data: ExperimentDataTrialBlock[],
@@ -78,28 +77,13 @@ class ExperimentRunner extends React.Component<
       subjectID: this.state.subjectID,
       totalDuration: (Date.now() - this.state.startTime) / 1000,
     });
-    return config.testTrial.enabled ? (
-      <TestTrialBlock
+    return (
+      <TrialBlockWrapper
+        key={trialBlockIndex}
         config={config}
         onFail={() => {
           this.setState({ stage: StageEnum.fail });
         }}
-        onProceed={(result) => {
-          if (trialBlockIndex === this.props.config.trialBlocks.length - 1) {
-            this.props.sendData(buildData(data, result));
-            this.setState({ stage: StageEnum.done });
-          } else {
-            this.setState({
-              data: data,
-              trialBlockIndex: trialBlockIndex + 1,
-            });
-          }
-        }}
-      />
-    ) : (
-      <TrialBlock
-        key={trialBlockIndex}
-        config={config}
         onDone={(result) => {
           const newData = [
             ...this.state.data,

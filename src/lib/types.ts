@@ -20,19 +20,23 @@ export type TrialBlockConfig =
   | ContinuousParadigmTrialBlockConfig;
 
 export type Paradigm = "consensus" | "self" | "continuous";
-interface BaseTrialBlockConfig {
+interface BaseTrialBlockConfig<T extends BaseTestTrial = BaseTestTrial> {
   shuffleVideos: boolean;
   paradigm: Paradigm;
   videos: { id: string; timepoints: number[] }[];
   questions?: Question[];
   shuffleQuestions?: boolean;
   instructions: TrialInstructions;
-  testTrial: {
-    enabled: boolean;
-    failMessage?: string;
-    tryAgainMessage?: string;
-  };
+  testTrial: T | { enabled: false };
 }
+
+type BaseTestTrial = {
+  enabled: true;
+  video: { id: string; timepoints: number[] };
+  successMessage: string;
+  failMessage: string;
+  tryAgainMessage: string;
+};
 
 export interface TrialInstructions {
   instructionScreens: string[];
@@ -40,21 +44,16 @@ export interface TrialInstructions {
   pauseInstructions?: string;
 }
 
-export interface SelfParadigmTrialBlockConfig extends BaseTrialBlockConfig {
+export interface SelfParadigmTrialBlockConfig
+  extends BaseTrialBlockConfig<SelfTestTrial> {
   paradigm: "self";
   questions: Question[];
   shuffleQuestions: boolean;
-  testTrial:
-    | {
-        enabled: false;
-      }
-    | {
-        enabled: true;
-        tryAgainMessage: string;
-        failMessage: string;
-        minSegments: number;
-        maxTries: number;
-      };
+}
+
+interface SelfTestTrial extends BaseTestTrial {
+  minSegments: number;
+  maxTries: number;
 }
 
 export interface ConsensusParadigmTrialBlockConfig
@@ -65,19 +64,13 @@ export interface ConsensusParadigmTrialBlockConfig
 }
 
 export interface ContinuousParadigmTrialBlockConfig
-  extends BaseTrialBlockConfig {
+  extends BaseTrialBlockConfig<ContinuousTestTrial> {
   paradigm: "continuous";
-  testTrial:
-    | {
-        enabled: false;
-      }
-    | {
-        enabled: true;
-        tryAgainMessage: string;
-        failMessage: string;
-        maxSeconds: number;
-        maxTries: number;
-      };
+}
+
+interface ContinuousTestTrial extends BaseTestTrial {
+  maxSeconds: number;
+  maxTries: number;
 }
 
 export type Question = MCQuestion | ScaleQuestion | OpenQuestion | GridQuestion;
