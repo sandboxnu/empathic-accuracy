@@ -5,7 +5,7 @@ import { useState } from "react";
 
 interface TrialBlockWrapperProps {
   config: TrialBlockConfig;
-  onFail: (r: TrialResult) => void;
+  onFail: () => void;
   onDone: (data: TrialResult) => void;
 }
 

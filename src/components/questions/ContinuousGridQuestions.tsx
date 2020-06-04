@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { GridAnswer } from "lib/types";
+import Grid from "./Grid";
+import { clamp } from "lodash";
 
 function getRelativeClick(e: React.MouseEvent) {
-  console.log(e.clientX, e.clientY);
   // e = Mouse click event.
   const rect = e.currentTarget.getBoundingClientRect();
   const x = e.clientX - rect.left; // x position within the element.
@@ -44,46 +45,43 @@ const ContinuousGrid = ({
   onPlay,
   paused,
 }: ContinuousGridProps) => {
-  const [lastPos, setLastPos] = useState<GridAnswer | null>();
+  const [lastPos, setLastPos] = useState<GridAnswer>({ x: 0.5, y: 0.5 });
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    document.addEventListener(
+      "pointerlockchange",
+      () => {
+        if (
+          document.pointerLockElement === gridRef.current ||
+          document.mozPointerLockElement === gridRef.current
+        ) {
+          onPlay();
+        } else {
+          onGridExit();
+        }
+      },
+      false
+    );
+  }, [onPlay, onGridExit]);
   return (
     <div
-      className="grid"
-      // ! why does it pause on enter instead of exit??
-      onMouseLeave={onGridExit}
-      onMouseMoveCapture={(e) => {
-        const pos = getRelativeClick(e);
-        setLastPos(pos);
+      ref={gridRef}
+      onClick={() => {
+        gridRef.current?.requestPointerLock();
+      }}
+      onMouseMove={(e) => {
         if (!paused) {
+          const pos = {
+            x: clamp(e.movementX / 250 + lastPos.x, 0, 1),
+            y: clamp(e.movementY / 250 + lastPos.y, 0, 1),
+          };
+          setLastPos(pos);
           onValue(pos);
         }
       }}
     >
-      <div className="CircleContainer">
-        {paused ? (
-          <div
-            className="circle"
-            onClick={onPlay}
-            style={{
-              background: "green",
-              top: "180px",
-              left: "200px",
-            }}
-          />
-        ) : (
-          <div>
-            {lastPos && (
-              <div
-                className="circle"
-                style={{
-                  top: lastPos.y,
-                  left: lastPos.x,
-                }}
-              />
-            )}
-          </div>
-        )}
-      </div>
-      <img id="grid" src="/affect.png" alt="Grid" />
+      <Grid x={lastPos.x} y={lastPos.y} />
     </div>
   );
 };

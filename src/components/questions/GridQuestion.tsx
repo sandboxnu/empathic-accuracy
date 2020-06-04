@@ -1,6 +1,7 @@
 import React from "react";
 import { useField } from "informed";
 import { GridAnswer } from "lib/types";
+import Grid from "./Grid";
 
 function getRelativeClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
   // e = Mouse click event.
@@ -21,20 +22,7 @@ const GridQuestion = (props: GridQuestionProps) => {
   const { fieldState, fieldApi } = useField<GridAnswer | undefined>(props);
   const { value } = fieldState;
   const { setValue } = fieldApi;
-  return (
-    <div className="grid">
-      <div className="CircleContainer">
-        {value !== undefined ? (
-          <div className="circle" style={{ top: value.y, left: value.x }} />
-        ) : null}
-      </div>
-      <img
-        onClick={(e) => setValue(getRelativeClick(e))}
-        src="/affect.png"
-        alt="Grid"
-      />
-    </div>
-  );
+  return <Grid x={value?.x || 0.5} y={value?.y || 0.5} onClick={setValue} />;
 };
 
 export default GridQuestion;

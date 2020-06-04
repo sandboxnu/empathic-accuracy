@@ -93,6 +93,10 @@ export interface GridQuestion extends BaseQuestion {
   type: "grid";
 }
 
+export interface GridAxisLabel {
+  high: string;
+  low: string;
+}
 // ================ Experiment Collected Data ======================
 
 export type ExperimentData = ExperimentDataEntry[];
