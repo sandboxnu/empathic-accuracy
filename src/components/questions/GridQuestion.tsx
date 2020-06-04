@@ -3,14 +3,6 @@ import { useField } from "informed";
 import { GridAnswer } from "lib/types";
 import Grid from "./Grid";
 
-function getRelativeClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
-  // e = Mouse click event.
-  const rect = e.currentTarget.getBoundingClientRect();
-  const x = e.clientX - rect.left; // x position within the element.
-  const y = e.clientY - rect.top; // y position within the element.
-  return { x, y };
-}
-
 interface GridQuestionProps {
   field: string;
   id: string;

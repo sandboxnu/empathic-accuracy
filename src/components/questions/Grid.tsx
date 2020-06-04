@@ -1,6 +1,7 @@
 import { Stage, Layer, Rect, Text, Line, Circle } from "react-konva";
 import { GridAxisLabel, GridAnswer } from "lib/types";
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import Konva from "konva";
 
 const STAGE_SIZE = 400;
 const RECT_SIZE = 250;
@@ -32,13 +33,14 @@ const Bullseye = () => (
     />
   </>
 );
-function getRelativePointerPosition(node) {
+function getRelativePointerPosition(node: Konva.Rect) {
   const transform = node.getAbsoluteTransform().copy();
   // to detect relative position we need to invert transform
   transform.invert();
 
   // get pointer (say mouse or touch) position
-  const pos = node.getStage().getPointerPosition();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const pos = node.getStage()!.getPointerPosition()!;
 
   // now we can find relative point
   return transform.point(pos);
@@ -60,7 +62,7 @@ export default function Grid({
   y = 0.5,
   onClick,
 }: GridProps) {
-  const rectRef = useRef(null);
+  const rectRef = useRef<Konva.Rect>(null);
   return (
     <Stage
       style={{ background: "white" }}
@@ -78,8 +80,9 @@ export default function Grid({
           strokeWidth={1}
           onClick={
             onClick !== undefined
-              ? (e) => {
-                  const pos = getRelativePointerPosition(rectRef.current);
+              ? () => {
+                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                  const pos = getRelativePointerPosition(rectRef.current!);
                   onClick({ x: pos.x / RECT_SIZE, y: 1 - pos.y / RECT_SIZE });
                 }
               : undefined
