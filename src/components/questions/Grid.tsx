@@ -47,6 +47,7 @@ function getRelativePointerPosition(node: Konva.Rect) {
 }
 
 interface GridProps {
+  label: string;
   xLabel?: GridAxisLabel;
   yLabel?: GridAxisLabel;
   x: number;
@@ -56,6 +57,7 @@ interface GridProps {
 const VALENCE = { low: "Negative", high: "Positive" };
 const AROUSAL = { low: "Low Arousal", high: "High Arousal" };
 export default function Grid({
+  label,
   xLabel = VALENCE,
   yLabel = AROUSAL,
   x = 0.5,
@@ -64,66 +66,69 @@ export default function Grid({
 }: GridProps) {
   const rectRef = useRef<Konva.Rect>(null);
   return (
-    <Stage
-      style={{ background: "white" }}
-      width={STAGE_SIZE}
-      height={STAGE_SIZE}
-    >
-      <Layer>
-        <Rect
-          ref={rectRef}
-          x={BORDER_SIZE}
-          y={BORDER_SIZE}
-          width={RECT_SIZE}
-          height={RECT_SIZE}
-          stroke="black"
-          strokeWidth={1}
-          onClick={
-            onClick !== undefined
-              ? () => {
-                  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                  const pos = getRelativePointerPosition(rectRef.current!);
-                  onClick({ x: pos.x / RECT_SIZE, y: 1 - pos.y / RECT_SIZE });
-                }
-              : undefined
-          }
-        />
-        <Text
-          text={xLabel.low}
-          x={0}
-          y={STAGE_SIZE / 2}
-          align="center"
-          width={BORDER_SIZE}
-        />
-        <Text
-          text={xLabel.high}
-          x={STAGE_SIZE - BORDER_SIZE}
-          y={STAGE_SIZE / 2}
-          align="center"
-          width={BORDER_SIZE}
-        />
-        <Text
-          text={yLabel.low}
-          x={0}
-          y={STAGE_SIZE - BORDER_SIZE + 10}
-          align="center"
-          width={STAGE_SIZE}
-        />
-        <Text
-          text={yLabel.high}
-          x={0}
-          y={BORDER_SIZE - 20}
-          align="center"
-          width={STAGE_SIZE}
-        />
-        <Circle
-          fill="black"
-          radius={3}
-          x={BORDER_SIZE + x * RECT_SIZE}
-          y={STAGE_SIZE - BORDER_SIZE - y * RECT_SIZE}
-        />
-        <Bullseye />
-      </Layer>
-    </Stage>
+    <div>
+      <div className="questionTitle">{label}</div>
+      <Stage
+        style={{ background: "white" }}
+        width={STAGE_SIZE}
+        height={STAGE_SIZE}
+      >
+        <Layer>
+          <Rect
+            ref={rectRef}
+            x={BORDER_SIZE}
+            y={BORDER_SIZE}
+            width={RECT_SIZE}
+            height={RECT_SIZE}
+            stroke="black"
+            strokeWidth={1}
+            onClick={
+              onClick !== undefined
+                ? () => {
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    const pos = getRelativePointerPosition(rectRef.current!);
+                    onClick({ x: pos.x / RECT_SIZE, y: 1 - pos.y / RECT_SIZE });
+                  }
+                : undefined
+            }
+          />
+          <Text
+            text={xLabel.low}
+            x={0}
+            y={STAGE_SIZE / 2}
+            align="center"
+            width={BORDER_SIZE}
+          />
+          <Text
+            text={xLabel.high}
+            x={STAGE_SIZE - BORDER_SIZE}
+            y={STAGE_SIZE / 2}
+            align="center"
+            width={BORDER_SIZE}
+          />
+          <Text
+            text={yLabel.low}
+            x={0}
+            y={STAGE_SIZE - BORDER_SIZE + 10}
+            align="center"
+            width={STAGE_SIZE}
+          />
+          <Text
+            text={yLabel.high}
+            x={0}
+            y={BORDER_SIZE - 20}
+            align="center"
+            width={STAGE_SIZE}
+          />
+          <Circle
+            fill="black"
+            radius={3}
+            x={BORDER_SIZE + x * RECT_SIZE}
+            y={STAGE_SIZE - BORDER_SIZE - y * RECT_SIZE}
+          />
+          <Bullseye />
+        </Layer>
+      </Stage>
+    </div>
   );
 }

@@ -5,6 +5,7 @@ import Grid from "./Grid";
 
 interface GridQuestionProps {
   field: string;
+  label: string;
   id: string;
 }
 
@@ -14,7 +15,14 @@ const GridQuestion = (props: GridQuestionProps) => {
   const { fieldState, fieldApi } = useField<GridAnswer | undefined>(props);
   const { value } = fieldState;
   const { setValue } = fieldApi;
-  return <Grid x={value?.x || 0.5} y={value?.y || 0.5} onClick={setValue} />;
+  return (
+    <Grid
+      x={value?.x || 0.5}
+      y={value?.y || 0.5}
+      onClick={setValue}
+      label={props.label}
+    />
+  );
 };
 
 export default GridQuestion;

@@ -33,6 +33,7 @@ function renderTrail(value) {
 }
 */
 export interface ContinuousGridProps {
+  label: string;
   onValue: (a: GridAnswer) => void;
   onGridExit: () => void;
   onPlay: () => void;
@@ -40,6 +41,7 @@ export interface ContinuousGridProps {
 }
 
 const ContinuousGrid = ({
+  label,
   onValue,
   onGridExit,
   onPlay,
@@ -81,7 +83,7 @@ const ContinuousGrid = ({
         }
       }}
     >
-      <Grid x={lastPos.x} y={lastPos.y} />
+      <Grid x={lastPos.x} y={lastPos.y} label={label} />
     </div>
   );
 };
