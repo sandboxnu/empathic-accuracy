@@ -37,7 +37,7 @@ export async function createExperiment(): Promise<string> {
   const exp: DBConfig = {
     id: `CONFIG-${exId}`,
     nickname: "Blank Experiment",
-    config: sampleConfig as ExperimentConfig,
+    config: sampleConfig,
   };
   await docClient
     .put({

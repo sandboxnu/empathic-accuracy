@@ -83,6 +83,7 @@ export default function TrialBlock({
         return (
           <ContinuousVideoTask
             videoId={currentVideo.id}
+            grid={config.grid}
             instructions={config.instructions}
             onDone={onVideoEnd}
           />

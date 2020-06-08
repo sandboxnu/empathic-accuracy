@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState, useRef, useEffect } from "react";
-import { GridAnswer } from "lib/types";
+import { GridAnswer, GridAxisLabel, ContinuousGridConfig } from "lib/types";
 import Grid from "./Grid";
 import { clamp } from "lodash";
+import Grid1D from "./Grid1D";
 
 function getRelativeClick(e: React.MouseEvent) {
   // e = Mouse click event.
@@ -33,7 +35,7 @@ function renderTrail(value) {
 }
 */
 export interface ContinuousGridProps {
-  label: string;
+  config: ContinuousGridConfig;
   onValue: (a: GridAnswer) => void;
   onGridExit: () => void;
   onPlay: () => void;
@@ -41,13 +43,17 @@ export interface ContinuousGridProps {
 }
 
 const ContinuousGrid = ({
-  label,
+  config,
   onValue,
   onGridExit,
   onPlay,
   paused,
 }: ContinuousGridProps) => {
-  const [lastPos, setLastPos] = useState<GridAnswer>({ x: 0.5, y: 0.5 });
+  const is2D = config.dimensions === 2;
+  const [lastPos, setLastPos] = useState<GridAnswer>({
+    x: 0.5,
+    y: is2D ? 0.5 : undefined,
+  });
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,8 +61,8 @@ const ContinuousGrid = ({
       "pointerlockchange",
       () => {
         if (
-          document.pointerLockElement === gridRef.current ||
-          document.mozPointerLockElement === gridRef.current
+          document.pointerLockElement === gridRef.current // ||
+          // document.mozPointerLockElement === gridRef.current
         ) {
           onPlay();
         } else {
@@ -76,14 +82,24 @@ const ContinuousGrid = ({
         if (!paused) {
           const pos = {
             x: clamp(e.movementX / 250 + lastPos.x, 0, 1),
-            y: clamp(e.movementY / 250 + lastPos.y, 0, 1),
+            y: is2D ? clamp(-e.movementY / 250 + lastPos.y!, 0, 1) : undefined,
           };
           setLastPos(pos);
           onValue(pos);
         }
       }}
     >
-      <Grid x={lastPos.x} y={lastPos.y} label={label} />
+      {config.dimensions === 2 ? (
+        <Grid
+          x={lastPos.x}
+          y={lastPos.y!}
+          label={config.label}
+          xLabel={config.xAxis}
+          yLabel={config.yAxis}
+        />
+      ) : (
+        <Grid1D x={lastPos.x} label={config.label} axis={config.axis} />
+      )}
     </div>
   );
 };

@@ -74,6 +74,49 @@ const trialBlock: JSONSchema6 = {
             paradigm: {
               enum: ["continuous"],
             },
+            grid: {
+              type: "object",
+              title: "Grid Settings",
+              properties: {
+                dimensions: {
+                  type: "number",
+                  title: "Grid dimensions",
+                  enum: [1, 2],
+                  default: 1,
+                },
+                label: {
+                  type: "string",
+                  title: "Instruction text shown above the Affect Grid",
+                  default: "",
+                },
+              },
+              required: ["dimensions", "label"],
+              dependencies: {
+                dimensions: {
+                  oneOf: [
+                    {
+                      properties: {
+                        dimensions: { enum: [1] },
+                        axis: {
+                          $ref: "#/definitions/axis",
+                        },
+                      },
+                    },
+                    {
+                      properties: {
+                        dimensions: { enum: [2] },
+                        xAxis: {
+                          $ref: "#/definitions/axis",
+                        },
+                        yAxis: {
+                          $ref: "#/definitions/axis",
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
             testTrial: {
               dependencies: {
                 enabled: {
@@ -121,6 +164,14 @@ const trialBlock: JSONSchema6 = {
                             "message to show when test trial is failed too many times",
                         },
                       },
+                      required: [
+                        "video",
+                        "maxSeconds",
+                        "maxTries",
+                        "successMessage",
+                        "tryAgainMessage",
+                        "failMessage",
+                      ],
                     },
                   ],
                 },
@@ -199,6 +250,14 @@ const trialBlock: JSONSchema6 = {
                             "message to show when test trial is failed too many times",
                         },
                       },
+                      required: [
+                        "video",
+                        "minSegments",
+                        "maxTries",
+                        "successMessage",
+                        "tryAgainMessage",
+                        "failMessage",
+                      ],
                     },
                   ],
                 },
@@ -373,6 +432,14 @@ const configSchema: JSONSchema6 = {
           },
         },
       },
+    },
+    axis: {
+      type: "object",
+      properties: {
+        high: { type: "string", title: "upper label" },
+        low: { type: "string", title: "lower label" },
+      },
+      required: ["high", "low"],
     },
   },
 };

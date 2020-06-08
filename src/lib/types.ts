@@ -66,7 +66,21 @@ export interface ConsensusParadigmTrialBlockConfig
 export interface ContinuousParadigmTrialBlockConfig
   extends BaseTrialBlockConfig<ContinuousTestTrial> {
   paradigm: "continuous";
+  grid: ContinuousGridConfig;
 }
+
+export type ContinuousGridConfig =
+  | {
+      label: string;
+      dimensions: 1;
+      axis: GridAxisLabel;
+    }
+  | {
+      label: string;
+      dimensions: 2;
+      xAxis: GridAxisLabel;
+      yAxis: GridAxisLabel;
+    };
 
 interface ContinuousTestTrial extends BaseTestTrial {
   maxSeconds: number;
@@ -127,7 +141,7 @@ export interface AnswerSet {
 }
 
 export type Answer = GridAnswer | string;
-export type GridAnswer = { x: number; y: number };
+export type GridAnswer = { x: number; y?: number };
 
 //================== Frontend Only ====================
 export interface QuestionBaseProp {
