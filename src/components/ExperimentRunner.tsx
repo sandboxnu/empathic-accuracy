@@ -4,11 +4,13 @@ import {
   ExperimentDataEntry,
   ExperimentConfig,
   ExperimentDataTrialBlock,
+  TrialBlockConfig,
 } from "lib/types";
 import { TrialResult } from "./TrialBlock";
 import GatedButton from "./GatedButton";
 import ReactMarkdown from "react-markdown";
 import TrialBlockWrapper from "./TrialBlockWrapper";
+import { shuffle } from "lodash";
 
 interface ExperimentRunnerProps {
   config: ExperimentConfig;
@@ -21,6 +23,7 @@ interface ExperimentRunnerState {
   subjectID: string;
   data: ExperimentDataTrialBlock[];
   trialBlockIndex: number;
+  trialBlocks: TrialBlockConfig[];
 }
 
 enum StageEnum {
@@ -35,6 +38,7 @@ const INITIALSTATE: ExperimentRunnerState = {
   subjectID: "",
   data: [],
   trialBlockIndex: 0,
+  trialBlocks: [],
 };
 
 class ExperimentRunner extends React.Component<
@@ -44,7 +48,12 @@ class ExperimentRunner extends React.Component<
   constructor(props: ExperimentRunnerProps) {
     super(props);
     // Parse csv timepoints
-    this.state = { ...INITIALSTATE };
+    this.state = {
+      ...INITIALSTATE,
+      trialBlocks: props.config.shuffleTrialBlocks
+        ? shuffle(props.config.trialBlocks)
+        : props.config.trialBlocks,
+    };
   }
 
   // The user has closed the tab - save data to localstorage.
@@ -58,7 +67,7 @@ class ExperimentRunner extends React.Component<
 
   renderExperiment() {
     const { trialBlockIndex } = this.state;
-    const config = this.props.config.trialBlocks[trialBlockIndex];
+    const config = this.state.trialBlocks[trialBlockIndex];
     const buildData = (
       data: ExperimentDataTrialBlock[],
       result: TrialResult
@@ -92,7 +101,7 @@ class ExperimentRunner extends React.Component<
               paradigm: config.paradigm,
             },
           ];
-          if (trialBlockIndex === this.props.config.trialBlocks.length - 1) {
+          if (trialBlockIndex === this.state.trialBlocks.length - 1) {
             this.props.sendData(buildData(newData, result));
             this.setState({ stage: StageEnum.done });
           } else {
@@ -133,9 +142,7 @@ class ExperimentRunner extends React.Component<
   }
 
   renderFail() {
-    const { testTrial } = this.props.config.trialBlocks[
-      this.state.trialBlockIndex
-    ];
+    const { testTrial } = this.state.trialBlocks[this.state.trialBlockIndex];
     if (testTrial.enabled) {
       return (
         <div className="instructionsContainer">

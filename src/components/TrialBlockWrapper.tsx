@@ -22,6 +22,10 @@ export default function TrialBlockWrapper({
       onProceed={() => setShowingTrial(false)}
     />
   ) : (
-    <TrialBlock config={config} skipInstructions onDone={onDone} />
+    <TrialBlock
+      config={config}
+      skipInstructions={config.testTrial.enabled}
+      onDone={onDone}
+    />
   );
 }

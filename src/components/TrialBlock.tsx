@@ -9,6 +9,7 @@ import { zipObject, shuffle } from "lodash";
 import ConsensusVideoTask from "./videoTask/ConsensusVideoTask";
 import ContinuousVideoTask from "./videoTask/ContinuousVideoTask";
 import SelfVideoTask from "./videoTask/SelfVideoTask";
+import { useShuffled } from "lib/useShuffled";
 
 enum StageEnum {
   instructions,
@@ -36,14 +37,8 @@ export default function TrialBlock({
     skipInstructions ? StageEnum.showingVid : StageEnum.instructions
   );
   const [vidIndex, setVidIndex] = useState(0);
-  const videos = useState(
-    config.shuffleVideos ? shuffle(config.videos) : config.videos
-  )[0];
-  const questions = useState(
-    config?.shuffleQuestions
-      ? shuffle(config.questions)
-      : config?.questions || []
-  )[0];
+  const videos = useShuffled(config.videos, config.shuffleVideos);
+  const questions = useShuffled(config?.questions || [], config?.shuffleVideos);
   const data = useRef<VideoToAnswerSet>(
     zipObject(
       videos.map((v) => v.id),
