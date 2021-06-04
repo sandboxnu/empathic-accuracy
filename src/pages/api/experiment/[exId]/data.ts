@@ -12,7 +12,7 @@ import { putDataEntry, getAllData } from "lib/db";
 // Submit a new data entry for a participant
 async function post(req: NextApiRequestWithSess, res: NextApiResponse) {
   const newConfig = req.body as ExperimentDataEntry;
-  const exId = parseInt(req.query.exId as string);
+  const exId = (req.query.exId as string);
   await putDataEntry(exId, newConfig);
   res.status(201).end();
 }
@@ -22,7 +22,7 @@ async function get(
   req: NextApiRequestWithSess,
   res: NextApiResponse<ExperimentData>
 ) {
-  const exId = parseInt(req.query.exId as string);
+  const exId = (req.query.exId as string);
   const config = await getAllData(exId);
   if (config !== undefined) {
     res.status(200).json(config);

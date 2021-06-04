@@ -101,7 +101,7 @@ export async function setExperiment(
 }
 
 export async function getAllData(
-  experimentId: number
+  experimentId: string
 ): Promise<ExperimentData | undefined> {
   const item = (
     await docClient
@@ -112,7 +112,7 @@ export async function getAllData(
 }
 
 export async function putDataEntry(
-  experimentId: number,
+  experimentId: string,
   dataEntry: ExperimentDataEntry
 ) {
   await docClient
