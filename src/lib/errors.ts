@@ -4,6 +4,7 @@ import { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
 // Rollbar for error logging + notifications
 const rollbar = new Rollbar({
   accessToken: process.env.ROLLBAR_TOKEN,
+  environment: process.env.VERCEL_ENV,
   captureUncaught: true,
   captureUnhandledRejections: true,
 });
