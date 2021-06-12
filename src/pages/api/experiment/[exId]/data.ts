@@ -1,6 +1,6 @@
 import { withIronSession } from "next-iron-session";
 import { NextApiResponse } from "next";
-import { safe } from "lib/errors";
+import { rollbar, safe } from "lib/errors";
 import {
   NextApiRequestWithSess,
   ExperimentDataEntry,
@@ -13,6 +13,7 @@ import { putDataEntry, getAllData } from "lib/db";
 async function post(req: NextApiRequestWithSess, res: NextApiResponse) {
   const newConfig = req.body as ExperimentDataEntry;
   const exId = (req.query.exId as string);
+  rollbar.log({ msg: "data", exId, newConfig });
   await putDataEntry(exId, newConfig);
   res.status(201).end();
 }
