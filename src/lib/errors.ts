@@ -8,6 +8,11 @@ export const rollbar = new Rollbar({
   captureUncaught: true,
   captureUnhandledRejections: true,
 });
+export function rollbarWait() {
+  return new Promise<void>((resolve) => {
+    rollbar.wait(resolve);
+  });
+}
 
 // Make routes safe by catching and giving sane response + report to rolllbar
 export function safe(route: NextApiHandler): NextApiHandler {
@@ -20,5 +25,6 @@ export function safe(route: NextApiHandler): NextApiHandler {
       const msg = `Something broke on our end. Please reach out to us immediately.`;
       res.status(500).send(msg);
     }
+    await rollbarWait();
   };
 }
