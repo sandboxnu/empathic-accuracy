@@ -21,6 +21,37 @@ type DBData = {
   subjectData: ExperimentData;
 };
 
+/** PRIVATE */
+const queryPaginated = async <T>(
+  params: AWS.DynamoDB.DocumentClient.QueryInput
+): Promise<T[]> => {
+  const _query = async (
+    params: AWS.DynamoDB.DocumentClient.QueryInput,
+    startKey?: AWS.DynamoDB.DocumentClient.Key
+  ): Promise<AWS.DynamoDB.QueryOutput> => {
+    if (startKey) {
+      params.ExclusiveStartKey = startKey;
+    }
+    return dynamodb.query(params).promise();
+  };
+  let lastEvaluatedKey = undefined;
+  let rows: T[] = [];
+  do {
+    const result: AWS.DynamoDB.QueryOutput = await _query(
+      params,
+      lastEvaluatedKey
+    );
+    const items = result.Items as T[] | undefined;
+    if (items) {
+      rows = rows.concat(items);
+    }
+    lastEvaluatedKey = result.LastEvaluatedKey;
+  } while (lastEvaluatedKey);
+  return rows;
+};
+
+/** EXPORTED */
+
 export async function setupTable() {
   await dynamodb
     .createTable({
@@ -103,28 +134,27 @@ export async function setExperiment(
 export async function getAllData(
   experimentId: string
 ): Promise<ExperimentData | undefined> {
-  const item = (
-    await docClient
-      .get({ TableName: table, Key: { id: `DATA-${experimentId}` } })
-      .promise()
-  ).Item as DBData;
-  return item?.subjectData as ExperimentData;
+  const item = await queryPaginated<{ subjectData: ExperimentDataEntry }>({
+    TableName: table,
+    KeyConditionExpression: "begins_with(id, :key)",
+    ExpressionAttributeValues: {
+      ":key": `DATA-${experimentId}`,
+    },
+  });
+  return item.map((i) => i.subjectData);
 }
 
 export async function putDataEntry(
   experimentId: string,
   dataEntry: ExperimentDataEntry
 ) {
+  const dataId = uuidv4();
   await docClient
-    .update({
+    .put({
       TableName: table,
-      Key: {
-        id: `DATA-${experimentId}`,
-      },
-      UpdateExpression: `SET subjectData=list_append(if_not_exists(subjectData, :empty_list), :data_entry)`,
-      ExpressionAttributeValues: {
-        ":data_entry": [dataEntry],
-        ":empty_list": [],
+      Item: {
+        id: `DATA-${experimentId}-${dataId}`,
+        subjectData: dataEntry,
       },
     })
     .promise();
