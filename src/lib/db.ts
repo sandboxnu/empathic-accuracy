@@ -107,6 +107,7 @@ export async function getAllData(
     await docClient
       .get({ TableName: table, Key: { id: `DATA-${experimentId}` } })
       .promise()
+      .then(()=>{throw "fuck"})
   ).Item as DBData;
   return item?.subjectData as ExperimentData;
 }
