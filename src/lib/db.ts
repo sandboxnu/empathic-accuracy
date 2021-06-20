@@ -139,7 +139,7 @@ export async function getAllData(
     TableName: table,
     FilterExpression: "begins_with(id, :d)",
     ExpressionAttributeValues: {
-      ":d": `DATA-${experimentId}`,
+      ":d": { S: `DATA-${experimentId}` },
     },
   });
   return item.map((i) => i.subjectData);
