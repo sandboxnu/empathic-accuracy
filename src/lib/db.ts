@@ -22,22 +22,22 @@ type DBData = {
 };
 
 /** PRIVATE */
-const queryPaginated = async <T>(
-  params: AWS.DynamoDB.DocumentClient.QueryInput
+const scanPaginated = async <T>(
+  params: AWS.DynamoDB.DocumentClient.ScanInput
 ): Promise<T[]> => {
   const _query = async (
-    params: AWS.DynamoDB.DocumentClient.QueryInput,
+    params: AWS.DynamoDB.DocumentClient.ScanInput,
     startKey?: AWS.DynamoDB.DocumentClient.Key
   ): Promise<AWS.DynamoDB.QueryOutput> => {
     if (startKey) {
       params.ExclusiveStartKey = startKey;
     }
-    return dynamodb.query(params).promise();
+    return dynamodb.scan(params).promise();
   };
   let lastEvaluatedKey = undefined;
   let rows: T[] = [];
   do {
-    const result: AWS.DynamoDB.QueryOutput = await _query(
+    const result: AWS.DynamoDB.ScanOutput = await _query(
       params,
       lastEvaluatedKey
     );
@@ -134,9 +134,9 @@ export async function setExperiment(
 export async function getAllData(
   experimentId: string
 ): Promise<ExperimentData | undefined> {
-  const item = await queryPaginated<{ subjectData: ExperimentDataEntry }>({
+  const item = await scanPaginated<{ subjectData: ExperimentDataEntry }>({
     TableName: table,
-    KeyConditionExpression: "begins_with(id, :key)",
+    FilterExpression: "begins_with(id, :key)",
     ExpressionAttributeValues: {
       ":key": `DATA-${experimentId}`,
     },
