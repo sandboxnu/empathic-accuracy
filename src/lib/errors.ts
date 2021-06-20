@@ -21,6 +21,7 @@ export function safe(route: NextApiHandler): NextApiHandler {
       await route(req, res);
     } catch (err) {
       rollbar.error(err, req);
+      await rollbarWait();
       console.error(err);
       const msg = `Something broke on our end. Please reach out to us immediately.`;
       res.status(500).send(msg);
