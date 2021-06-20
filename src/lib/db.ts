@@ -32,6 +32,7 @@ const scanPaginated = async <T>(
     if (startKey) {
       params.ExclusiveStartKey = startKey;
     }
+    console.log("scan", params);
     return dynamodb.scan(params).promise();
   };
   let lastEvaluatedKey = undefined;
@@ -136,9 +137,9 @@ export async function getAllData(
 ): Promise<ExperimentData | undefined> {
   const item = await scanPaginated<{ subjectData: ExperimentDataEntry }>({
     TableName: table,
-    FilterExpression: "begins_with(id, :key)",
+    FilterExpression: "begins_with(id, :d)",
     ExpressionAttributeValues: {
-      ":key": `DATA-${experimentId}`,
+      ":d": `DATA-${experimentId}`,
     },
   });
   return item.map((i) => i.subjectData);
