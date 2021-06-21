@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { ExperimentConfig, ExperimentData, ExperimentDataEntry } from "./types";
 import sampleConfig from "./config/sampleConfig";
 import { ServiceConfigurationOptions } from "aws-sdk/lib/service";
+import bcrypt from "bcrypt";
+import { AttributeMap } from "aws-sdk/clients/dynamodb";
 
 const CONFIG: ServiceConfigurationOptions = {
   accessKeyId: process.env.ACCESS_KEY_ID,
@@ -135,21 +137,24 @@ export async function setExperiment(
 export async function getAllData(
   experimentId: string
 ): Promise<ExperimentData | undefined> {
-  const item = await scanPaginated<{ subjectData: ExperimentDataEntry }>({
+  const item = await scanPaginated<{ subjectData: AttributeMap }>({
     TableName: table,
     FilterExpression: "begins_with(id, :d)",
     ExpressionAttributeValues: {
       ":d": { S: `DATA-${experimentId}` },
     },
   });
-  return item.map((i) => i.subjectData);
+  return item.map(
+    (i) =>
+      AWS.DynamoDB.Converter.unmarshall(i.subjectData) as ExperimentDataEntry
+  );
 }
 
 export async function putDataEntry(
   experimentId: string,
   dataEntry: ExperimentDataEntry
 ) {
-  const dataId = uuidv4();
+  const dataId = bcrypt.hashSync(dataEntry.subjectID, 10);
   await docClient
     .put({
       TableName: table,
