@@ -4,7 +4,6 @@ import { ExperimentConfig, ExperimentData, ExperimentDataEntry } from "./types";
 import sampleConfig from "./config/sampleConfig";
 import { ServiceConfigurationOptions } from "aws-sdk/lib/service";
 import bcrypt from "bcrypt";
-import { AttributeMap } from "aws-sdk/clients/dynamodb";
 
 const CONFIG: ServiceConfigurationOptions = {
   accessKeyId: process.env.ACCESS_KEY_ID,
@@ -13,15 +12,11 @@ const CONFIG: ServiceConfigurationOptions = {
   endpoint: process.env.DYNAMO_ENDPOINT,
 };
 
-export const dynamodb = new AWS.DynamoDB(CONFIG);
+const dynamodb = new AWS.DynamoDB(CONFIG);
 const docClient = new AWS.DynamoDB.DocumentClient(CONFIG);
 const table = process.env.DYNAMO_TABLE || "empathic-accuracy";
 
 type DBConfig = { id: string; nickname: string; config: ExperimentConfig };
-type DBData = {
-  id: string;
-  subjectData: ExperimentData;
-};
 
 /** PRIVATE */
 const scanPaginated = async <T>(
@@ -161,4 +156,9 @@ export async function putDataEntry(
       },
     })
     .promise();
+}
+
+export async function getByKey<T>(key: string): Promise<T> {
+  return (await docClient.get({ TableName: table, Key: { id: key } }).promise())
+    .Item as T;
 }
