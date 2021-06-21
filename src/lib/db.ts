@@ -4,7 +4,7 @@ import { ExperimentConfig, ExperimentData, ExperimentDataEntry } from "./types";
 import sampleConfig from "./config/sampleConfig";
 import { ServiceConfigurationOptions } from "aws-sdk/lib/service";
 import bcrypt from "bcrypt";
-import { AttributeMap } from "aws-sdk/clients/dynamodb";
+import { AttributeMap, AttributeValue } from "aws-sdk/clients/dynamodb";
 
 const CONFIG: ServiceConfigurationOptions = {
   accessKeyId: process.env.ACCESS_KEY_ID,
@@ -137,17 +137,19 @@ export async function setExperiment(
 export async function getAllData(
   experimentId: string
 ): Promise<ExperimentData | undefined> {
-  const item = await scanPaginated<{ subjectData: AttributeMap }>({
+  const item = await scanPaginated<AttributeMap>({
     TableName: table,
     FilterExpression: "begins_with(id, :d)",
     ExpressionAttributeValues: {
       ":d": { S: `DATA-${experimentId}` },
     },
   });
-  return item.map(
-    (i) =>
-      AWS.DynamoDB.Converter.unmarshall(i.subjectData) as ExperimentDataEntry
-  );
+  return item
+    .map((i) => i?.subjectData?.M)
+    .filter((i): i is AttributeMap => !!i)
+    .map((i) => {
+      return AWS.DynamoDB.Converter.unmarshall(i) as ExperimentDataEntry;
+    });
 }
 
 export async function putDataEntry(
