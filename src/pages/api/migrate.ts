@@ -1,4 +1,3 @@
-import { get } from "http";
 import { getByKey, getExperiments, putDataEntry } from "lib/db";
 import { safe } from "lib/errors";
 import { IRON_SESSION_CONFIG } from "lib/ironSession";
@@ -14,9 +13,11 @@ type OldDBData = {
 async function convertExperimentData(id: string) {
   console.log(`converting ${id}`);
   const data = await getByKey<OldDBData>(`DATA-${id}`);
-  await Promise.all(
-    data.subjectData.map(async (d) => await putDataEntry(id, d))
-  );
+  if (data) {
+    await Promise.all(
+      data.subjectData.map(async (d) => await putDataEntry(id, d))
+    );
+  }
 }
 
 async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
