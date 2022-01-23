@@ -150,7 +150,6 @@ export async function putDataEntry(
   const dataId = Buffer.from(hashCode(dataEntry.subjectID).toString()).toString(
     "hex"
   );
-  console.log(dataId);
   await docClient
     .put({
       TableName: table,
