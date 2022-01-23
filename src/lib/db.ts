@@ -4,6 +4,7 @@ import { ExperimentConfig, ExperimentData, ExperimentDataEntry } from "./types";
 import sampleConfig from "./config/sampleConfig";
 import { ServiceConfigurationOptions } from "aws-sdk/lib/service";
 import bcrypt from "bcrypt";
+import { hashCode } from "./hashCode";
 
 const CONFIG: ServiceConfigurationOptions = {
   accessKeyId: process.env.ACCESS_KEY_ID,
@@ -146,7 +147,7 @@ export async function putDataEntry(
   experimentId: string,
   dataEntry: ExperimentDataEntry
 ) {
-  const dataId = bcrypt.hashSync(dataEntry.subjectID, 10);
+  const dataId = hashCode(dataEntry.subjectID);
   await docClient
     .put({
       TableName: table,

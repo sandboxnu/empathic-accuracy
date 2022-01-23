@@ -4,20 +4,19 @@ import { useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import ReactMarkdown from "react-markdown";
 import { AnswerSetWithMetadata, AnswerSet } from "lib/types";
+import { OnDone, SavePartialData } from "./taskTypes";
 
 interface VideoTaskViewProps {
   videoId: string;
   instructionsOverlay: string;
-  onDone: (
-    a: AnswerSetWithMetadata[],
-    d: { videoWidth: number; videoHeight: number }
-  ) => void;
   onProgress?: (playedSeconds: number) => void;
   setPlaying: (p: boolean) => void;
   playing: boolean;
   renderQuestions: (
     onSubmit: (a: Omit<AnswerSetWithMetadata, "timestamp">) => void
   ) => React.ReactNode;
+  onDone: OnDone;
+  savePartialData: SavePartialData;
 }
 
 export default function VideoTaskView({
@@ -28,9 +27,11 @@ export default function VideoTaskView({
   setPlaying,
   playing,
   renderQuestions,
+  savePartialData,
 }: VideoTaskViewProps) {
   const playerRef = useRef<ReactPlayer>(null);
   const data = useRef<AnswerSetWithMetadata[]>([]);
+  const [lastSavedAt, setLastSavedAt] = useState(0);
 
   // Add the new data point from VideoQuestions and resume the video
   function onSubmit(newValue: AnswerSet) {
@@ -41,6 +42,13 @@ export default function VideoTaskView({
     data.current.push(withMetadata);
     setPlaying(true);
   }
+  const getDimensions = () => {
+    const width = (playerRef.current as any)?.wrapper.clientWidth;
+    return {
+      videoWidth: width,
+      videoHeight: (width / 16) * 9,
+    };
+  };
 
   return (
     <div className="Video">
@@ -57,17 +65,15 @@ export default function VideoTaskView({
           url={`https://vimeo.com/${videoId}`}
           onPlay={() => setPlaying(true)}
           onEnded={() => {
-            const width = (playerRef.current as any)?.wrapper.clientWidth;
-            onDone(data.current, {
-              videoWidth: width,
-              videoHeight: (width / 16) * 9,
-            });
+            onDone(data.current, getDimensions());
           }}
-          onProgress={
-            onProgress
-              ? ({ playedSeconds }) => onProgress(playedSeconds)
-              : undefined
-          }
+          onProgress={({ playedSeconds }) => {
+            onProgress && onProgress(playedSeconds);
+            if (playedSeconds - lastSavedAt > 10) {
+              savePartialData(data.current, getDimensions());
+              setLastSavedAt(playedSeconds);
+            }
+          }}
           playing={playing}
           width="100%"
           height="100%"

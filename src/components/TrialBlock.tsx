@@ -10,6 +10,7 @@ import ConsensusVideoTask from "./videoTask/ConsensusVideoTask";
 import ContinuousVideoTask from "./videoTask/ContinuousVideoTask";
 import SelfVideoTask from "./videoTask/SelfVideoTask";
 import { useShuffled } from "lib/useShuffled";
+import { SavePartialData } from "./videoTask/taskTypes";
 
 enum StageEnum {
   instructions,
@@ -26,11 +27,13 @@ export interface TrialResult {
 interface TrialBlockProps {
   config: TrialBlockConfig;
   onDone: (data: TrialResult) => void;
+  onPartialSave: (data: TrialResult) => void;
   skipInstructions?: boolean;
 }
 export default function TrialBlock({
   config,
   onDone,
+  onPartialSave,
   skipInstructions = false,
 }: TrialBlockProps) {
   const [stage, setStage] = useState(
@@ -65,6 +68,13 @@ export default function TrialBlock({
       setVidIndex((i) => i + 1);
     }
   }
+  const savePartialData: SavePartialData = (a, d) => {
+    onPartialSave({
+      answers: { ...data.current, [currentVideo.id]: a },
+      videoWidth: d.videoHeight,
+      videoHeight: d.videoHeight,
+    });
+  };
   if (stage === StageEnum.instructions) {
     return (
       <Instructions
@@ -80,6 +90,7 @@ export default function TrialBlock({
             videoId={currentVideo.id}
             grid={config.grid}
             instructions={config.instructions}
+            savePartialData={savePartialData}
             onDone={onVideoEnd}
           />
         );
@@ -90,6 +101,7 @@ export default function TrialBlock({
             timepoints={currentVideo.timepoints}
             instructions={config.instructions}
             questions={questions}
+            savePartialData={savePartialData}
             onDone={onVideoEnd}
           />
         );
@@ -99,6 +111,7 @@ export default function TrialBlock({
             videoId={currentVideo.id}
             instructions={config.instructions}
             questions={questions}
+            savePartialData={savePartialData}
             onDone={onVideoEnd}
           />
         );

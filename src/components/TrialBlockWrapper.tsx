@@ -7,12 +7,14 @@ interface TrialBlockWrapperProps {
   config: TrialBlockConfig;
   onFail: () => void;
   onDone: (data: TrialResult) => void;
+  onPartialSave: (data: TrialResult) => void;
 }
 
 export default function TrialBlockWrapper({
   config,
   onFail,
   onDone,
+  onPartialSave,
 }: TrialBlockWrapperProps) {
   const [showingTrial, setShowingTrial] = useState(config.testTrial.enabled);
   return showingTrial ? (
@@ -26,6 +28,7 @@ export default function TrialBlockWrapper({
       config={config}
       skipInstructions={config.testTrial.enabled}
       onDone={onDone}
+      onPartialSave={onPartialSave}
     />
   );
 }

@@ -1,27 +1,22 @@
-import {
-  AnswerSetWithMetadata,
-  GridAnswer,
-  TrialInstructions,
-  ContinuousGridConfig,
-} from "lib/types";
+import { GridAnswer, TrialInstructions, ContinuousGridConfig } from "lib/types";
 import ContinuousGrid from "../questions/ContinuousGridQuestions";
 import VideoTaskView from "./VideoTaskView";
 import { useState } from "react";
+import { OnDone, SavePartialData } from "./taskTypes";
 
 interface ContinuousVideoTaskProps {
   videoId: string;
   grid: ContinuousGridConfig;
   instructions: TrialInstructions;
-  onDone: (
-    a: AnswerSetWithMetadata[],
-    d: { videoWidth: number; videoHeight: number }
-  ) => void;
+  onDone: OnDone;
+  savePartialData: SavePartialData;
 }
 export default function ContinuousVideoTask({
   videoId,
   grid,
   instructions,
   onDone,
+  savePartialData,
 }: ContinuousVideoTaskProps) {
   const [playing, setPlaying] = useState(false);
   return (
@@ -29,6 +24,7 @@ export default function ContinuousVideoTask({
       videoId={videoId}
       instructionsOverlay={instructions.instructionsOverlay}
       onDone={onDone}
+      savePartialData={savePartialData}
       setPlaying={setPlaying}
       playing={playing}
       renderQuestions={(onSubmit) => (

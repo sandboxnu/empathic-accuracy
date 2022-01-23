@@ -1,23 +1,23 @@
 import VideoTaskView from "./VideoTaskView";
 import VideoQuestions from "components/questions/VideoQuestions";
-import { Question, AnswerSetWithMetadata, TrialInstructions } from "lib/types";
+import { Question, TrialInstructions } from "lib/types";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { OnDone, SavePartialData } from "./taskTypes";
 
 interface SelfVideoTaskProps {
   videoId: string;
   questions: Question[];
   instructions: TrialInstructions;
-  onDone: (
-    a: AnswerSetWithMetadata[],
-    d: { videoWidth: number; videoHeight: number }
-  ) => void;
+  onDone: OnDone;
+  savePartialData: SavePartialData;
 }
 export default function SelfVideoTask({
   videoId,
   questions,
   instructions,
   onDone,
+  savePartialData,
 }: SelfVideoTaskProps) {
   const [playing, setPlaying] = useState(true);
   const [showQuestionTime, setShowQuestionTime] = useState(Date.now());
@@ -31,6 +31,7 @@ export default function SelfVideoTask({
       videoId={videoId}
       instructionsOverlay={instructions.instructionsOverlay}
       onDone={onDone}
+      savePartialData={savePartialData}
       setPlaying={setPlaying}
       playing={playing}
       renderQuestions={(onSubmit) =>

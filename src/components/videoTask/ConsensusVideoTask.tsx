@@ -1,18 +1,17 @@
 import { useState } from "react";
 import VideoTaskView from "./VideoTaskView";
 import VideoQuestions from "components/questions/VideoQuestions";
-import { AnswerSetWithMetadata, Question, TrialInstructions } from "lib/types";
+import { Question, TrialInstructions } from "lib/types";
 import ReactMarkdown from "react-markdown";
+import { OnDone, SavePartialData } from "./taskTypes";
 
 interface ConsensusVideoTaskProps {
   videoId: string;
   timepoints: number[];
   questions: Question[];
   instructions: TrialInstructions;
-  onDone: (
-    a: AnswerSetWithMetadata[],
-    d: { videoWidth: number; videoHeight: number }
-  ) => void;
+  onDone: OnDone;
+  savePartialData: SavePartialData;
 }
 export default function ConsensusVideoTask({
   videoId,
@@ -20,6 +19,7 @@ export default function ConsensusVideoTask({
   questions,
   instructions,
   onDone,
+  savePartialData,
 }: ConsensusVideoTaskProps) {
   const [playing, setPlaying] = useState(true);
   const [showQuestionTime, setShowQuestionTime] = useState(Date.now());
@@ -37,6 +37,7 @@ export default function ConsensusVideoTask({
       videoId={videoId}
       instructionsOverlay={instructions.instructionsOverlay}
       onDone={onDone}
+      savePartialData={savePartialData}
       onProgress={onProgress}
       setPlaying={setPlaying}
       playing={playing}

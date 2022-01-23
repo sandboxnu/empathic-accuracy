@@ -70,7 +70,8 @@ class ExperimentRunner extends React.Component<
     const config = this.state.trialBlocks[trialBlockIndex];
     const buildData = (
       data: ExperimentDataTrialBlock[],
-      result: TrialResult
+      result: TrialResult,
+      unfinished?: boolean
     ) => ({
       trialBlocks: data,
       videoHeight: result.videoHeight,
@@ -85,6 +86,7 @@ class ExperimentRunner extends React.Component<
       ),
       subjectID: this.state.subjectID,
       totalDuration: (Date.now() - this.state.startTime) / 1000,
+      unfinished: unfinished ? true : undefined,
     });
     return (
       <TrialBlockWrapper
@@ -92,6 +94,16 @@ class ExperimentRunner extends React.Component<
         config={config}
         onFail={() => {
           this.setState({ stage: StageEnum.fail });
+        }}
+        onPartialSave={(result) => {
+          const newData = [
+            ...this.state.data,
+            {
+              answers: result.answers,
+              paradigm: config.paradigm,
+            },
+          ];
+          this.props.sendData(buildData(newData, result, true));
         }}
         onDone={(result) => {
           const newData = [
