@@ -79,14 +79,10 @@ export async function createExperiment(): Promise<string> {
 }
 
 export async function getExperiments(): Promise<DBConfig[]> {
-  const items = (
-    await docClient
-      .scan({
-        TableName: table,
-        FilterExpression: "attribute_exists(config)",
-      })
-      .promise()
-  ).Items as DBConfig[];
+  const items = await scanPaginated<DBConfig>({
+    TableName: table,
+    FilterExpression: "attribute_exists(config)",
+  });
   for (const item of items) {
     item.id = item.id.slice("CONFIG-".length);
   }
