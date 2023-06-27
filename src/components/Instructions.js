@@ -34,7 +34,7 @@ class Instructions extends React.Component {
     return (
       <div className="instructionsContainer">
         <div className="instructionsText">
-          <ReactMarkdown source={instructionText} />
+          <ReactMarkdown children={instructionText} />
         </div>
         <div className="buttonContainer">
           {section === 0 ? (

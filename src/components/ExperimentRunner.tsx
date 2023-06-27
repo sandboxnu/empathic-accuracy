@@ -159,7 +159,7 @@ class ExperimentRunner extends React.Component<
       return (
         <div className="instructionsContainer">
           <p className="instructionsText">
-            <ReactMarkdown source={testTrial.failMessage} />
+            <ReactMarkdown children={testTrial.failMessage} />
           </p>
         </div>
       );

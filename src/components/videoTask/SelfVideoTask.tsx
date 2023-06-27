@@ -37,7 +37,7 @@ export default function SelfVideoTask({
       renderQuestions={(onSubmit) =>
         playing ? (
           <div className="questionPlaceholder">
-            <ReactMarkdown source={instructions.pauseInstructions} />
+            <ReactMarkdown children={instructions.pauseInstructions || ""} />
             <button
               className="btn btn-primary"
               id="pauseButton"

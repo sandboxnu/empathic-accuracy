@@ -1,4 +1,4 @@
-import { withIronSession } from "next-iron-session";
+import { withIronSessionSsr } from "iron-session/next";
 import Link from "next/link";
 import { IRON_SESSION_CONFIG } from "lib/ironSession";
 import { Container, Button, Table } from "react-bootstrap";
@@ -76,11 +76,11 @@ export default function Admin() {
   );
 }
 
-export const getServerSideProps = withIronSession(async function ({
+export const getServerSideProps = withIronSessionSsr(async function ({
   req,
   res,
 }) {
-  const user = req.session.get("user");
+  const user = req.session.user;
   if (user && user.admin) {
     return { props: {} };
   } else {

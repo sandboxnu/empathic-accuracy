@@ -24,7 +24,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import GatedButton from "components/GatedButton";
-import { merge } from "lodash";
 
 interface ExperimentConfiguratorProps {
   experimentId: string;

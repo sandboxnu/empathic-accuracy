@@ -62,7 +62,7 @@ const trialBlock: JSONSchema6 = {
     paradigm: {
       type: "string",
       title: "Data Collection Paradigm",
-      enum: ["self", "consensus", "continuous"],
+      enum: ["self", "consensus", "continuous", "timestamp"],
       default: "self",
     },
   },
@@ -167,6 +167,89 @@ const trialBlock: JSONSchema6 = {
                       required: [
                         "video",
                         "maxSeconds",
+                        "maxTries",
+                        "successMessage",
+                        "tryAgainMessage",
+                        "failMessage",
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        {
+          properties: {
+            paradigm: {
+              enum: ["timestamp"],
+            },
+            instructions: {
+              type: "object",
+              title: "Instruction Configurations",
+              properties: {
+                buttonInstructions: {
+                  type: "string",
+                  title: "Instruction text shown between timepoints",
+                  default: "Click the button at emotional events",
+                },
+                buttonText: {
+                  type: "string",
+                  title: "Text to show inside the button",
+                  default: "Click",
+                }
+              },
+            },
+            testTrial: {
+              dependencies: {
+                enabled: {
+                  oneOf: [
+                    {
+                      properties: {
+                        enabled: { enum: [false] },
+                      },
+                    },
+                    {
+                      properties: {
+                        enabled: { enum: [true] },
+                        video: {
+                          type: "object",
+                          title: "",
+                          properties: {
+                            id: {
+                              type: "string",
+                              title: "test trial video id",
+                            },
+                          },
+                        },
+                        minSegments: {
+                          type: "number",
+                          title:
+                            "Minimum number of segments needed to pass test trial",
+                        },
+                        maxTries: {
+                          type: "number",
+                          title: "Number of test trials allowed",
+                          default: 3,
+                        },
+                        successMessage: {
+                          type: "string",
+                          title: "message to show when test trial succeeds",
+                        },
+                        tryAgainMessage: {
+                          type: "string",
+                          title:
+                            "message to show when test trial is failed and they must try again",
+                        },
+                        failMessage: {
+                          type: "string",
+                          title:
+                            "message to show when test trial is failed too many times",
+                        },
+                      },
+                      required: [
+                        "video",
+                        "minSegments",
                         "maxTries",
                         "successMessage",
                         "tryAgainMessage",

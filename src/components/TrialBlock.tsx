@@ -11,6 +11,7 @@ import ContinuousVideoTask from "./videoTask/ContinuousVideoTask";
 import SelfVideoTask from "./videoTask/SelfVideoTask";
 import { useShuffled } from "lib/useShuffled";
 import { SavePartialData } from "./videoTask/taskTypes";
+import TimestampVideoTask from "./videoTask/TimestampVideoTask";
 
 enum StageEnum {
   instructions,
@@ -101,6 +102,15 @@ export default function TrialBlock({
             timepoints={currentVideo.timepoints}
             instructions={config.instructions}
             questions={questions}
+            savePartialData={savePartialData}
+            onDone={onVideoEnd}
+          />
+        );
+      case "timestamp":
+        return (
+          <TimestampVideoTask
+            videoId={currentVideo.id}
+            instructions={config.instructions}
             savePartialData={savePartialData}
             onDone={onVideoEnd}
           />

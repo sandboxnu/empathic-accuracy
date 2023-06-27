@@ -28,6 +28,7 @@ export default function TestTrialBlock({
       return (
         <TrialBlock
           key={tryCount}
+          onPartialSave={() => { }}
           onDone={(d) => {
             if (config.testTrial.enabled) {
               let proceed = true;

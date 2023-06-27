@@ -44,7 +44,7 @@ export default function ConsensusVideoTask({
       renderQuestions={(onSubmit) =>
         playing ? (
           <div className="questionPlaceholder">
-            <ReactMarkdown source={instructions.pauseInstructions} />
+            <ReactMarkdown children={instructions.pauseInstructions} />
           </div>
         ) : (
           <VideoQuestions

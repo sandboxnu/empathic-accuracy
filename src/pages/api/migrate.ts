@@ -3,7 +3,7 @@ import { safe } from "lib/errors";
 import { IRON_SESSION_CONFIG } from "lib/ironSession";
 import { ExperimentData, NextApiRequestWithSess } from "lib/types";
 import { NextApiResponse } from "next";
-import { withIronSession } from "next-iron-session";
+import { withIronSessionApiRoute } from "iron-session/next";
 
 type OldDBData = {
   id: string;
@@ -22,7 +22,7 @@ async function convertExperimentData(id: string) {
 
 async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   if (req.method === "GET") {
-    const user = req.session.get("user");
+    const user = req.session.user;
     if (user && user.admin) {
       const experiments = await getExperiments();
       for (const experiment of experiments) {
@@ -35,4 +35,4 @@ async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   }
 }
 
-export default safe(withIronSession(handler, IRON_SESSION_CONFIG));
+export default safe(withIronSessionApiRoute(handler, IRON_SESSION_CONFIG));
