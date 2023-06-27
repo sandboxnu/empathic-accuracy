@@ -111,6 +111,7 @@ export default function TrialBlock({
           <TimestampVideoTask
             videoId={currentVideo.id}
             instructions={config.instructions}
+            timestampPrompt={config.timestampPrompt}
             savePartialData={savePartialData}
             onDone={onVideoEnd}
           />

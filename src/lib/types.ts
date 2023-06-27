@@ -61,14 +61,15 @@ export interface SelfParadigmTrialBlockConfig
 }
 
 export interface TimestampParadigmTrialBlockConfig
-  extends Omit<BaseTrialBlockConfig<SelfTestTrial>, 'instructions'> {
-    instructions: {
-      buttonText: string;
-      buttonInstructions: string;
-      instructionsOverlay: string;
-    };
-    paradigm: "self";
+  extends BaseTrialBlockConfig {
+  paradigm: "timestamp";
+  timestampPrompt: TimestampPrompt;
 }
+
+export interface TimestampPrompt {
+  buttonInstructions: string;
+  buttonText: string;
+ }
 
 interface SelfTestTrial extends BaseTestTrial {
   minSegments: number;

@@ -6,7 +6,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint src/",
     "dev:db:up": "docker run -p 8000:8000 --name ea-db -d amazon/dynamodb-local && yarn dev:db:seed",
     "dev:db:seed": "dotenv -e .env.development -- ts-node -P tsconfig.standalone.json src/lib/setupdb-cli.ts",
     "dev:db:down": "docker rm --force ea-db"

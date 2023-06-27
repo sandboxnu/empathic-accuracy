@@ -184,7 +184,7 @@ const trialBlock: JSONSchema6 = {
             paradigm: {
               enum: ["timestamp"],
             },
-            instructions: {
+            timestampPrompt: {
               type: "object",
               title: "Instruction Configurations",
               properties: {

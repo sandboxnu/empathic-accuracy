@@ -1,17 +1,20 @@
 import VideoTaskView from "./VideoTaskView";
-import { TimestampParadigmTrialBlockConfig } from "lib/types";
+import { TimestampPrompt, TrialInstructions } from "lib/types";
 import ReactMarkdown from "react-markdown";
 import { OnDone, SavePartialData } from "./taskTypes";
 import { useState } from "react";
 
 type TimestampVideoTaskProps ={
   videoId: string;
+  instructions: TrialInstructions;
+  timestampPrompt: TimestampPrompt;
   onDone: OnDone;
   savePartialData: SavePartialData;
-} & TimestampParadigmTrialBlockConfig;
+};
 export default function TimestampVideoTask({
   videoId,
   instructions,
+  timestampPrompt,
   onDone,
   savePartialData,
 }: TimestampVideoTaskProps) {
@@ -27,7 +30,7 @@ export default function TimestampVideoTask({
       renderQuestions={(onSubmit) =>
         (
           <div className="questionPlaceholder">
-            <ReactMarkdown children={instructions.buttonInstructions || ""} />
+            <ReactMarkdown children={timestampPrompt.buttonInstructions || ""} />
             <button
               className="btn btn-primary"
               id="pauseButton"
@@ -40,7 +43,7 @@ export default function TimestampVideoTask({
               }}
               type="button"
             >
-            {instructions.buttonText}
+            {timestampPrompt.buttonText}
             </button>
           </div>
         ) 
