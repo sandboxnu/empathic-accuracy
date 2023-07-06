@@ -124,7 +124,7 @@ export default function ExperimentConfigurator({
         </Link>
         <Form
           onSubmit={(e: React.FormEvent) => e.preventDefault()}
-          className="flex-grow-1"
+          className="flex-grow-1 flex flex-row"
         >
           <span className="mr-2">Nickname:</span>
           <FormControl
