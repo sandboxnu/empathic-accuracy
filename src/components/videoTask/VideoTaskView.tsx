@@ -117,7 +117,7 @@ export function OverlayInstruction({
           &times;
         </div>
         <div className="overlay-content">
-          <ReactMarkdown source={instructionsOverlay} />
+          <ReactMarkdown children={instructionsOverlay} />
         </div>
       </div>
       <div

@@ -12,7 +12,7 @@ interface GridQuestionProps {
 // Make GridQuestion play nice with the informed library
 // https://joepuzzo.github.io/informed/?selectedKind=CustomInputs&selectedStory=Creating Custom Inputs
 const GridQuestion = (props: GridQuestionProps) => {
-  const { fieldState, fieldApi } = useField<GridAnswer | undefined>(props);
+  const { fieldState, fieldApi } = useField<GridAnswer>(props);
   const { value } = fieldState;
   const { setValue } = fieldApi;
   return (

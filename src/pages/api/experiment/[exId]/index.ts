@@ -1,4 +1,4 @@
-import { withIronSession } from "next-iron-session";
+import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiResponse } from "next";
 import { safe } from "lib/errors";
 import { NextApiRequestWithSess, ExperimentConfig } from "lib/types";
@@ -35,7 +35,7 @@ async function get(req: NextApiRequestWithSess, res: NextApiResponse) {
 
 async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   if (req.method === "POST") {
-    const user = req.session.get("user");
+    const user = req.session.user;
     if (user && user.admin) {
       await set(req, res);
     } else {
@@ -46,4 +46,4 @@ async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   }
 }
 
-export default safe(withIronSession(handler, IRON_SESSION_CONFIG));
+export default safe(withIronSessionApiRoute(handler, IRON_SESSION_CONFIG));

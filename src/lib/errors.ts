@@ -19,7 +19,7 @@ export function safe(route: NextApiHandler): NextApiHandler {
   return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       await route(req, res);
-    } catch (err) {
+    } catch (err: any) {
       rollbar.error(err, req);
       await rollbarWait();
       console.error(err);

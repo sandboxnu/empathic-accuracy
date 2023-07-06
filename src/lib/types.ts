@@ -1,7 +1,15 @@
 import { NextApiRequest } from "next";
-import { Session } from "next-iron-session";
+import { IronSession } from "iron-session";
 
-export type NextApiRequestWithSess = NextApiRequest & { session: Session };
+interface User {
+  admin: boolean;
+}
+declare module "iron-session" {
+  interface IronSessionData {
+    user?: User;
+  }
+}
+export type NextApiRequestWithSess = NextApiRequest & { session: IronSession };
 
 // ================ Experiment Config ======================
 export type ExperimentMetadata = {
@@ -16,10 +24,11 @@ export type ExperimentConfig = {
 
 export type TrialBlockConfig =
   | SelfParadigmTrialBlockConfig
+  | TimestampParadigmTrialBlockConfig
   | ConsensusParadigmTrialBlockConfig
   | ContinuousParadigmTrialBlockConfig;
 
-export type Paradigm = "consensus" | "self" | "continuous";
+export type Paradigm = "consensus" | "self" | "continuous" | "timestamp";
 interface BaseTrialBlockConfig<T extends BaseTestTrial = BaseTestTrial> {
   shuffleVideos: boolean;
   paradigm: Paradigm;
@@ -51,6 +60,17 @@ export interface SelfParadigmTrialBlockConfig
   shuffleQuestions: boolean;
 }
 
+export interface TimestampParadigmTrialBlockConfig
+  extends BaseTrialBlockConfig<SelfTestTrial> {
+  paradigm: "timestamp";
+  timestampPrompt: TimestampPrompt;
+}
+
+export interface TimestampPrompt {
+  buttonInstructions: string;
+  buttonText: string;
+ }
+
 interface SelfTestTrial extends BaseTestTrial {
   minSegments: number;
   maxTries: number;
@@ -71,16 +91,16 @@ export interface ContinuousParadigmTrialBlockConfig
 
 export type ContinuousGridConfig =
   | {
-      label: string;
-      dimensions: 1;
-      axis: GridAxisLabel;
-    }
+    label: string;
+    dimensions: 1;
+    axis: GridAxisLabel;
+  }
   | {
-      label: string;
-      dimensions: 2;
-      xAxis: GridAxisLabel;
-      yAxis: GridAxisLabel;
-    };
+    label: string;
+    dimensions: 2;
+    xAxis: GridAxisLabel;
+    yAxis: GridAxisLabel;
+  };
 
 interface ContinuousTestTrial extends BaseTestTrial {
   maxSeconds: number;

@@ -28,6 +28,7 @@ export default function TestTrialBlock({
       return (
         <TrialBlock
           key={tryCount}
+          onPartialSave={() => { }}
           onDone={(d) => {
             if (config.testTrial.enabled) {
               let proceed = true;
@@ -35,7 +36,7 @@ export default function TestTrialBlock({
                 setStage(StageEnum.succeedmessage);
                 return;
               }
-              if (config.paradigm === "self") {
+              if (config.paradigm === "self" || config.paradigm === "timestamp") {
                 proceed =
                   config.testTrial.minSegments <=
                   sumBy(Object.values(d.answers), (e) => e.length);

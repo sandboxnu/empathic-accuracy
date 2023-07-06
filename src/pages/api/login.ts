@@ -1,4 +1,4 @@
-import { withIronSession } from "next-iron-session";
+import { withIronSessionApiRoute } from "iron-session/next";
 import bcrypt from "bcrypt";
 import { NextApiResponse } from "next";
 import { safe } from "../../lib/errors";
@@ -12,12 +12,12 @@ async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   if (req.method === "POST") {
     const match = await bcrypt.compare(
       req.body.password,
-      process.env.ADMIN_PASS_HASH
+      process.env.ADMIN_PASS_HASH!
     );
     if (match) {
-      req.session.set("user", {
+      req.session.user = {
         admin: true,
-      });
+      };
       await req.session.save();
       res.status(200).send("Logged in");
     } else {
@@ -28,4 +28,4 @@ async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   }
 }
 
-export default safe(withIronSession(handler, IRON_SESSION_CONFIG));
+export default safe(withIronSessionApiRoute(handler, IRON_SESSION_CONFIG));

@@ -24,7 +24,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import GatedButton from "components/GatedButton";
-import { merge } from "lodash";
 
 interface ExperimentConfiguratorProps {
   experimentId: string;
@@ -124,9 +123,8 @@ export default function ExperimentConfigurator({
           </a>
         </Link>
         <Form
-          inline
           onSubmit={(e: React.FormEvent) => e.preventDefault()}
-          className="flex-grow-1"
+          className="flex-grow-1 d-flex"
         >
           <span className="mr-2">Nickname:</span>
           <FormControl
