@@ -123,7 +123,6 @@ export default function ExperimentConfigurator({
           </a>
         </Link>
         <Form
-          inline
           onSubmit={(e: React.FormEvent) => e.preventDefault()}
           className="flex-grow-1"
         >

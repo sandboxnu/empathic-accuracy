@@ -61,7 +61,7 @@ export interface SelfParadigmTrialBlockConfig
 }
 
 export interface TimestampParadigmTrialBlockConfig
-  extends BaseTrialBlockConfig {
+  extends BaseTrialBlockConfig<SelfTestTrial> {
   paradigm: "timestamp";
   timestampPrompt: TimestampPrompt;
 }

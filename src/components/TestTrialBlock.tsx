@@ -36,7 +36,7 @@ export default function TestTrialBlock({
                 setStage(StageEnum.succeedmessage);
                 return;
               }
-              if (config.paradigm === "self") {
+              if (config.paradigm === "self" || config.paradigm === "timestamp") {
                 proceed =
                   config.testTrial.minSegments <=
                   sumBy(Object.values(d.answers), (e) => e.length);
