@@ -12,7 +12,7 @@ async function handler(req: NextApiRequestWithSess, res: NextApiResponse) {
   if (req.method === "POST") {
     const match = await bcrypt.compare(
       req.body.password,
-      process.env.ADMIN_PASS_HASH
+      process.env.ADMIN_PASS_HASH!
     );
     if (match) {
       req.session.user = {
