@@ -34,7 +34,7 @@
     "react-player": "^2.1.0",
     "reactjs-localstorage": "0.0.7",
     "rollbar": "^2.16.2",
-    "uuid": "^8.1.0",
+    "uuid": "^14.0.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
